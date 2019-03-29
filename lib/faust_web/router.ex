@@ -18,9 +18,4 @@ defmodule FaustWeb.Router do
 
     get "/", PageController, :index
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", FaustWeb do
-  #   pipe_through :api
-  # end
 end
