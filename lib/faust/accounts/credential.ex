@@ -6,6 +6,7 @@ defmodule Faust.Accounts.Credential do
   import Ecto.Changeset
 
   alias Ecto.Changeset
+  alias Faust.Accounts.User
 
   schema "credentials" do
     field :unique, :string
@@ -16,9 +17,11 @@ defmodule Faust.Accounts.Credential do
     field :password_hash, :string
 
     timestamps()
+
+    has_one :user, User
   end
 
-  # Changesets fields ----------------------------------------------------------
+  # Changesets -----------------------------------------------------------------
 
   def create_changeset(credential, attrs) do
     credential
