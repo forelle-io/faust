@@ -31,7 +31,8 @@ defmodule FaustWeb do
     quote do
       use Phoenix.View,
         root: "lib/faust_web/templates",
-        namespace: FaustWeb
+        namespace: FaustWeb,
+        pattern: "**/*"
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
