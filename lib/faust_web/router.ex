@@ -19,5 +19,7 @@ defmodule FaustWeb.Router do
     get "/", PageController, :index
 
     resources "/users", UserController
+    resources "/organization", OrganizationController
+
   end
 end
