@@ -16,7 +16,21 @@
   <%= label f, :birthday %>
   <%= date_select f, :birthday %>
   <%= error_tag f, :birthday %>
+  
+  <%= inputs_for f, :credential, fn c -> %>
+      <%= label c, :email %>
+      <%= text_input c, :email %>
+      <%= error_tag c, :email %>
 
+      <%= label c, :password %>
+      <%= text_input c, :password %>
+      <%= error_tag c, :password %>
+
+      <%= label c, :password_confirmation %>
+      <%= text_input c, :password_confirmation %>
+      <%= error_tag c, :password_confirmation %>
+  <% end %>
+  
   <div>
     <%= submit "Save" %>
   </div>

@@ -29,5 +29,6 @@ defmodule Faust.Accounts.User do
   def update_changeset(user, attrs) do
     user
     |> cast(attrs, [:name, :surname, :birthday])
+    |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
   end
 end
