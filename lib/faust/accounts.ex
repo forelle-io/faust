@@ -202,7 +202,8 @@ defmodule Faust.Accounts do
   def change_user(%User{} = user) do
     User.update_changeset(user, %{})
   end
-# Organization structure -------------------------------------------------------
+
+  # Organization structure -------------------------------------------------------
 
   alias Faust.Accounts.Organization
 

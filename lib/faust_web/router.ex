@@ -20,6 +20,5 @@ defmodule FaustWeb.Router do
 
     resources "/users", UserController
     resources "/organization", OrganizationController
-
   end
 end
