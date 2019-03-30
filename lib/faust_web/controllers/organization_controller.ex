@@ -3,6 +3,7 @@ defmodule FaustWeb.OrganizationController do
 
   alias Faust.Accounts
   alias Faust.Accounts.Organization
+  alias Faust.Repo
 
   def index(conn, _params) do
     organization = Accounts.list_organization()
@@ -32,13 +33,13 @@ defmodule FaustWeb.OrganizationController do
   end
 
   def edit(conn, %{"id" => id}) do
-    organization = Accounts.get_organization!(id)
+    organization = get_organization_with_preloads(id, :credential)
     changeset = Accounts.change_organization(organization)
     render(conn, "edit.html", organization: organization, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "organization" => organization_params}) do
-    organization = Accounts.get_organization!(id)
+    organization = get_organization_with_preloads(id, :credential)
 
     case Accounts.update_organization(organization, organization_params) do
       {:ok, organization} ->
@@ -58,5 +59,13 @@ defmodule FaustWeb.OrganizationController do
     conn
     |> put_flash(:info, "Organization deleted successfully.")
     |> redirect(to: Routes.organization_path(conn, :index))
+  end
+
+  # Private functions ----------------------------------------------------------
+
+  defp get_organization_with_preloads(id, preloads) do
+    id
+    |> Accounts.get_organization!()
+    |> Repo.preload(preloads)
   end
 end

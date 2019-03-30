@@ -10,7 +10,7 @@
   <%= error_tag f, :name %>
 
   <%= label f, :description %>
-  <%= text_input f, :description %>
+  <%= textarea f, :description %>
   <%= error_tag f, :description %>
 
   <%= label f, :address %>

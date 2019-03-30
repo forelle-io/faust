@@ -27,5 +27,6 @@ defmodule Faust.Accounts.Organization do
   def update_changeset(organization, attrs) do
     organization
     |> cast(attrs, [:name, :address, :description])
+    |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
   end
 end
