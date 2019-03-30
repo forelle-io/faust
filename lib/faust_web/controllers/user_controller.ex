@@ -3,6 +3,7 @@ defmodule FaustWeb.UserController do
 
   alias Faust.Accounts
   alias Faust.Accounts.User
+  alias Faust.Repo
 
   def index(conn, _params) do
     users = Accounts.list_users()
@@ -32,13 +33,13 @@ defmodule FaustWeb.UserController do
   end
 
   def edit(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
+    user = get_user_with_preloads(id, :credential)
     changeset = Accounts.change_user(user)
     render(conn, "edit.html", user: user, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Accounts.get_user!(id)
+    user = get_user_with_preloads(id, :credential)
 
     case Accounts.update_user(user, user_params) do
       {:ok, user} ->
@@ -58,5 +59,12 @@ defmodule FaustWeb.UserController do
     conn
     |> put_flash(:info, "User deleted successfully.")
     |> redirect(to: Routes.user_path(conn, :index))
+  end
+
+  # Private functions ----------------------------------------------------------
+  defp get_user_with_preloads(id, preloads) do
+    id
+    |> Accounts.get_user!()
+    |> Repo.preload(preloads)
   end
 end

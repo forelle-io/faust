@@ -9,15 +9,19 @@
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
 
-  <%= label f, :surname %>
-  <%= text_input f, :surname %>
-  <%= error_tag f, :surname %>
+  <%= label f, :description %>
+  <%= textarea f, :description %>
+  <%= error_tag f, :description %>
 
-  <%= label f, :birthday %>
-  <%= date_select f, :birthday %>
-  <%= error_tag f, :birthday %>
-  
+  <%= label f, :address %>
+  <%= text_input f, :address %>
+  <%= error_tag f, :address %>
+
   <%= inputs_for f, :credential, fn c -> %>
+      <%= label c, :unique %>
+      <%= text_input c, :unique %>
+      <%= error_tag c, :unique %>
+
       <%= label c, :email %>
       <%= text_input c, :email %>
       <%= error_tag c, :email %>
@@ -30,7 +34,7 @@
       <%= text_input c, :password_confirmation %>
       <%= error_tag c, :password_confirmation %>
   <% end %>
-  
+
   <div>
     <%= submit "Save" %>
   </div>

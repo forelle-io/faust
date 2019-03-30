@@ -1,11 +1,11 @@
-defmodule Faust.Repo.Migrations.CreateUsers do
+defmodule Faust.Repo.Migrations.CreateOrganization do
   use Ecto.Migration
 
   def change do
-    create table(:users) do
+    create table(:organization) do
       add :name, :string, null: false
-      add :surname, :string, null: false
-      add :birthday, :date
+      add :description, :text
+      add :address, :string, null: false
       add :credential_id, references(:credentials)
 
       timestamps()

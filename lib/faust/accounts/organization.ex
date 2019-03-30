@@ -1,16 +1,14 @@
-defmodule Faust.Accounts.User do
+defmodule Faust.Accounts.Organization do
   @moduledoc false
 
   use Ecto.Schema
-
   import Ecto.Changeset
-
   alias Faust.Accounts.Credential
 
-  schema "users" do
+  schema "organization" do
     field :name, :string
-    field :surname, :string
-    field :birthday, :date
+    field :description, :string
+    field :address, :string
 
     timestamps()
 
@@ -19,16 +17,16 @@ defmodule Faust.Accounts.User do
 
   # Changesets -----------------------------------------------------------------
 
-  def create_changeset(user, attrs) do
-    user
-    |> cast(attrs, [:name, :surname])
-    |> validate_required([:name, :surname])
+  def create_changeset(organization, attrs) do
+    organization
+    |> cast(attrs, [:name, :address, :description])
+    |> validate_required([:name, :address])
     |> cast_assoc(:credential, with: &Credential.create_changeset/2, required: true)
   end
 
-  def update_changeset(user, attrs) do
-    user
-    |> cast(attrs, [:name, :surname, :birthday])
+  def update_changeset(organization, attrs) do
+    organization
+    |> cast(attrs, [:name, :address, :description])
     |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
   end
 end
