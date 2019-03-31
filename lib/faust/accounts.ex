@@ -301,7 +301,7 @@ defmodule Faust.Accounts do
     Organization.update_changeset(organization, %{})
   end
 
-  # Organization structure -------------------------------------------------------
+  # Chief structure -------------------------------------------------------
 
   alias Faust.Accounts.Chief
 

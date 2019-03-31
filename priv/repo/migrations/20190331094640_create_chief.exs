@@ -7,6 +7,5 @@ defmodule Faust.Repo.Migrations.CreateChief do
 
       timestamps()
     end
-
   end
 end

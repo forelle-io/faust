@@ -6,15 +6,14 @@ defmodule Faust.Accounts.Chief do
   alias Faust.Accounts.Credential
 
   schema "chief" do
-
     timestamps()
 
     belongs_to :credential, Credential
   end
 
-# Changesets -----------------------------------------------------------------
+  # Changesets -----------------------------------------------------------------
 
-def create_changeset(chief, attrs) do
+  def create_changeset(chief, attrs) do
     chief
     |> cast(attrs, [])
     |> cast_assoc(:credential, with: &Credential.create_changeset/2, required: true)
@@ -22,7 +21,7 @@ def create_changeset(chief, attrs) do
 
   def update_changeset(chief, attrs) do
     chief
-    |>cast(attrs, [])
-    |>cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
+    |> cast(attrs, [])
+    |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
   end
 end
