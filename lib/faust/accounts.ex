@@ -300,4 +300,102 @@ defmodule Faust.Accounts do
   def change_organization(%Organization{} = organization) do
     Organization.update_changeset(organization, %{})
   end
+
+  # Chief structure -------------------------------------------------------
+
+  alias Faust.Accounts.Chief
+
+  @doc """
+  Returns the list of chief.
+
+  ## Examples
+
+      iex> list_chief()
+      [%Chief{}, ...]
+
+  """
+  def list_chief do
+    Repo.all(Chief)
+  end
+
+  @doc """
+  Gets a single chief.
+
+  Raises `Ecto.NoResultsError` if the Chief does not exist.
+
+  ## Examples
+
+      iex> get_chief!(123)
+      %Chief{}
+
+      iex> get_chief!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_chief!(id), do: Repo.get!(Chief, id)
+
+  @doc """
+  Creates a chief.
+
+  ## Examples
+
+      iex> create_chief(%{field: value})
+      {:ok, %Chief{}}
+
+      iex> create_chief(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_chief(attrs \\ %{}) do
+    %Chief{}
+    |> Chief.create_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a chief.
+
+  ## Examples
+
+      iex> update_chief(chief, %{field: new_value})
+      {:ok, %Chief{}}
+
+      iex> update_chief(chief, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_chief(%Chief{} = chief, attrs) do
+    chief
+    |> Chief.update_changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Chief.
+
+  ## Examples
+
+      iex> delete_chief(chief)
+      {:ok, %Chief{}}
+
+      iex> delete_chief(chief)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_chief(%Chief{} = chief) do
+    Repo.delete(chief)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking chief changes.
+
+  ## Examples
+
+      iex> change_chief(chief)
+      %Ecto.Changeset{source: %Chief{}}
+
+  """
+  def change_chief(%Chief{} = chief) do
+    Chief.update_changeset(chief, %{})
+  end
 end

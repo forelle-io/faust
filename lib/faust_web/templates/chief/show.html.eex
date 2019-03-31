@@ -1,0 +1,8 @@
+<h1>Show Chief</h1>
+
+<ul>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.chief_path(@conn, :edit, @chief) %></span>
+<span><%= link "Back", to: Routes.chief_path(@conn, :index) %></span>
