@@ -1,5 +1,5 @@
 <h1>New Organization</h1>
 
-<%= render "forms/new.html", Map.put(assigns, :action, Routes.organization_path(@conn, :create)) %>
+<%= render FaustWeb.OrganizationView, "forms/new.html", Map.put(assigns, :action, Routes.organization_path(@conn, :create)) %>
 
 <span><%= link "Back", to: Routes.organization_path(@conn, :index) %></span>
