@@ -5,37 +5,49 @@
     </div>
   <% end %>
 
-  <%= label f, :name %>
-  <%= text_input f, :name %>
-  <%= error_tag f, :name %>
+  <div class="row">
+    <div class="col-6 form-group">
+      <%= text_input f, :name, placeholder: "Имя" %>
+      <%= error_tag f, :name %>
+    </div>
 
-  <%= label f, :surname %>
-  <%= text_input f, :surname %>
-  <%= error_tag f, :surname %>
-
-  <%= label f, :birthday %>
-  <%= date_select f, :birthday %>
-  <%= error_tag f, :birthday %>
+    <div class="col-6 form-group" style="padding-right:0;">
+      <%= text_input f, :surname, placeholder: "Фамилия" %>
+      <%= error_tag f, :surname %>
+    </div>
+  </div>
 
   <%= inputs_for f, :credential, fn c -> %>
-      <%= label c, :unique %>
-      <%= text_input c, :unique %>
-      <%= error_tag c, :unique %>
+      <div class="form-group">
+        <%= text_input c, :unique, placeholder: "Уникальное имя" %>
+        <%= error_tag c, :unique %>
+      </div>
 
-      <%= label c, :email %>
-      <%= text_input c, :email %>
-      <%= error_tag c, :email %>
+      <div class="form-group">
+        <%= text_input c, :email, placeholder: "Почта" %>
+        <%= error_tag c, :email %>
+      </div>
 
-      <%= label c, :password %>
-      <%= text_input c, :password %>
-      <%= error_tag c, :password %>
+      <div class="form-group">
+    <div>День рождения</div>
+    <div>
+      <%= date_select f, :birthday, placeholder: "fd" %>
+      <%= error_tag f, :birthday %>
+    </div>
+  </div>
 
-      <%= label c, :password_confirmation %>
-      <%= text_input c, :password_confirmation %>
-      <%= error_tag c, :password_confirmation %>
+      <div class="form-group">
+        <%= text_input c, :password, placeholder: "Пароль" %>
+        <%= error_tag c, :password %>
+      </div>
+
+      <div class="form-group">
+        <%= text_input c, :password_confirmation, placeholder: "Подтвердите пароль" %>
+        <%= error_tag c, :password_confirmation %>
+      </div>
   <% end %>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Регистрация" %>
   </div>
 <% end %>

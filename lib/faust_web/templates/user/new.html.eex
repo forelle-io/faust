@@ -1,5 +1,17 @@
-<h1>New User</h1>
-
-<%= render FaustWeb.UserView, "forms/new.html", Map.put(assigns, :action, Routes.user_path(@conn, :create)) %>
-
-<span><%= link "Back", to: Routes.user_path(@conn, :index) %></span>
+<div class="row">
+    <div class="col-4 mx-auto">
+        <span><%= link "Back", to: Routes.user_path(@conn, :index) %></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-4 mx-auto">
+        <h1>Создайте нового пользователя</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-4 mx-auto">
+        <div class="text-center">
+            <%= render "forms/new.html", Map.put(assigns, :action, Routes.user_path(@conn, :create)) %>
+        </div>
+    </div>
+</div>
