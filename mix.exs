@@ -44,6 +44,7 @@ defmodule Faust.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:bcrypt_elixir, "~> 1.1"},
+      {:guardian, "~> 1.2"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end

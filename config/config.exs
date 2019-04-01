@@ -17,6 +17,10 @@ config :faust, FaustWeb.Endpoint,
   render_errors: [view: FaustWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Faust.PubSub, adapter: Phoenix.PubSub.PG2]
 
+config :faust, Faust.Guardian,
+  issuer: "faust",
+  secret_key: "K1C9WbLyaYrG2EIwx1nkAzEaberOndYsc8sF+skoMXedXdZ5lMWHQL+3pLoM7m3J"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
