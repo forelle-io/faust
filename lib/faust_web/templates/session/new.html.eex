@@ -1,12 +1,12 @@
 <div class="row">
     <div class="col-4 mx-auto">
-        <h1>Создайте нового пользователя</h1>
+        <h1>Авторизация</h1>
     </div>
 </div>
 <div class="row">
     <div class="col-4 mx-auto">
         <div class="text-center">
-            <%= render "forms/new.html", Map.put(assigns, :action, Routes.user_path(@conn, :create)) %>
+            <%= render "forms/new.html", Map.put(assigns, :action, Routes.session_path(@conn, :create)) %>
         </div>
     </div>
 </div>

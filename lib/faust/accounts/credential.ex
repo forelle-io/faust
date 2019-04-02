@@ -6,7 +6,7 @@ defmodule Faust.Accounts.Credential do
   import Ecto.Changeset
 
   alias Ecto.Changeset
-  alias Faust.Accounts.User
+  alias Faust.Accounts.{User, Organization, Chief}
 
   schema "credentials" do
     field :unique, :string
@@ -19,6 +19,8 @@ defmodule Faust.Accounts.Credential do
     timestamps()
 
     has_one :user, User
+    has_one :organization, Organization
+    has_one :chief, Chief
   end
 
   # Changesets -----------------------------------------------------------------
@@ -34,6 +36,13 @@ defmodule Faust.Accounts.Credential do
     credential
     |> cast(attrs, [:email, :password, :password_confirmation])
     |> password_hash_pipeline()
+  end
+
+  def session_changeset(credential, attrs) do
+    credential
+    |> cast(attrs, [:unique, :password])
+    |> validate_required([:unique, :password])
+    |> validate_length(:password, min: 8, max: 16)
   end
 
   # Private functions ----------------------------------------------------------

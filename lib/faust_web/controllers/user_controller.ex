@@ -2,7 +2,7 @@ defmodule FaustWeb.UserController do
   use FaustWeb, :controller
 
   alias Faust.Accounts
-  alias Faust.Accounts.User
+  alias Faust.Accounts.{User, Credential}
   alias Faust.Repo
 
   def index(conn, _params) do
@@ -17,10 +17,10 @@ defmodule FaustWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
-      {:ok, user} ->
+      {:ok, _user} ->
         conn
         |> put_flash(:info, "User created successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
+        |> redirect(to: Routes.page_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)

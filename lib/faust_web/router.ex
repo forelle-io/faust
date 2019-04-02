@@ -13,13 +13,34 @@ defmodule FaustWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :maybe_authentication do
+    plug FaustWeb.GuardianPipelinePlug
+  end
+
+  pipeline :without_authentication do
+    plug FaustWeb.WithoutAuthenticationPlug, key: :user
+  end
+
+  pipeline :ensure_authentication do
+    plug Guardian.Plug.EnsureAuthenticated, key: :user
+  end
+
   scope "/", FaustWeb do
-    pipe_through :browser
+    pipe_through [:browser, :maybe_authentication, :without_authentication]
 
     get "/", PageController, :index
 
-    resources "/users", UserController
+    resources "/users", UserController, only: [:new, :create]
+    resources "/session", SessionController, only: [:new, :create]
+  end
+
+  scope "/", FaustWeb do
+    pipe_through [:browser, :maybe_authentication, :ensure_authentication]
+
+    resources "/users", UserController, except: [:new, :create]
     resources "/organization", OrganizationController
     resources "/chief", ChiefController
+
+    delete "/session", SessionController, :delete
   end
 end
