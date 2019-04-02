@@ -105,6 +105,19 @@ defmodule Faust.Accounts do
     Credential.update_changeset(credential, %{})
   end
 
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking credential session changes.
+
+  ## Examples
+
+      iex> change_credential(credential)
+      %Ecto.Changeset{source: %Credential{}}
+
+  """
+  def session_credential(%Credential{} = credential) do
+    Credential.session_changeset(credential, %{})
+  end
+
   # User structure -------------------------------------------------------
 
   alias Faust.Accounts.User
@@ -137,6 +150,22 @@ defmodule Faust.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
+  @doc """
+  Gets a single user.
+
+  Returns nil if the User does not exist.
+
+  ## Examples
+
+      iex> get_user(123)
+      %User{}
+
+      iex> get_user(456)
+      nil
+
+  """
+  def get_user(id), do: Repo.get(User, id)
 
   @doc """
   Creates a user.
@@ -237,6 +266,22 @@ defmodule Faust.Accounts do
   def get_organization!(id), do: Repo.get!(Organization, id)
 
   @doc """
+  Gets a single organization.
+
+  Returns nil if the Organization does not exist.
+
+  ## Examples
+
+      iex> get_organization(123)
+      %Organization{}
+
+      iex> get_organization(456)
+      nil
+
+  """
+  def get_organization(id), do: Repo.get(Organization, id)
+
+  @doc """
   Creates a organization.
 
   ## Examples
@@ -333,6 +378,22 @@ defmodule Faust.Accounts do
 
   """
   def get_chief!(id), do: Repo.get!(Chief, id)
+
+  @doc """
+  Gets a single chief.
+
+  Returns nil if the Chief does not exist.
+
+  ## Examples
+
+      iex> get_chief(123)
+      %Chief{}
+
+      iex> get_chief(456)
+      nil
+
+  """
+  def get_chief(id), do: Repo.get(Chief, id)
 
   @doc """
   Creates a chief.

@@ -12,30 +12,36 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
           <div class="container">
             <a class="navbar-brand" href="#">
-              <%= img_tag Routes.static_path(@conn, "/images/logotype.png"), height: 72 %>
+              <%= 
+                @conn
+                |> Routes.static_path("/images/logotype.png")
+                |> img_tag(height: 72)
+                |> link(to: "/")
+              %>
             </a>
-            <div>
-              <span style="color: #F26671; font-weight: bold; font-size: 15px;">
-                Forelle.<span style="color: #2E4053; font-weight: bold; font-size: 15px;">Faust</span>
-              </span>
-            </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
               <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <%= link "ВОЙТИ", to: Routes.user_path(@conn, :new), class: "nav-link" %>
-                </li>
-                <li class="nav-item">
-                  <%= link "СОЗДАТЬ АККАУНТ", to: Routes.user_path(@conn, :new), class: "nav-link" %>
-                </li>
-                <li class="nav-item">
-                  <%= link "ПОЛЬЗОВАТЕЛИ", to: Routes.user_path(@conn, :index), class: "nav-link" %>
-                </li>
-                <li class="nav-item">
-                  <%= link "ОРГАНИЗАЦИИ", to: Routes.organization_path(@conn, :index), class: "nav-link" %>
-                </li>
+                <%= if current_user(@conn) do %>
+                  <li class="nav-item">
+                    <%= link "Пользователи", to: Routes.user_path(@conn, :index), class: "nav-link" %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link "Организации", to: Routes.organization_path(@conn, :index), class: "nav-link" %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link "Выход", to: Routes.session_path(@conn, :delete, [action: "user"]), method: :delete, class: "nav-link" %>
+                  </li>
+                <% else %>
+                  <li class="nav-item">
+                    <%= link "Войти", to: Routes.session_path(@conn, :new), class: "nav-link" %>
+                  </li>
+                  <li class="nav-item">
+                    <%= link "Создать аккаунт", to: Routes.user_path(@conn, :new), class: "nav-link" %>
+                  </li>
+                <% end %>
               </ul>
             </div>
           </div>

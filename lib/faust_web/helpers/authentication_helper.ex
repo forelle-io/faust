@@ -2,14 +2,14 @@ defmodule FaustWeb.AuthenticationHelper do
   @moduledoc false
 
   import Phoenix.Controller, only: [redirect: 2, put_flash: 3]
-  import Plug.Conn, only: [assign: 3]
 
   alias Faust.Accounts.{Credential}
   alias Faust.Guardian
   alias Faust.Repo
   alias FaustWeb.Router.Helpers, as: Router
+  alias Plug.Conn
 
-  def sign_in(conn, %{"credential" => params}) do
+  def sign_in(%Conn{} = conn, %{"credential" => params}) do
     credential = Repo.get_by(Credential, unique: params["unique"])
 
     if credential && Bcrypt.verify_pass(params["password"], credential.password_hash) do
@@ -21,10 +21,7 @@ defmodule FaustWeb.AuthenticationHelper do
             apply(Router, String.to_atom("#{association}_path"), [conn, :show, current_resource])
 
           conn
-          |> Guardian.Plug.sign_in(current_resource, %{"type" => "access"},
-            key: String.to_atom(association)
-          )
-          |> assign(String.to_atom("current_#{association}"), current_resource)
+          |> Guardian.Plug.sign_in(current_resource, %{}, key: String.to_atom(association))
           |> redirect(to: redirect_to)
 
         _ ->
@@ -37,16 +34,41 @@ defmodule FaustWeb.AuthenticationHelper do
     end
   end
 
-  def sign_in(conn, _), do: redirect(conn, to: "/")
+  def sign_in(%Conn{} = conn, _), do: redirect(conn, to: "/")
 
-  def sign_out(conn, %{"action" => action})
+  def sign_out(%Conn{} = conn, %{"action" => action})
       when action in ["user", "credential", "chief"] do
     conn
     |> Faust.Guardian.Plug.sign_out(key: String.to_atom(action))
     |> redirect(to: "/")
   end
 
-  def sign_out(conn, _), do: redirect(conn, to: "/")
+  def sign_out(%Conn{} = conn, _), do: redirect(conn, to: "/")
+
+  def auth_error(%Conn{} = conn, {_type, _reason}, _opts) do
+    conn
+    |> put_flash(:error, "Please, sign in")
+    |> redirect(to: Router.session_path(conn, :new))
+  end
+
+  def current_user(%Conn{} = conn) do
+    guardian_current_resource(conn, :user)
+  end
+
+  def current_organization(%Conn{} = conn) do
+    guardian_current_resource(conn, :organization)
+  end
+
+  def current_chief(%Conn{} = conn) do
+    guardian_current_resource(conn, :chief)
+  end
+
+  def guardian_current_resource(%Conn{} = conn, key)
+      when key in [:user, :organization, :chief] do
+    Guardian.Plug.current_resource(conn, key: key)
+  end
+
+  def guardian_current_resource(_, _), do: nil
 
   # Private functions ----------------------------------------------------------
 

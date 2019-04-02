@@ -42,5 +42,6 @@ defmodule Faust.Guardian do
     end
   end
 
-  defp handle_claims(id, action), do: "The claims not found (action: #{action}, id: #{id})"
+  # defp handle_claims(id, action), do: "The claims not found (action: #{action}, id: #{id})"
+  defp handle_claims(_, _), do: {:error, :not_found}
 end
