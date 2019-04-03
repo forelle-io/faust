@@ -10,5 +10,7 @@ defmodule Faust.Repo.Migrations.CreateOrganization do
 
       timestamps()
     end
+
+    create unique_index(:organization, :credential_id)
   end
 end

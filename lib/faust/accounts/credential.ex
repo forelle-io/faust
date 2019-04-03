@@ -29,12 +29,16 @@ defmodule Faust.Accounts.Credential do
     credential
     |> cast(attrs, [:unique, :email, :password, :password_confirmation])
     |> validate_required([:unique, :email, :password, :password_confirmation])
+    |> unique_constraint(:unique)
+    |> unique_constraint(:email)
     |> password_hash_pipeline()
   end
 
   def update_changeset(credential, attrs) do
     credential
     |> cast(attrs, [:email, :password, :password_confirmation])
+    |> validate_required([:email, :password_hash])
+    |> unique_constraint(:email)
     |> password_hash_pipeline()
   end
 

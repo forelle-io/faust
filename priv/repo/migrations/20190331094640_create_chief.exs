@@ -7,5 +7,7 @@ defmodule Faust.Repo.Migrations.CreateChief do
 
       timestamps()
     end
+
+    create unique_index(:chief, :credential_id)
   end
 end

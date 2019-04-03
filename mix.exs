@@ -45,7 +45,8 @@ defmodule Faust.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:bcrypt_elixir, "~> 1.1"},
       {:guardian, "~> 1.2"},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:ex_machina, "~> 2.3", only: :test}
     ]
   end
 
