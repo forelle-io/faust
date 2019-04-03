@@ -1,4 +1,65 @@
-<section class="phx-hero">
-  <h1>ДОБРО ПОЖАЛОВАТЬ</h1>
-  <p>Платформа нового поколения для рыболовного сообщества</p>
-</section>
+ <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Faust · Phoenix Framework</title>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <style type="text/css">
+      body{ background-color: #FAFAFA;}
+
+      .container{ margin-top: 150px;}
+
+      .col-md-4-child{
+        border: 1px solid #e6e6e6; 
+        padding: 15px;
+        margin-bottom: 15px; 
+        background-color: #FFFFFF; 
+      }
+
+      @media only screen and (max-width : 800px) 
+      {
+        .container{margin-top: 10px;}
+      }
+
+      @media only screen and (max-width : 600px) 
+      { .col-md-1{display:none;} 
+        .col-md-6{display:none;} 
+        .container{margin-top: 10px;}
+      }
+
+   </style>
+  </head>
+<body>
+  <main role="main" class="container">
+    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+    <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-6">
+      <%= 
+        @conn
+        |> Routes.static_path("/images/logotype.png")
+        |> img_tag()
+      %>
+    </div>
+
+    <div class="col-md-4">
+      <div class="col-md-4-child">
+        <h1 style="text-align: center; color:#F26671"><b>FORELLE</b></h1>
+        <h5 style="text-align: center; padding-bottom: 5px; color:#808080">платформа нового поколения для рыболовного сообщества</h3>
+        <%= render Elixir.FaustWeb.UserView, "forms/new.html", Map.put(assigns, :action, Routes.user_path(@conn, :create)) %>
+      </div>
+      <div class="col-md-4-child">
+        <h3 style="color:#808080"> Есть аккаунт? </h3> 
+        <%= link "Войти" , to: Routes.session_path(@conn, :new), class: "submit"%>            
+      </div>
+    </div>
+
+  <div class="col-md-1">
+  </div>
+  </div>
+
+    </main>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+</body>

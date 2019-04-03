@@ -29,14 +29,6 @@
       </div>
 
       <div class="form-group">
-    <div>День рождения</div>
-    <div>
-      <%= date_select f, :birthday, placeholder: "fd" %>
-      <%= error_tag f, :birthday %>
-    </div>
-  </div>
-
-      <div class="form-group">
         <%= text_input c, :password, placeholder: "Пароль" %>
         <%= error_tag c, :password %>
       </div>
@@ -47,7 +39,11 @@
       </div>
   <% end %>
 
-  <div>
+  <div><br>
     <%= submit "Регистрация" %>
   </div>
+
+  <h5>Регистрируясь, вы принимаете наши Условия, <br>
+  Политику использования данных и Политику в отношении файлов cookie.</h5>
+  
 <% end %>
