@@ -134,6 +134,7 @@ defmodule Faust.AccountsTest do
   describe "chief" do
     test "list_chief/0 returns all chief" do
       insert_list(5, :chief)
+
       assert Accounts.list_chief() |> length() == 5
     end
 
@@ -235,8 +236,7 @@ defmodule Faust.AccountsTest do
     test "update_user/2 with invalid data returns error changeset" do
       user = insert(:user)
 
-      # assert {:error, %Ecto.Changeset{}} =
-      # Accounts.update_user(user, %{name: nil, surname: nil})
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, %{name: nil, surname: nil})
     end
 
     test "delete user/1 deletes the user" do
