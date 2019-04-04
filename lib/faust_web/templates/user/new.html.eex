@@ -1,12 +1,9 @@
 <div class="row">
-    <div class="col-4 mx-auto">
+    <div class="col-md-8 media-hide-block">
         <h1>Создайте нового пользователя</h1>
+        <div class="text-secondary">и присоединитесь к рыболовному сообществу уже <b>сейчас</b></div>
     </div>
-</div>
-<div class="row">
-    <div class="col-4 mx-auto">
-        <div class="text-center">
-            <%= render "forms/new.html", Map.put(assigns, :action, Routes.user_path(@conn, :create)) %>
-        </div>
+    <div class="col-md-4">
+        <%= render Elixir.FaustWeb.UserView, "forms/new.html", Map.put(assigns, :action, Routes.user_path(@conn, :create)) %>
     </div>
 </div>

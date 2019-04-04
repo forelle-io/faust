@@ -7,21 +7,23 @@
 
   <div class="row">
     <div class="col-12 form-group">
-      <%= text_input f, :unique, placeholder: "Логин" %>
+      <%= hidden_input f, :association, value: @association %>
+    </div>
+
+    <div class="col-12 form-group">
+      <%= text_input f, :unique, placeholder: "Логин", class: "form-control" %>
       <%= error_tag f, :unique %>
     </div>
 
     <div class="col-12 form-group">
-      <%= text_input f, :password, placeholder: "Пароль" %>
+      <%= text_input f, :password, placeholder: "Пароль", class: "form-control" %>
       <%= error_tag f, :password %>
-    </div>
-
-    <div class="col-12 form-group">
-      <%= hidden_input f, :association, value: @association %>
     </div>
   </div>
 
-  <div>
-    <%= submit "Авторизация" %>
+  <div class="row">
+    <div class="col-md-12 form-group">
+      <%= submit "Авторизация", class: "btn btn-outline-success btn-lg btn-block" %>
+    </div>
   </div>
 <% end %>
