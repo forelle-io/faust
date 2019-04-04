@@ -7,47 +7,49 @@
 
   <div class="row">
     <div class="col-6 form-group">
-      <%= text_input f, :name, placeholder: "Имя" %>
+      <%= text_input f, :name, placeholder: "Имя", class: "form-control" %>
       <%= error_tag f, :name %>
     </div>
 
-    <div class="col-6 form-group" style="padding-right:0;">
-      <%= text_input f, :surname, placeholder: "Фамилия" %>
+    <div class="col-6 form-group">
+      <%= text_input f, :surname, placeholder: "Фамилия", class: "form-control" %>
       <%= error_tag f, :surname %>
     </div>
   </div>
 
   <%= inputs_for f, :credential, fn c -> %>
       <div class="form-group">
-        <%= text_input c, :unique, placeholder: "Уникальное имя" %>
+        <%= text_input c, :unique, placeholder: "Логин", class: "form-control", autocomplete: false %>
         <%= error_tag c, :unique %>
       </div>
 
       <div class="form-group">
-        <%= text_input c, :email, placeholder: "Почта" %>
+        <%= text_input c, :email, placeholder: "Почта", class: "form-control" %>
         <%= error_tag c, :email %>
       </div>
 
       <div class="form-group">
-    <div>День рождения</div>
-    <div>
-      <%= date_select f, :birthday, placeholder: "fd" %>
-      <%= error_tag f, :birthday %>
-    </div>
-  </div>
-
-      <div class="form-group">
-        <%= text_input c, :password, placeholder: "Пароль" %>
+        <%= text_input c, :password, placeholder: "Пароль", class: "form-control" %>
         <%= error_tag c, :password %>
       </div>
 
       <div class="form-group">
-        <%= text_input c, :password_confirmation, placeholder: "Подтвердите пароль" %>
+        <%= text_input c, :password_confirmation, placeholder: "Подтвердите пароль", class: "form-control" %>
         <%= error_tag c, :password_confirmation %>
+        <small class="text-muted">В целях безопасности, Ваш пароль должен содержит не менее 8 символов</small>
       </div>
   <% end %>
 
-  <div>
-    <%= submit "Регистрация" %>
+  <div class="row">
+    <div class="col-md-12 form-group">
+      <%= submit "Регистрация", class: "btn btn-outline-primary btn-lg btn-block" %>
+    </div>
   </div>
+  
+  <div class="row">
+    <small class="col-md-12 form-group text-center text-muted">
+      Регистрируясь, вы принимаете наши <b>Условия</b> и <b>Политику</b> в отношении файлов cookie.
+    </small>
+  </div>
+  
 <% end %>

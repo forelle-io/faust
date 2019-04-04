@@ -1,4 +1,31 @@
-<section class="phx-hero">
-  <h1>ДОБРО ПОЖАЛОВАТЬ</h1>
-  <p>Платформа нового поколения для рыболовного сообщества</p>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Forelle · Faust Platform</title>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+  </head>
+  <body>
+    <main role="main" class="container">
+      <div class="row vertical-center">
+        <div class="col-md-8 media-hide-block">
+          <%= logotype_path(@conn) |> img_tag(height: 256) %>
+        </div>
+        <div class="col-md-4">
+          <div class="text-center">
+            <h3 class="text-secondary"><b>FORELLE</b></h3>
+            <div class="text-muted">
+              <small>пройдите регистрацию и присоединитесь к рыболовному сообществу уже сейчас</small>
+            </div>
+          </div>
+          <div style="margin-top: 25px;">
+            <%= render Elixir.FaustWeb.UserView, "forms/new.html", Map.put(assigns, :action, Routes.user_path(@conn, :create)) %>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>

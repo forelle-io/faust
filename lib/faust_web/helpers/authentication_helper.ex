@@ -30,7 +30,7 @@ defmodule FaustWeb.AuthenticationHelper do
     else
       conn
       |> put_flash(:error, "Bad credential params")
-      |> redirect(to: "/")
+      |> redirect(to: Router.session_path(conn, :new))
     end
   end
 
