@@ -2,7 +2,7 @@ defmodule FaustWeb.UserController do
   use FaustWeb, :controller
 
   alias Faust.Accounts
-  alias Faust.Accounts.{User, Credential}
+  alias Faust.Accounts.User
   alias Faust.Repo
 
   def index(conn, _params) do
