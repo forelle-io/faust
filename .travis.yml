@@ -1,0 +1,16 @@
+language: elixir
+elixir:
+  - 1.8.1
+otp_release:
+  - 21.0
+addons:
+  postgresql: '10.6'
+sudo: false
+env:
+  - MIX_ENV=test
+install:
+  - mix do deps.get, ecto.setup
+script:
+  - mix format --check-formatted
+  - mix credo --strict
+  - mix test
