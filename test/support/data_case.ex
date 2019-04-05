@@ -14,6 +14,8 @@ defmodule Faust.DataCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
       alias Faust.Repo
@@ -26,10 +28,10 @@ defmodule Faust.DataCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Faust.Repo)
+    :ok = Sandbox.checkout(Faust.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Faust.Repo, {:shared, self()})
+      Sandbox.mode(Faust.Repo, {:shared, self()})
     end
 
     :ok
