@@ -168,6 +168,24 @@ defmodule Faust.Accounts do
   def get_user(id), do: Repo.get(User, id)
 
   @doc """
+  Gets a single user by params.
+
+  Returns nil if the User by params does not exist.
+
+  ## Examples
+
+      iex> get_user_by(%{key: value})
+      %User{}
+
+      iex> get_user_by(%{key: value})
+      nil
+
+  """
+  def get_user_by(params) when is_map(params) do
+    Repo.get_by(User, params)
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples
