@@ -2,7 +2,9 @@ defmodule Faust.Accounts.Organization do
   @moduledoc false
 
   use Ecto.Schema
+
   import Ecto.Changeset
+
   alias Faust.Accounts.Credential
 
   schema "organization" do
@@ -27,6 +29,7 @@ defmodule Faust.Accounts.Organization do
   def update_changeset(organization, attrs) do
     organization
     |> cast(attrs, [:name, :address, :description])
+    |> validate_required([:name, :address])
     |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
   end
 end

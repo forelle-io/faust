@@ -10,5 +10,8 @@ defmodule Faust.Repo.Migrations.CreateCredentials do
 
       timestamps()
     end
+
+    create unique_index(:credentials, :unique)
+    create unique_index(:credentials, :email)
   end
 end
