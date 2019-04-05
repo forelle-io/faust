@@ -2,7 +2,7 @@ defmodule Faust.Support.AccountFixtures do
   @moduledoc false
 
   alias Faust.Accounts
-  alias Faust.Accounts.{Credential, User, Organization, Chief}
+  alias Faust.Accounts.{Chief, Credential, Organization, User}
 
   @credential_attrs %{
     unique: "unique",

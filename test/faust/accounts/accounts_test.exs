@@ -6,7 +6,7 @@ defmodule Faust.AccountsTest do
   import Faust.Support.{AccountFixtures, Factories}
 
   alias Faust.Accounts
-  alias Faust.Accounts.{Credential, Organization, Chief, User}
+  alias Faust.Accounts.{Chief, Credential, Organization, User}
 
   describe "credentials" do
     test "list_credentials/0 returns all credentials" do

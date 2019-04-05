@@ -7,9 +7,9 @@ defmodule FaustWeb.UserControllerTest do
   import Phoenix.Controller, only: [view_template: 1]
   import Plug.Conn.Status, only: [code: 1]
 
+  alias Ecto.Changeset
   alias Faust.Accounts
   alias Faust.Accounts.User
-  alias Ecto.Changeset
 
   describe "index" do
     test "lists all users when user is not authorized", %{conn: conn} do

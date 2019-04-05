@@ -1,7 +1,7 @@
 defmodule FaustWeb.GuardianPipelinePlug do
   @moduledoc false
 
-  alias Guardian.Plug.{Pipeline, VerifySession, VerifyHeader, LoadResource}
+  alias Guardian.Plug.{LoadResource, Pipeline, VerifyHeader, VerifySession}
 
   use Pipeline,
     otp_app: :faust,

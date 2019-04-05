@@ -3,7 +3,7 @@ defmodule Faust.Support.Factories do
 
   use ExMachina.Ecto, repo: Faust.Repo
 
-  alias Faust.Accounts.{Credential, User, Organization, Chief}
+  alias Faust.Accounts.{Chief, Credential, Organization, User}
 
   def credential_factory do
     %Credential{
