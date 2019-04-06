@@ -1,4 +1,4 @@
-# Faust [![Build Status](https://travis-ci.org/forelle-io/faust.svg)](https://travis-ci.org/forelle-io/faust)
+# Faust [![Build Status](https://api.travis-ci.com/forelle-io/faust.png?branch=master)](https://travis-ci.org/forelle-io/faust)
 
 <img src="https://github.com/forelle-io/faust/blob/master/assets/static/images/logotype.png" height="128">
 
