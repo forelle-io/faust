@@ -12,7 +12,7 @@ defmodule FaustWeb.UserControllerTest do
   alias Faust.Accounts.User
 
   describe "index" do
-    test "lists all users when user is not authorized", %{conn: conn} do
+    test "redirects to session page when user is not authorized", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :index))
 
       assert conn.status == code(:found)
@@ -92,6 +92,26 @@ defmodule FaustWeb.UserControllerTest do
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.user_path(conn, :show, user)
+    end
+  end
+
+  describe "show user" do
+    setup [:create_user]
+
+    test "redirects to session page when user is not authorized", %{conn: conn, user: user} do
+      conn = get(conn, Routes.user_path(conn, :show, user))
+
+      assert conn.status == code(:found)
+    end
+
+    test "renders user page when user is authorized", %{conn: conn, user: user} do
+      conn =
+        conn
+        |> authorize_conn(user)
+        |> get(Routes.user_path(conn, :show, user))
+
+      assert conn.status == code(:ok)
+      assert conn.assigns.user.id == user.id
     end
   end
 

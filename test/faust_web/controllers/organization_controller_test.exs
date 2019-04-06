@@ -2,53 +2,58 @@ defmodule FaustWeb.OrganizationControllerTest do
   @moduledoc false
   use FaustWeb.ConnCase
 
-  import Faust.Support.{AccountFixtures, Factories}
+  import Faust.Support.Factories
   import Plug.Conn.Status, only: [code: 1]
 
-  alias Ecto.Changeset
-  alias Faust.Accounts
-  alias Faust.Accounts.Organization
-
   describe "index" do
-    test "lists all organization when user is not authorized", %{conn: conn} do
+    test "redirects to session page when user is not authorized", %{conn: conn} do
       conn = get(conn, Routes.organization_path(conn, :index))
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
+
+    test "lists all organization when user is authorized", %{conn: conn} do
+      user = insert(:user)
+      insert_list(1, :organization)
+
+      conn =
+        conn
+        |> authorize_conn(user)
+        |> get(Routes.organization_path(conn, :index))
+
+      assert conn.status == code(:ok)
+      assert length(conn.assigns.organization) == 1
+    end
   end
 
-  test "lists all organization when user is authorized", %{conn: conn} do
-    user = insert(:user)
-    organization = insert_list(5, :organization)
+  describe "show organization" do
+    setup [:create_organization]
 
-    conn =
-      conn
-      |> authorize_conn(user)
-      |> get(Routes.organization_path(conn, :index))
+    test "redirects to session page when user is not authorized", %{
+      conn: conn,
+      organization: organization
+    } do
+      conn = get(conn, Routes.organization_path(conn, :show, organization))
 
-    assert conn.status == code(:ok)
-    assert length(conn.assigns.organization) == 5
- end
+      assert conn.status == code(:found)
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
+    end
 
- describe "show" do
-  test "redirects to show organization when user is not authorized", %{conn: conn} do
-    organization = insert(:organization)
-    conn = get(conn, Routes.organization_path(conn, :show, organization))
+    test "renders page when user is authorized", %{conn: conn, organization: organization} do
+      user = insert(:user)
 
-    assert conn.status == code(:found)
+      conn =
+        conn
+        |> authorize_conn(user)
+        |> get(Routes.organization_path(conn, :show, organization))
+
+      assert conn.status == code(:ok)
+      assert conn.assigns.organization.id == organization.id
+    end
   end
 
-  test "redirects to show organization when user is authorized", %{conn: conn} do
-    user = insert(:user)
-    organization = insert(:organization)
+  # Private functions ----------------------------------------------------------
 
-    conn =
-      conn
-      |> authorize_conn(user)
-      |> get(Routes.organization_path(conn, :show, organization), organization: organization_attrs())
-
-    assert conn.status == code(:ok)
-  end
- end
+  defp create_organization(_), do: {:ok, organization: insert(:organization)}
 end
