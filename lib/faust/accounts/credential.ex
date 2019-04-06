@@ -46,14 +46,14 @@ defmodule Faust.Accounts.Credential do
     credential
     |> cast(attrs, [:unique, :password])
     |> validate_required([:unique, :password])
-    |> validate_length(:password, min: 8, max: 16)
+    |> validate_length(:password, min: 8)
   end
 
   # Private functions ----------------------------------------------------------
 
   defp password_hash_pipeline(%Changeset{} = changeset) do
     changeset
-    |> validate_length(:password, min: 8, max: 16)
+    |> validate_length(:password, min: 8)
     |> validate_confirmation(:password)
     |> put_password_hash()
   end

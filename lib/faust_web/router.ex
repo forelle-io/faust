@@ -38,7 +38,7 @@ defmodule FaustWeb.Router do
     pipe_through [:browser, :maybe_authentication, :ensure_authentication]
 
     resources "/users", UserController, except: [:new, :create]
-    resources "/organization", OrganizationController
+    resources "/organization", OrganizationController, only: [:index, :show]
     resources "/chief", ChiefController
 
     delete "/session", SessionController, :delete
