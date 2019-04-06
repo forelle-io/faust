@@ -9,5 +9,4 @@
 
 </ul>
 
-<span><%= link "Edit", to: Routes.organization_path(@conn, :edit, @organization) %></span>
 <span><%= link "Back", to: Routes.organization_path(@conn, :index) %></span>
