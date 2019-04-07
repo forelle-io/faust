@@ -1,0 +1,12 @@
+{
+    "skip_files": [
+        "lib/faust.ex",
+        "lib/faust/repo.ex",
+        "lib/faust_web.ex",
+        "lib/faust_web/channels/user_socket.ex",
+        "lib/faust_web/endpoint.ex",
+        "lib/faust_web/gettext.ex",
+        "lib/faust_web/router.ex",
+        "test/"
+    ]
+}
