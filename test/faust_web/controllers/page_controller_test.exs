@@ -4,18 +4,21 @@ defmodule FaustWeb.PageControllerTest do
   use FaustWeb.ConnCase
 
   import Faust.Support.Factories
-  import Phoenix.Controller, only: [view_template: 1]
+  import Phoenix.Controller, only: [controller_module: 1, view_template: 1]
   import Plug.Conn.Status, only: [code: 1]
 
+  alias FaustWeb.PageController
+
   describe "index" do
-    test "get root page when user is not authorized", %{conn: conn} do
+    test "получение главной страницы, когда пользователь не авторизован", %{conn: conn} do
       conn = get(conn, "/")
 
       assert conn.status == code(:ok)
+      assert controller_module(conn) == PageController
       assert view_template(conn) == "index.html"
     end
 
-    test "show user page when he is authorized", %{conn: conn} do
+    test "редирект на страницу пользователя, когда пользователь авторизован", %{conn: conn} do
       user = insert(:user)
 
       conn =
