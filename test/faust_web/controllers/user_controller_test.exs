@@ -4,22 +4,21 @@ defmodule FaustWeb.UserControllerTest do
   use FaustWeb.ConnCase
 
   import Faust.Support.{AccountFixtures, Factories}
-  import Phoenix.Controller, only: [view_template: 1]
+  import Phoenix.Controller, only: [controller_module: 1, view_template: 1]
   import Plug.Conn.Status, only: [code: 1]
 
   alias Ecto.Changeset
-  alias Faust.Accounts
-  alias Faust.Accounts.User
+  alias FaustWeb.UserController
 
   describe "index" do
-    test "redirects to session page when user is not authorized", %{conn: conn} do
+    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :index))
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "lists all users when user is authorized", %{conn: conn} do
+    test "список всех пользователей, когда пользователь авторизован", %{conn: conn} do
       user = insert(:user)
 
       conn =
@@ -29,18 +28,23 @@ defmodule FaustWeb.UserControllerTest do
 
       assert conn.status == code(:ok)
       assert length(conn.assigns.users) == 1
+      assert controller_module(conn) == UserController
+      assert view_template(conn) == "index.html"
     end
   end
 
-  describe "new user" do
-    test "renders form when user is not authorized", %{conn: conn} do
+  describe "new" do
+    test "рендеринг страницы создания нового пользователя, когда пользователь не авторизован", %{
+      conn: conn
+    } do
       conn = get(conn, Routes.user_path(conn, :new))
 
       assert conn.status == code(:ok)
+      assert controller_module(conn) == UserController
       assert view_template(conn) == "new.html"
     end
 
-    test "renders form when user is authorized", %{conn: conn} do
+    test "редирект на страницу пользователя, когда пользователь авторизован", %{conn: conn} do
       user = insert(:user)
 
       conn =
@@ -53,17 +57,19 @@ defmodule FaustWeb.UserControllerTest do
     end
   end
 
-  describe "create user" do
-    test "redirects to show when data is valid and user is not authorized", %{conn: conn} do
+  describe "create" do
+    test "редирект на страницу создания сессии, когда данные валидны пользователь не авторизован",
+         %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: user_attrs())
 
       assert conn.status == code(:found)
       assert conn.private[:phoenix_flash]["info"] == "User created successfully."
       assert redirected_to(conn) == Routes.session_path(conn, :new)
-      assert %User{} = Accounts.get_user_by(%{name: "Name", surname: "Surname"})
     end
 
-    test "redirects to show when data is valid and user is authorized", %{conn: conn} do
+    test "редирект на страницу пользователя, когда данные валидны и пользователь авторизован", %{
+      conn: conn
+    } do
       user = insert(:user)
 
       conn =
@@ -75,14 +81,17 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.user_path(conn, :show, user)
     end
 
-    test "renders errors when data is invalid and user is not authorized", %{conn: conn} do
+    test "рендер ошибок, когда данные не валидны и пользователь не авторизован", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: %{user_attrs() | name: nil})
 
       assert conn.status == code(:ok)
       assert %Changeset{valid?: false} = conn.assigns.changeset
+      assert controller_module(conn) == UserController
+      assert view_template(conn) == "new.html"
     end
 
-    test "renders errors when data is invalid and user is authorized", %{conn: conn} do
+    test "редирект на страницу пользователя, когда данные не валидны и пользователь авторизован",
+         %{conn: conn} do
       user = insert(:user)
 
       conn =
@@ -95,16 +104,19 @@ defmodule FaustWeb.UserControllerTest do
     end
   end
 
-  describe "show user" do
+  describe "show" do
     setup [:create_user]
 
-    test "redirects to session page when user is not authorized", %{conn: conn, user: user} do
+    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{
+      conn: conn,
+      user: user
+    } do
       conn = get(conn, Routes.user_path(conn, :show, user))
 
       assert conn.status == code(:found)
     end
 
-    test "renders user page when user is authorized", %{conn: conn, user: user} do
+    test "рендер страницы пользователя, когда пользователь авторизован", %{conn: conn, user: user} do
       conn =
         conn
         |> authorize_conn(user)
@@ -112,13 +124,15 @@ defmodule FaustWeb.UserControllerTest do
 
       assert conn.status == code(:ok)
       assert conn.assigns.user.id == user.id
+      assert controller_module(conn) == UserController
+      assert view_template(conn) == "show.html"
     end
   end
 
-  describe "edit user" do
+  describe "edit" do
     setup [:create_user]
 
-    test "renders form for editing chosen user when he is not authorized", %{
+    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{
       conn: conn,
       user: user
     } do
@@ -128,7 +142,10 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "renders form for editing chosen user when he is authorized", %{conn: conn, user: user} do
+    test "рендер страницы редактирования пользователя, когда пользователь авторизован", %{
+      conn: conn,
+      user: user
+    } do
       conn =
         conn
         |> authorize_conn(user)
@@ -136,20 +153,28 @@ defmodule FaustWeb.UserControllerTest do
 
       assert conn.status == code(:ok)
       assert %Changeset{valid?: true} = conn.assigns.changeset
+      assert controller_module(conn) == UserController
+      assert view_template(conn) == "edit.html"
     end
   end
 
-  describe "update user" do
+  describe "update" do
     setup [:create_user]
 
-    test "redirects when data is valid and user is not authorized", %{conn: conn, user: user} do
+    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{
+      conn: conn,
+      user: user
+    } do
       conn = put(conn, Routes.user_path(conn, :update, user), user: %{name: "Faust"})
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "redirects when data is valid and user is authorized", %{conn: conn, user: user} do
+    test "редирект на страницу пользователя, когда данные валидны и пользователь авторизован", %{
+      conn: conn,
+      user: user
+    } do
       conn =
         conn
         |> authorize_conn(user)
@@ -160,17 +185,21 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.user_path(conn, :show, user)
     end
 
-    test "renders errors when data is invalid and user is not authorized", %{
-      conn: conn,
-      user: user
-    } do
+    test "редирект на страницу создания сессии, когда данные не валидны и пользователь не авторизован",
+         %{
+           conn: conn,
+           user: user
+         } do
       conn = put(conn, Routes.user_path(conn, :update, user), user: %{name: nil})
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "renders errors when data is invalid and user is authorized", %{conn: conn, user: user} do
+    test "рендер ошибок, когда данные не валидны и пользователь авторизован", %{
+      conn: conn,
+      user: user
+    } do
       conn =
         conn
         |> authorize_conn(user)
@@ -178,20 +207,26 @@ defmodule FaustWeb.UserControllerTest do
 
       assert conn.status == code(:ok)
       assert %Changeset{valid?: false} = conn.assigns.changeset
+      assert controller_module(conn) == UserController
+      assert view_template(conn) == "edit.html"
     end
   end
 
-  describe "delete user" do
+  describe "delete" do
     setup [:create_user]
 
-    test "deletes chosen user when user is not authorized", %{conn: conn, user: user} do
+    test "редирект на страницу создания сессии, когда данные не валидны и пользователь не авторизован",
+         %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "deletes chosen user when user is authorized", %{conn: conn, user: user} do
+    test "редирект на страницу списка всех пользователей, когда пользователь авторизован", %{
+      conn: conn,
+      user: user
+    } do
       conn =
         conn
         |> authorize_conn(user)

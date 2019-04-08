@@ -3,17 +3,20 @@ defmodule FaustWeb.OrganizationControllerTest do
   use FaustWeb.ConnCase
 
   import Faust.Support.Factories
+  import Phoenix.Controller, only: [controller_module: 1, view_template: 1]
   import Plug.Conn.Status, only: [code: 1]
 
+  alias FaustWeb.OrganizationController
+
   describe "index" do
-    test "redirects to session page when user is not authorized", %{conn: conn} do
+    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{conn: conn} do
       conn = get(conn, Routes.organization_path(conn, :index))
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "lists all organization when user is authorized", %{conn: conn} do
+    test "список всех организаций, когда когда пользователь авторизован", %{conn: conn} do
       user = insert(:user)
       insert_list(1, :organization)
 
@@ -24,13 +27,15 @@ defmodule FaustWeb.OrganizationControllerTest do
 
       assert conn.status == code(:ok)
       assert length(conn.assigns.organization) == 1
+      assert controller_module(conn) == OrganizationController
+      assert view_template(conn) == "index.html"
     end
   end
 
-  describe "show organization" do
+  describe "show" do
     setup [:create_organization]
 
-    test "redirects to session page when user is not authorized", %{
+    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{
       conn: conn,
       organization: organization
     } do
@@ -40,7 +45,10 @@ defmodule FaustWeb.OrganizationControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "renders page when user is authorized", %{conn: conn, organization: organization} do
+    test "рендеринг страницы организации, когда пользорватель авторизован", %{
+      conn: conn,
+      organization: organization
+    } do
       user = insert(:user)
 
       conn =
@@ -50,6 +58,8 @@ defmodule FaustWeb.OrganizationControllerTest do
 
       assert conn.status == code(:ok)
       assert conn.assigns.organization.id == organization.id
+      assert controller_module(conn) == OrganizationController
+      assert view_template(conn) == "show.html"
     end
   end
 
