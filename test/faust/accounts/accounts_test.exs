@@ -67,7 +67,7 @@ defmodule Faust.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_credential(credential)
     end
 
-    test "repo_preloadf/2 проверка двухсторонней связи с пользователем" do
+    test "repo_preload/2 проверка двухсторонней связи с пользователем" do
       user = user_fixture()
 
       %Credential{user: %User{id: user_id}} =
@@ -78,7 +78,7 @@ defmodule Faust.AccountsTest do
       assert user_id == user.id
     end
 
-    test "repo_preloadf/2 проверка двухсторонней связи с организацией" do
+    test "repo_preload/2 проверка двухсторонней связи с организацией" do
       organization = organization_fixture()
 
       %Credential{organization: %Organization{id: organization_id}} =
@@ -89,7 +89,7 @@ defmodule Faust.AccountsTest do
       assert organization_id == organization.id
     end
 
-    test "repo_preloadf/2 проверка двухсторонней связи с шефом" do
+    test "repo_preload/2 проверка двухсторонней связи с шефом" do
       chief = chief_fixture()
 
       %Credential{chief: %Chief{id: chief_id}} =

@@ -20,20 +20,27 @@
                 |> link(to: "/")
               %>
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
               <ul class="navbar-nav ml-auto">
                 <%= if current_user(@conn) do %>
                   <li class="nav-item">
-                    <%= link "Пользователи", to: Routes.user_path(@conn, :index), class: "nav-link" %>
+                    <a link href="#" class="nav-link">Поездки</a>
                   </li>
                   <li class="nav-item">
-                    <%= link "Организации", to: Routes.organization_path(@conn, :index), class: "nav-link" %>
+                    <a link href="#" class="nav-link">Водоемы</a>
                   </li>
-                  <li class="nav-item">
-                    <%= link "Выход", to: Routes.session_path(@conn, :delete, [action: "user"]), method: :delete, class: "nav-link" %>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <%= current_user(@conn).credential.unique %>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <%= link "Мой аккаунт", to: Routes.user_path(@conn, :show, current_user(@conn)), class: "dropdown-item" %>
+                      <a href="#" class="dropdown-item">Мои поездки</a>
+                      <a href="#" class="dropdown-item">Мои водоемы</a>
+                      <div class="dropdown-divider"></div>
+                      <%= link "Редактировать", to: Routes.user_path(@conn, :edit, current_user(@conn)), class: "dropdown-item" %>
+                      <%= link "Выход", to: Routes.session_path(@conn, :delete, [action: "user"]), method: :delete, class: "dropdown-item" %>
+                    </div>
                   </li>
                 <% else %>
                   <li class="nav-item">

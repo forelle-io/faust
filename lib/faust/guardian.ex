@@ -4,6 +4,7 @@ defmodule Faust.Guardian do
   use Guardian, otp_app: :faust
 
   alias Faust.Accounts
+  alias Faust.Repo
 
   def subject_for_token(resource, _claims) do
     prefix_from_subject = fetch_prefix_from_subject(resource)
@@ -38,7 +39,7 @@ defmodule Faust.Guardian do
         {:error, :not_found}
 
       resource ->
-        {:ok, resource}
+        {:ok, Repo.preload(resource, :credential)}
     end
   end
 
