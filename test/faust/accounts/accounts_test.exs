@@ -7,15 +7,16 @@ defmodule Faust.AccountsTest do
 
   alias Faust.Accounts
   alias Faust.Accounts.{Chief, Credential, Organization, User}
+  alias Faust.Repo
 
   describe "credentials" do
-    test "list_credentials/0 returns all credentials" do
+    test "list_credentials/0 возврат всех удостоверений" do
       insert_list(5, :credential)
 
       assert Accounts.list_credentials() |> length() == 5
     end
 
-    test "get_credential!/1 returns the credential with given id" do
+    test "get_credential!/1 возврат удостоверения по переданному id" do
       credential = insert(:credential)
 
       with %Credential{id: id} <- Accounts.get_credential!(credential.id) do
@@ -23,7 +24,7 @@ defmodule Faust.AccountsTest do
       end
     end
 
-    test "create_credential/1 with valid data creates a credential" do
+    test "create_credential/1 с валидными данными создание удостоверения" do
       {:ok, %Credential{} = credential} =
         credential_attrs()
         |> Accounts.create_credential()
@@ -33,11 +34,11 @@ defmodule Faust.AccountsTest do
       assert Bcrypt.verify_pass("password", credential.password_hash)
     end
 
-    test "create_credential/1 with invalid data returns error changeset" do
+    test "create_credential/1 с невалидными данными возврат ошибочного changeset" do
       assert {:error, %Ecto.Changeset{} = changeset} = Accounts.create_credential(%{unique: nil})
     end
 
-    test "update_credential/2 with valid data updates the credential" do
+    test "update_credential/2 с валидными данными обновление удостоверения" do
       credential = insert(:credential)
 
       assert {:ok, %Credential{} = credential} =
@@ -47,34 +48,67 @@ defmodule Faust.AccountsTest do
       assert Bcrypt.verify_pass("password", credential.password_hash)
     end
 
-    test "update_credential/2 with invalid data returns error changeset" do
+    test "update_credential/2 с невалидными данными возврат ошибочного changeset" do
       credential = insert(:credential)
 
       assert {:error, %Ecto.Changeset{}} = Accounts.update_credential(credential, %{email: nil})
     end
 
-    test "delete_credential/1 deletes the credential" do
+    test "delete_credential/1 удаление удостоверения" do
       credential = insert(:credential)
 
       assert {:ok, %Credential{}} = Accounts.delete_credential(credential)
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_credential!(credential.id) end
     end
 
-    test "change_credential/1 returns a credential changeset" do
+    test "change_credential/1 возврат changeset удостоверения" do
       credential = insert(:credential)
 
       assert %Ecto.Changeset{} = Accounts.change_credential(credential)
     end
+
+    test "repo_preloadf/2 проверка двухсторонней связи с пользователем" do
+      user = user_fixture()
+
+      %Credential{user: %User{id: user_id}} =
+        user.credential.id
+        |> Accounts.get_credential!()
+        |> Repo.preload(:user)
+
+      assert user_id == user.id
+    end
+
+    test "repo_preloadf/2 проверка двухсторонней связи с организацией" do
+      organization = organization_fixture()
+
+      %Credential{organization: %Organization{id: organization_id}} =
+        organization.credential.id
+        |> Accounts.get_credential!()
+        |> Repo.preload(:organization)
+
+      assert organization_id == organization.id
+    end
+
+    test "repo_preloadf/2 проверка двухсторонней связи с шефом" do
+      chief = chief_fixture()
+
+      %Credential{chief: %Chief{id: chief_id}} =
+        chief.credential.id
+        |> Accounts.get_credential!()
+        |> Repo.preload(:chief)
+
+      assert chief_id == chief.id
+    end
   end
 
   describe "organization" do
-    test "list_organization/0 returns all organization" do
+    test "list_organization/0 возврат всех организаций" do
       insert_list(5, :organization)
 
       assert Accounts.list_organization() |> length() == 5
     end
 
-    test "get_organization!/1 returns the organization with given id" do
+    test "get_organization!/1 возврат организации по переданному id" do
       organization = insert(:organization)
 
       with %Organization{id: id} <- Accounts.get_organization!(organization.id) do
@@ -82,7 +116,7 @@ defmodule Faust.AccountsTest do
       end
     end
 
-    test "create_organization/1 with valid data creates a organization" do
+    test "create_organization/1 с валидными данными создание организации" do
       {:ok, %Organization{} = organization} =
         organization_attrs()
         |> Accounts.create_organization()
@@ -91,11 +125,11 @@ defmodule Faust.AccountsTest do
       assert organization.address == "Address"
     end
 
-    test "create_organization/1 with invalid data returns error changeset" do
+    test "create_organization/1 с невалидными данными возврат ошибочного changeset" do
       assert {:error, %Ecto.Changeset{} = changeset} = Accounts.create_credential(%{name: nil})
     end
 
-    test "update_organization/2 with valid data updates the organization" do
+    test "update_organization/2 с валидными данными обновление организации" do
       organization = insert(:organization)
 
       assert {:ok, %Organization{} = organization} =
@@ -110,21 +144,21 @@ defmodule Faust.AccountsTest do
       assert organization.address == "Address"
     end
 
-    test "update_organization/2 with invalid data returns error changeset" do
+    test "update_organization/2 с невалидными данными возврат ошибочного changeset" do
       organization = insert(:organization)
 
       assert {:error, %Ecto.Changeset{}} =
                Accounts.update_organization(organization, %{name: nil, address: nil})
     end
 
-    test "delete_organization/1 deletes the organization" do
+    test "delete_organization/1 удаление организации" do
       organization = insert(:organization)
 
       assert {:ok, %Organization{}} = Accounts.delete_organization(organization)
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_organization!(organization.id) end
     end
 
-    test "change_organization/1 returns a organization changeset" do
+    test "change_organization/1 возврат changeset организации" do
       organization = insert(:organization)
 
       assert %Ecto.Changeset{} = Accounts.change_organization(organization)
@@ -132,13 +166,13 @@ defmodule Faust.AccountsTest do
   end
 
   describe "chief" do
-    test "list_chief/0 returns all chief" do
+    test "list_chief/0 возврат всех шефов" do
       insert_list(5, :chief)
 
       assert Accounts.list_chief() |> length() == 5
     end
 
-    test "get_chief!/1 returns the chief with given id" do
+    test "get_chief!/1 возврат шефа по переданному id" do
       chief = insert(:chief)
 
       with %Chief{id: id} <- Accounts.get_chief!(chief.id) do
@@ -146,58 +180,40 @@ defmodule Faust.AccountsTest do
       end
     end
 
-    test "create_credential/1 with valid data creates a credential" do
-      {:ok, %Credential{} = credential} =
-        credential_attrs()
-        |> Accounts.create_credential()
+    test "create_chief/1 с валидными данными создание шефа" do
+      {:ok, %Chief{} = chief} =
+        chief_attrs()
+        |> Accounts.create_chief()
 
-      assert credential.unique == "unique"
-      assert credential.email == "unique@forelle.io"
-      assert Bcrypt.verify_pass("password", credential.password_hash)
+      assert chief
     end
 
-    test "create_credential/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.create_credential(%{unique: nil})
+    test "create_chief/1 с невалидными данными возврат ошибочного changeset" do
+      assert {:error, %Ecto.Changeset{} = changeset} = Accounts.create_chief(%{})
     end
 
-    test "update_credential/2 with valid data updates the credential" do
-      credential = insert(:credential)
+    test "delete_chief/1 удаление шефа" do
+      chief = insert(:chief)
 
-      assert {:ok, %Credential{} = credential} =
-               Accounts.update_credential(credential, %{email: "faust@forelle.io"})
-
-      assert credential.email == "faust@forelle.io"
-      assert Bcrypt.verify_pass("password", credential.password_hash)
+      assert {:ok, %Chief{}} = Accounts.delete_chief(chief)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_chief!(chief.id) end
     end
 
-    test "update_credential/2 with invalid data returns error changeset" do
-      credential = insert(:credential)
+    test "change_chief/1 возврат changeset шефа" do
+      chief = insert(:chief)
 
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_credential(credential, %{email: nil})
-    end
-
-    test "delete_credential/1 deletes the credential" do
-      credential = insert(:credential)
-
-      assert {:ok, %Credential{}} = Accounts.delete_credential(credential)
-      assert_raise Ecto.NoResultsError, fn -> Accounts.get_credential!(credential.id) end
-    end
-
-    test "change_credential/1 returns a credential changeset" do
-      credential = insert(:credential)
-
-      assert %Ecto.Changeset{} = Accounts.change_credential(credential)
+      assert %Ecto.Changeset{} = Accounts.change_chief(chief)
     end
   end
 
   describe "user" do
-    test "list_user/0 returns all user" do
+    test "list_user/0 возврат всех пользователей" do
       insert_list(5, :user)
 
       assert Accounts.list_users() |> length() == 5
     end
 
-    test "get_user!/1 returns the user with given id" do
+    test "get_user!/1 возврат пользователя по переданному id" do
       user = insert(:user)
 
       with %User{id: id} <- Accounts.get_user!(user.id) do
@@ -205,7 +221,7 @@ defmodule Faust.AccountsTest do
       end
     end
 
-    test "create user/1 with valid data creates a user" do
+    test "create user/1 с валидными данными создание пользователя" do
       {:ok, %User{} = user} =
         user_attrs()
         |> Accounts.create_user()
@@ -214,11 +230,11 @@ defmodule Faust.AccountsTest do
       assert user.surname == "Surname"
     end
 
-    test "create_user/1 with invalid data returns error changeset" do
+    test "create_user/1 с невалидными данными возврат ошибочного changeset" do
       assert {:error, %Ecto.Changeset{} = changeset} = Accounts.create_user(%{name: nil})
     end
 
-    test "update_user/2 with valid data updates the user" do
+    test "update_user/2 в валидными данными обновление пользователя" do
       user = insert(:user)
 
       assert {:ok, %User{} = user} =
@@ -233,20 +249,20 @@ defmodule Faust.AccountsTest do
       assert user.birthday == ~D[2000-05-01]
     end
 
-    test "update_user/2 with invalid data returns error changeset" do
+    test "update_user/2 с невалидными данными возврат ошибочного changeset" do
       user = insert(:user)
 
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, %{name: nil, surname: nil})
     end
 
-    test "delete user/1 deletes the user" do
+    test "delete user/1 удаление пользователя" do
       user = insert(:user)
 
       assert {:ok, %User{}} = Accounts.delete_user(user)
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
     end
 
-    test "change_user/1 returns a user changeset" do
+    test "change_user/1 возврат changeset пользователя" do
       user = insert(:user)
 
       assert %Ecto.Changeset{} = Accounts.change_user(user)
