@@ -27,7 +27,7 @@ defmodule Faust.MixProject do
   def application do
     [
       mod: {Faust.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :alchemic_avatar]
     ]
   end
 
@@ -52,6 +52,7 @@ defmodule Faust.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:bcrypt_elixir, "~> 1.1"},
       {:guardian, "~> 1.2"},
+      {:alchemic_avatar, "~> 0.1.0"},
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.3", only: :test}
