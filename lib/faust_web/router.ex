@@ -17,8 +17,8 @@ defmodule FaustWeb.Router do
     plug FaustWeb.GuardianPipelinePlug
   end
 
-  pipeline :without_authentication do
-    plug FaustWeb.WithoutAuthenticationPlug, key: :user
+  pipeline :ensure_not_authenticated do
+    plug Guardian.Plug.EnsureNotAuthenticated, key: :user
   end
 
   pipeline :ensure_authentication do
@@ -26,7 +26,7 @@ defmodule FaustWeb.Router do
   end
 
   scope "/", FaustWeb do
-    pipe_through [:browser, :maybe_authentication, :without_authentication]
+    pipe_through [:browser, :maybe_authentication, :ensure_not_authenticated]
 
     get "/", PageController, :index
 

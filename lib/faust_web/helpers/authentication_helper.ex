@@ -39,36 +39,23 @@ defmodule FaustWeb.AuthenticationHelper do
   def sign_out(%Conn{} = conn, %{"action" => action})
       when action in ["user", "credential", "chief"] do
     conn
-    |> Faust.Guardian.Plug.sign_out(key: String.to_atom(action))
+    |> Guardian.Plug.sign_out(key: String.to_atom(action))
     |> redirect(to: "/")
   end
 
   def sign_out(%Conn{} = conn, _), do: redirect(conn, to: "/")
 
-  def auth_error(%Conn{} = conn, {_type, _reason}, _opts) do
-    conn
-    |> put_flash(:error, "Please, sign in")
-    |> redirect(to: Router.session_path(conn, :new))
-  end
-
   def current_user(%Conn{} = conn) do
-    guardian_current_resource(conn, :user)
+    Guardian.Plug.current_resource(conn, key: :user)
   end
 
   def current_organization(%Conn{} = conn) do
-    guardian_current_resource(conn, :organization)
+    Guardian.Plug.current_resource(conn, key: :organization)
   end
 
   def current_chief(%Conn{} = conn) do
-    guardian_current_resource(conn, :chief)
+    Guardian.Plug.current_resource(conn, key: :chief)
   end
-
-  def guardian_current_resource(%Conn{} = conn, key)
-      when key in [:user, :organization, :chief] do
-    Guardian.Plug.current_resource(conn, key: key)
-  end
-
-  def guardian_current_resource(_, _), do: nil
 
   # Private functions ----------------------------------------------------------
 

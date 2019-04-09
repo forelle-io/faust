@@ -6,7 +6,7 @@ defmodule FaustWeb.GuardianPipelinePlug do
   use Pipeline,
     otp_app: :faust,
     module: Faust.Guardian,
-    error_handler: FaustWeb.AuthenticationHelper
+    error_handler: FaustWeb.GuardianAuthErrorHandler
 
   plug VerifySession, key: :user
   plug VerifyHeader, key: :user
