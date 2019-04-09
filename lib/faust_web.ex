@@ -23,7 +23,13 @@ defmodule FaustWeb do
 
       import Plug.Conn
       import FaustWeb.Gettext
-      import FaustWeb.AuthenticationHelper, only: [current_user: 1]
+
+      import FaustWeb.AuthenticationHelper,
+        only: [
+          current_user: 1,
+          authenticated_user?: 1
+        ]
+
       alias FaustWeb.Router.Helpers, as: Routes
     end
   end
@@ -43,7 +49,13 @@ defmodule FaustWeb do
 
       import FaustWeb.ErrorHelpers
       import FaustWeb.Gettext
-      import FaustWeb.AuthenticationHelper, only: [current_user: 1]
+
+      import FaustWeb.AuthenticationHelper,
+        only: [
+          current_user: 1,
+          authenticated_user?: 1
+        ]
+
       alias FaustWeb.Router.Helpers, as: Routes
     end
   end

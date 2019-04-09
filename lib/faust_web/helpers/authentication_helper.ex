@@ -57,6 +57,18 @@ defmodule FaustWeb.AuthenticationHelper do
     Guardian.Plug.current_resource(conn, key: :chief)
   end
 
+  def authenticated_user?(%Conn{} = conn) do
+    Guardian.Plug.authenticated?(conn, key: :user)
+  end
+
+  def authenticated_organization?(%Conn{} = conn) do
+    Guardian.Plug.authenticated?(conn, key: :organization)
+  end
+
+  def authenticated_chief?(%Conn{} = conn) do
+    Guardian.Plug.authenticated?(conn, key: :chief)
+  end
+
   # Private functions ----------------------------------------------------------
 
   defp prepare_current_resource(%Credential{} = credential, association)

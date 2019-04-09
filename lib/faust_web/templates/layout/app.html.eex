@@ -22,7 +22,7 @@
             </a>
             <div class="collapse navbar-collapse" id="navbarResponsive">
               <ul class="navbar-nav ml-auto">
-                <%= if current_user(@conn) do %>
+                <%= if authenticated_user?(@conn) do %>
                   <li class="nav-item">
                     <a link href="#" class="nav-link">Поездки</a>
                   </li>

@@ -28,7 +28,7 @@ defmodule FaustWeb.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
+    user = get_user_with_preloads(id, :credential)
     render(conn, "show.html", user: user)
   end
 
@@ -62,6 +62,7 @@ defmodule FaustWeb.UserController do
   end
 
   # Private functions ----------------------------------------------------------
+
   defp get_user_with_preloads(id, preloads) do
     id
     |> Accounts.get_user!()
