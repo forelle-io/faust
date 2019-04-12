@@ -28,18 +28,18 @@ defmodule FaustWeb.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = get_user_with_preloads(id, :credential)
+    user = user_preloader(conn, id)
     render(conn, "show.html", user: user)
   end
 
   def edit(conn, %{"id" => id}) do
-    user = get_user_with_preloads(id, :credential)
+    user = user_preloader(conn, id)
     changeset = Accounts.change_user(user)
     render(conn, "edit.html", user: user, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = get_user_with_preloads(id, :credential)
+    user = user_preloader(conn, id)
 
     case Accounts.update_user(user, user_params) do
       {:ok, user} ->
@@ -63,9 +63,15 @@ defmodule FaustWeb.UserController do
 
   # Private functions ----------------------------------------------------------
 
-  defp get_user_with_preloads(id, preloads) do
-    id
-    |> Accounts.get_user!()
-    |> Repo.preload(preloads)
+  defp user_preloader(conn, id) do
+    current_user = current_user(conn)
+
+    if current_user && current_user.id == String.to_integer(id) do
+      Repo.preload(current_user, :fishes)
+    else
+      id
+      |> Accounts.get_user!()
+      |> Repo.preload([:credential, :fishes])
+    end
   end
 end

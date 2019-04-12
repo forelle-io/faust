@@ -6,6 +6,7 @@ defmodule Faust.Accounts.User do
   import Ecto.Changeset
 
   alias Faust.Accounts.Credential
+  alias Faust.Fishing.Fish
 
   schema "users" do
     field :name, :string
@@ -13,6 +14,8 @@ defmodule Faust.Accounts.User do
     field :birthday, :date
 
     timestamps()
+
+    many_to_many :fishes, Fish, join_through: "fishes_users"
 
     belongs_to :credential, Credential
   end

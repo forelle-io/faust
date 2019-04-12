@@ -2,7 +2,7 @@ defmodule Faust.Repo.Migrations.CreateOrganization do
   use Ecto.Migration
 
   def change do
-    create table(:organization) do
+    create table(:organizations) do
       add :name, :string, null: false
       add :description, :text
       add :address, :string, null: false
@@ -11,6 +11,6 @@ defmodule Faust.Repo.Migrations.CreateOrganization do
       timestamps()
     end
 
-    create unique_index(:organization, :credential_id)
+    create unique_index(:organizations, :credential_id)
   end
 end

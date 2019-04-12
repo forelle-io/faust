@@ -49,7 +49,7 @@ defmodule Faust.Accounts.Credential do
     |> validate_length(:password, min: 8)
   end
 
-  # Private functions ----------------------------------------------------------
+  # Приватные функции ----------------------------------------------------------
 
   defp password_hash_pipeline(%Changeset{} = changeset) do
     changeset
