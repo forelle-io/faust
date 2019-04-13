@@ -22,7 +22,7 @@
   </li>
   <li>
     <strong>Почта:</strong>
-    <%= @user.surname %>
+    <%= @user.credential.email %>
   </li>
 </ul>
 

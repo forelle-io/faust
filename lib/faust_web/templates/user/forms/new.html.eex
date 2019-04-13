@@ -29,12 +29,12 @@
       </div>
 
       <div class="form-group">
-        <%= text_input c, :password, placeholder: "Пароль", class: "form-control" %>
+        <%= password_input c, :password, placeholder: "Пароль", class: "form-control" %>
         <%= error_tag c, :password %>
       </div>
 
       <div class="form-group">
-        <%= text_input c, :password_confirmation, placeholder: "Подтвердите пароль", class: "form-control" %>
+        <%= password_input c, :password_confirmation, placeholder: "Подтвердите пароль", class: "form-control" %>
         <%= error_tag c, :password_confirmation %>
         <small class="text-muted">В целях безопасности Ваш пароль должен содержать не менее 8 символов</small>
       </div>
