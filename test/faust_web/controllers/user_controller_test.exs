@@ -241,7 +241,7 @@ defmodule FaustWeb.UserControllerTest do
     end
   end
 
-  # Private functions ----------------------------------------------------------
+  # Приватные функции ----------------------------------------------------------
 
   defp create_user(_), do: {:ok, user: insert(:user)}
 end

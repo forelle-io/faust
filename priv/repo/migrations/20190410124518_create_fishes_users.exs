@@ -7,6 +7,8 @@ defmodule Faust.Repo.Migrations.CreateUsersFishes do
       add :fish_id, references(:fishes, on_delete: :delete_all)
     end
 
+    create index(:fishes_users, [:user_id])
+    create index(:fishes_users, [:fish_id])
     create unique_index(:fishes_users, [:user_id, :fish_id])
   end
 end

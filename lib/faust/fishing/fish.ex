@@ -3,16 +3,15 @@ defmodule Faust.Fishing.Fish do
 
   use Ecto.Schema
 
-  import Ecto.Changeset
-  import Ecto.Query, only: [from: 2]
+  import Ecto.{Changeset, Query}
 
-  alias __MODULE__
   alias Faust.Accounts.User
+  alias Faust.Fishing.Fish
 
   schema "fishes" do
-    field :name, :string
+    field :name, :string, default: false
 
-    many_to_many :users, User, join_through: "fishes_users"
+    many_to_many :users, User, join_through: "fishes_users", on_replace: :delete
   end
 
   # Changesets -----------------------------------------------------------------
@@ -27,5 +26,12 @@ defmodule Faust.Fishing.Fish do
     fish
     |> cast(attrs, [:name])
     |> validate_required([:name])
+  end
+
+  # SQL запрос -----------------------------------------------------------------
+
+  def list_fishes_query(ids) do
+    from f in Fish,
+      where: f.id in ^ids
   end
 end

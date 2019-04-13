@@ -41,7 +41,7 @@ defmodule FaustWeb.UserController do
   def update(conn, %{"id" => id, "user" => user_params}) do
     user = user_preloader(conn, id)
 
-    case Accounts.update_user(user, user_params) do
+    case Accounts.update_user(user, handle_user_params(user, user_params)) do
       {:ok, user} ->
         conn
         |> put_flash(:info, "User updated successfully.")
@@ -61,7 +61,7 @@ defmodule FaustWeb.UserController do
     |> redirect(to: Routes.user_path(conn, :index))
   end
 
-  # Private functions ----------------------------------------------------------
+  # Приватные функции ----------------------------------------------------------
 
   defp user_preloader(conn, id) do
     current_user = current_user(conn)
@@ -72,6 +72,31 @@ defmodule FaustWeb.UserController do
       id
       |> Accounts.get_user!()
       |> Repo.preload([:credential, :fishes])
+    end
+  end
+
+  defp handle_user_params(user, user_params) do
+    handle_fish_params(user_params, user.fishes)
+  end
+
+  def handle_fish_params(user_params, user_fishes)
+      when is_map(user_params) and is_list(user_fishes) do
+    case user_params do
+      %{"fishes_ids" => []} ->
+        user_params
+
+      %{"fishes_ids" => fishes} ->
+        user_fishes = Enum.map(user_fishes, & &1.id)
+        fishes = Enum.map(fishes, &String.to_integer/1)
+
+        if Enum.sort(user_fishes) == Enum.sort(fishes) do
+          %{user_params | "fishes_ids" => nil}
+        else
+          user_params
+        end
+
+      _ ->
+        user_params
     end
   end
 end

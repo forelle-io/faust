@@ -16,6 +16,12 @@ defmodule Faust.Fishing do
     Repo.all(Fish)
   end
 
+  def list_fishes(ids) when is_list(ids) do
+    ids
+    |> Fish.list_fishes_query()
+    |> Repo.all()
+  end
+
   def get_fish!(id), do: Repo.get!(Fish, id)
 
   def create_fish(attrs \\ %{}) do

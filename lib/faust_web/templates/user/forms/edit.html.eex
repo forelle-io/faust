@@ -53,14 +53,14 @@
       <%= label c, "Новый пароль" %>
       <%= text_input c, :password, class: "form-control" %>
       <%= error_tag c, :password %>
-      <small class="text-muted">В целях безопасности, Ваш пароль должен содержит не менее 8 символов</small>
+      <small class="text-muted">В целях безопасности Ваш пароль должен содержать не менее 8 символов</small>
     </div>
     
     <div class="form-group">
       <%= label c, "Повторите новый пароль" %>
       <%= text_input c, :password_confirmation, class: "form-control" %>
       <%= error_tag c, :password_confirmation %>
-      <small class="text-muted">В целях безопасности, Ваш пароль подтверждения должен содержит не менее 8 символов</small>
+      <small class="text-muted">В целях безопасности Ваш пароль подтверждения должен содержать не менее 8 символов</small>
     </div>
   
   <% end %>
@@ -71,8 +71,8 @@
   <hr>
 
   <div class="form-group">
-      <%= label f, :fishes, "Виды рыб" %>
-      <%= multiple_select f, :fishes, fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), class: "form-control" %>
+      <%= label f, :fishes_ids, "Виды рыб" %>
+      <%= multiple_select f, :fishes_ids, fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), class: "form-control" %>
   </div>
 
   <div class="row">
