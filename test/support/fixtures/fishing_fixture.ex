@@ -1,7 +1,6 @@
-# Add there fish model fixture as in user , chief in AccountFixture
 defmodule Faust.Support.FishesFixtures do
   @moduledoc false
-  alias Faust.Fishing
+
   alias Faust.Fishing.Fish
 
   @fish_attrs %{

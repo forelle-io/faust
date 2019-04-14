@@ -37,10 +37,9 @@ defmodule Faust.Support.Factories do
     }
   end
 
-  # Add there the fish factory
   def fish_factory do
     %Fish{
-      name: sequence(:name, &"Name#{&1}")
+      name: sequence(:name, &"name#{&1}")
     }
   end
 end

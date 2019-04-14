@@ -1,4 +1,3 @@
-# write there your test from notepad
 defmodule Faust.FishingTest do
   @moduledoc false
 
@@ -42,10 +41,10 @@ defmodule Faust.FishingTest do
 
       assert {:ok, %Fish{} = fish} =
                Fishing.update_fish(fish, %{
-                 name: "щука"
+                 name: "окунь"
                })
 
-      assert fish.name == "щука"
+      assert fish.name == "окунь"
     end
 
     test "update_fish/2 с невалидными данными возврат ошибочного changeset" do
