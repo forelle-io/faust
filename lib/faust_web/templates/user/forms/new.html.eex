@@ -52,4 +52,10 @@
     </small>
   </div>
   
+  <div class="row">
+    <small class="col-md-12 form-group text-center text-muted">
+      Есть аккаунт?
+      <%= link "Войти" , to: Routes.session_path(@conn, :new), class: "submit"%>
+    </small>   
+  </div>
 <% end %>
