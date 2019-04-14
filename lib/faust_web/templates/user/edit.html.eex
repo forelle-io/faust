@@ -1,5 +1,9 @@
-<h1>Edit User</h1>
+<div class="row">
+    <div class="col-md-8 media-hide-block">
+        <h1>Редактирование пользователя</h1>
+    </div>
+    <div class="col-md-4">
+        <%= render "forms/edit.html", Map.put(assigns, :action, Routes.user_path(@conn, :update, @user)) %>
+    </div>
+</div>
 
-<%= render "forms/edit.html", Map.put(assigns, :action, Routes.user_path(@conn, :update, @user)) %>
-
-<span><%= link "Back", to: Routes.user_path(@conn, :index) %></span>

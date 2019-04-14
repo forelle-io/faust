@@ -1,22 +1,36 @@
-<h1>Show User</h1>
-
+<h3>Информация о пользователе</h3>
 <ul>
-
   <li>
-    <strong>Name:</strong>
+    <strong>Имя:</strong>
     <%= @user.name %>
   </li>
-
   <li>
-    <strong>Surname:</strong>
+    <strong>Фамилия:</strong>
     <%= @user.surname %>
   </li>
-
   <li>
-    <strong>Birthday:</strong>
+    <strong>День рождения:</strong>
     <%= @user.birthday %>
   </li>
+</ul>
 
+<h3>Информация удостоверения</h3>
+<ul>
+  <li>
+    <strong>Логин</strong>
+    <%= @user.credential.unique %>
+  </li>
+  <li>
+    <strong>Почта:</strong>
+    <%= @user.credential.email %>
+  </li>
+</ul>
+
+<h3>Предпочитаемая рыба</h3>
+<ul>
+  <%= for fish <- @user.fishes do %>
+      <li><%= fish.name %></li>
+    <% end %>
 </ul>
 
 <span><%= link "Edit", to: Routes.user_path(@conn, :edit, @user) %></span>

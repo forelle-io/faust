@@ -61,7 +61,7 @@ defmodule FaustWeb.ChiefController do
     |> redirect(to: Routes.chief_path(conn, :index))
   end
 
-  # Private functions ----------------------------------------------------------
+  # Приватные функции ----------------------------------------------------------
 
   defp get_chief_with_preloads(id, preloads) do
     id

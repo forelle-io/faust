@@ -16,7 +16,7 @@
     </div>
 
     <div class="col-12 form-group">
-      <%= text_input f, :password, placeholder: "Пароль", class: "form-control" %>
+      <%= password_input f, :password, placeholder: "Пароль", class: "form-control" %>
       <%= error_tag f, :password %>
     </div>
   </div>

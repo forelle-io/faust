@@ -12,9 +12,10 @@ defmodule Faust.Accounts.Credential do
     field :unique, :string
     field :phone, :string
     field :email, :string
+    field :password_hash, :string
+
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
-    field :password_hash, :string
 
     timestamps()
 
@@ -49,7 +50,7 @@ defmodule Faust.Accounts.Credential do
     |> validate_length(:password, min: 8)
   end
 
-  # Private functions ----------------------------------------------------------
+  # Приватные функции ----------------------------------------------------------
 
   defp password_hash_pipeline(%Changeset{} = changeset) do
     changeset

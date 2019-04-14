@@ -5,33 +5,79 @@
     </div>
   <% end %>
 
-  <%= label f, :name %>
-  <%= text_input f, :name %>
-  <%= error_tag f, :name %>
-
-  <%= label f, :surname %>
-  <%= text_input f, :surname %>
-  <%= error_tag f, :surname %>
-
-  <%= label f, :birthday %>
-  <%= date_select f, :birthday %>
-  <%= error_tag f, :birthday %>
-  
-  <%= inputs_for f, :credential, fn c -> %>
-      <%= label c, :email %>
-      <%= text_input c, :email %>
-      <%= error_tag c, :email %>
-
-      <%= label c, :password %>
-      <%= text_input c, :password %>
-      <%= error_tag c, :password %>
-
-      <%= label c, :password_confirmation %>
-      <%= text_input c, :password_confirmation %>
-      <%= error_tag c, :password_confirmation %>
-  <% end %>
-  
   <div>
-    <%= submit "Save" %>
+    <h4>Аккаунт</h4>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-6 form-group">
+      <%= label f, "Имя" %>
+      <%= text_input f, :name, class: "form-control" %>
+      <%= error_tag f, :name %>
+    </div>
+    <div class="col-6 form-group">
+      <%= label f, "Фамилия" %>
+      <%= text_input f, :surname, class: "form-control" %>
+      <%= error_tag f, :surname %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= label f, "День рождения" %>
+    <%= date_select f, :birthday %>
+    <%= error_tag f, :birthday %>
+  </div>
+
+  <div>
+    <h4>Удостоверение</h4>
+  </div>
+  <hr>
+
+  <%= inputs_for f, :credential, fn c -> %>
+
+    <div class="form-group">
+      <%= label c, "Логин" %>
+      <%= text_input c, :unique, class: "form-control", disabled: true %>
+      <%= error_tag c, :unique %>
+    </div>
+
+    <div class="form-group">
+      <%= label c, "Почта" %>
+      <%= text_input c, :email, class: "form-control" %>
+      <%= error_tag c, :email %>
+    </div>
+    
+    <div class="form-group">
+      <%= label c, "Новый пароль" %>
+      <%= text_input c, :password, class: "form-control" %>
+      <%= error_tag c, :password %>
+      <small class="text-muted">В целях безопасности Ваш пароль должен содержать не менее 8 символов</small>
+    </div>
+    
+    <div class="form-group">
+      <%= label c, "Повторите новый пароль" %>
+      <%= password_input c, :password_confirmation, class: "form-control" %>
+      <%= error_tag c, :password_confirmation %>
+      <small class="text-muted">В целях безопасности Ваш пароль подтверждения должен содержать не менее 8 символов</small>
+    </div>
+  
+  <% end %>
+
+  <div>
+    <h4>Специализация</h4>
+  </div>
+  <hr>
+
+  <div class="form-group">
+      <%= label f, :fishes_ids, "Виды рыб" %>
+      <%= multiple_select f, :fishes_ids, fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), class: "form-control" %>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 form-group">
+      <%= submit "Сохранить", class: "btn btn-outline-success btn-lg btn-block" %>
+    </div>
   </div>
 <% end %>
