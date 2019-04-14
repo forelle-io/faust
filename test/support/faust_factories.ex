@@ -4,6 +4,7 @@ defmodule Faust.Support.Factories do
   use ExMachina.Ecto, repo: Faust.Repo
 
   alias Faust.Accounts.{Chief, Credential, Organization, User}
+  alias Faust.Fishing.Fish
 
   def credential_factory do
     %Credential{
@@ -33,6 +34,13 @@ defmodule Faust.Support.Factories do
   def chief_factory do
     %Chief{
       credential: build(:credential)
+    }
+  end
+
+  # Add there the fish factory
+  def fish_factory do
+    %Fish{
+      name: sequence(:name, &"Name#{&1}")
     }
   end
 end
