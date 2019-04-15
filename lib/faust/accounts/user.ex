@@ -9,6 +9,7 @@ defmodule Faust.Accounts.User do
   alias Faust.Accounts.Credential
   alias Faust.Fishing
   alias Faust.Fishing.Fish
+  alias FaustWeb.UserPolicy
 
   schema "users" do
     field :name, :string
@@ -23,6 +24,8 @@ defmodule Faust.Accounts.User do
 
     belongs_to :credential, Credential
   end
+
+  defdelegate authorize(action, current_user, resource), to: UserPolicy
 
   # Changesets -----------------------------------------------------------------
 

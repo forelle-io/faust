@@ -7,7 +7,6 @@ defmodule Faust.FishingTest do
 
   alias Faust.Fishing
   alias Faust.Fishing.Fish
-  alias Faust.Repo
 
   describe "fishes" do
     test "list_fish/0 возврат всей рыбы" do

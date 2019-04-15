@@ -5,6 +5,8 @@ defmodule FaustWeb.UserController do
   alias Faust.Accounts.User
   alias Faust.Repo
 
+  action_fallback FaustWeb.FallbackController
+
   def index(conn, _params) do
     users = Accounts.list_users()
     render(conn, "index.html", users: users)
@@ -33,32 +35,39 @@ defmodule FaustWeb.UserController do
   end
 
   def edit(conn, %{"id" => id}) do
-    user = user_preloader(conn, id)
-    changeset = Accounts.change_user(user)
-    render(conn, "edit.html", user: user, changeset: changeset)
+    with :ok <- Bodyguard.permit(User, :edit, current_user(conn), String.to_integer(id)) do
+      user = user_preloader(conn, id)
+      changeset = Accounts.change_user(user)
+      render(conn, "edit.html", user: user, changeset: changeset)
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = user_preloader(conn, id)
+    with :ok <- Bodyguard.permit(User, :update, current_user(conn), String.to_integer(id)) do
+      user = user_preloader(conn, id)
 
-    case Accounts.update_user(user, handle_user_params(user, user_params)) do
-      {:ok, user} ->
-        conn
-        |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
+      case Accounts.update_user(user, handle_user_params(user, user_params)) do
+        {:ok, user} ->
+          conn
+          |> put_flash(:info, "User updated successfully.")
+          |> redirect(to: Routes.user_path(conn, :show, user))
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", user: user, changeset: changeset)
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "edit.html", user: user, changeset: changeset)
+      end
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
-    {:ok, _user} = Accounts.delete_user(user)
+    current_user = current_user(conn)
 
-    conn
-    |> put_flash(:info, "User deleted successfully.")
-    |> redirect(to: Routes.user_path(conn, :index))
+    with :ok <- Bodyguard.permit(User, :delete, current_user, String.to_integer(id)) do
+      {:ok, _user} = Accounts.delete_user(current_user)
+
+      conn
+      |> put_flash(:info, "User deleted successfully.")
+      |> redirect(to: Routes.user_path(conn, :index))
+    end
   end
 
   # Приватные функции ----------------------------------------------------------
