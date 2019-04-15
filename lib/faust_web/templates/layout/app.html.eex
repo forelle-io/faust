@@ -27,6 +27,9 @@
               <ul class="navbar-nav ml-auto">
                 <%= if authenticated_user?(@conn) do %>
                   <li class="nav-item">
+                    <%= link "Пользователи", to: Routes.user_path(@conn, :index), class: "nav-link" %>
+                  </li>
+                  <li class="nav-item">
                     <a link href="#" class="nav-link">Поездки</a>
                   </li>
                   <li class="nav-item">
