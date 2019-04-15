@@ -81,7 +81,7 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.user_path(conn, :show, user)
     end
 
-    test "рендер ошибок, когда данные не валидны и пользователь не авторизован", %{conn: conn} do
+    test "рендеринг ошибок, когда данные не валидны и пользователь не авторизован", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: %{user_attrs() | name: nil})
 
       assert conn.status == code(:ok)
@@ -142,7 +142,7 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "рендер страницы редактирования пользователя, когда пользователь авторизован", %{
+    test "рендеринг страницы редактирования пользователя, когда пользователь авторизован", %{
       conn: conn,
       user: user
     } do
@@ -155,6 +155,17 @@ defmodule FaustWeb.UserControllerTest do
       assert %Changeset{valid?: true} = conn.assigns.changeset
       assert controller_module(conn) == UserController
       assert view_template(conn) == "edit.html"
+    end
+
+    test "исключительная ситуация с кодом 403 при попытке редактировать запрещенный ресурс", %{
+      conn: conn,
+      user: user
+    } do
+      assert_error_sent(403, fn ->
+        conn
+        |> authorize_conn(user)
+        |> get(Routes.user_path(conn, :edit, insert(:user)))
+      end)
     end
   end
 
@@ -196,7 +207,7 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "рендер ошибок, когда данные не валидны и пользователь авторизован", %{
+    test "рендеринг ошибок, когда данные не валидны и пользователь авторизован", %{
       conn: conn,
       user: user
     } do
@@ -209,6 +220,17 @@ defmodule FaustWeb.UserControllerTest do
       assert %Changeset{valid?: false} = conn.assigns.changeset
       assert controller_module(conn) == UserController
       assert view_template(conn) == "edit.html"
+    end
+
+    test "исключительная ситуация с кодом 403 при попытке редактировать запрещенный ресурс", %{
+      conn: conn,
+      user: user
+    } do
+      assert_error_sent(403, fn ->
+        conn
+        |> authorize_conn(user)
+        |> put(Routes.user_path(conn, :update, insert(:user)), user: %{name: "Faust"})
+      end)
     end
   end
 
@@ -238,6 +260,17 @@ defmodule FaustWeb.UserControllerTest do
       assert_error_sent 404, fn ->
         get(conn, Routes.user_path(conn, :show, user))
       end
+    end
+
+    test "исключительная ситуация с кодом 403 при попытке редактировать запрещенный ресурс", %{
+      conn: conn,
+      user: user
+    } do
+      assert_error_sent(403, fn ->
+        conn
+        |> authorize_conn(user)
+        |> delete(Routes.user_path(conn, :delete, insert(:user)))
+      end)
     end
   end
 
