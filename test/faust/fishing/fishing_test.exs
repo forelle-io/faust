@@ -23,7 +23,7 @@ defmodule Faust.FishingTest do
       end
     end
 
-    test "create fishe/1 с валидными данными создание рыбы" do
+    test "create fishe/1 с валидными данными создания рыбы" do
       {:ok, %Fish{} = fish} =
         fish_attrs()
         |> Fishing.create_fish()
