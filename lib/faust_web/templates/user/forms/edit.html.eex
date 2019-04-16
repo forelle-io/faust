@@ -51,7 +51,7 @@
     
     <div class="form-group">
       <%= label c, "Новый пароль" %>
-      <%= text_input c, :password, class: "form-control" %>
+      <%= password_input c, :password, class: "form-control" %>
       <%= error_tag c, :password %>
       <small class="text-muted">В целях безопасности Ваш пароль должен содержать не менее 8 символов</small>
     </div>
@@ -73,6 +73,11 @@
   <div class="form-group">
       <%= label f, :fishes_ids, "Виды рыб" %>
       <%= multiple_select f, :fishes_ids, fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+      <%= label f, :techniques_ids, "Техника ловли" %>
+      <%= multiple_select f, :techniques_ids, techniques_for_multiple_select(), selected: Enum.map(@user.techniques, &(&1.id)), class: "form-control" %>
   </div>
 
   <div class="row">

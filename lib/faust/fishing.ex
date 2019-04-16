@@ -5,12 +5,10 @@ defmodule Faust.Fishing do
 
   import Ecto.Query, warn: false
 
-  alias Faust.Fishing.Fish
+  alias Faust.Fishing.{Fish, Technique}
   alias Faust.Repo
 
   # Fish structure -------------------------------------------------------------
-
-  alias Faust.Fishing.Fish
 
   def list_fishes do
     Repo.all(Fish)
@@ -42,5 +40,39 @@ defmodule Faust.Fishing do
 
   def change_fish(%Fish{} = fish) do
     Fish.update_changeset(fish, %{})
+  end
+
+  # Technique structure -------------------------------------------------------------
+
+  def list_techniques do
+    Repo.all(Technique)
+  end
+
+  def list_techniques(ids) when is_list(ids) do
+    ids
+    |> Technique.list_technique_query()
+    |> Repo.all()
+  end
+
+  def get_technique!(id), do: Repo.get!(Technique, id)
+
+  def create_technique(attrs \\ %{}) do
+    %Technique{}
+    |> Technique.create_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_technique(%Technique{} = technique, attrs) do
+    technique
+    |> Technique.update_changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_technique(%Technique{} = technique) do
+    Repo.delete(technique)
+  end
+
+  def change_technique(%Technique{} = technique) do
+    Technique.update_changeset(technique, %{})
   end
 end

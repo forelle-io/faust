@@ -221,7 +221,7 @@ defmodule Faust.AccountsTest do
       end
     end
 
-    test "create user/1 с валидными данными создание пользователя" do
+    test "create user/1 с валидными данными" do
       {:ok, %User{} = user} =
         user_attrs()
         |> Accounts.create_user()
@@ -234,7 +234,53 @@ defmodule Faust.AccountsTest do
       assert {:error, %Ecto.Changeset{} = changeset} = Accounts.create_user(%{name: nil})
     end
 
-    test "update_user/2 в валидными данными обновление пользователя" do
+    test "update_user/2 с валидными данными и с новым видом рыбы" do
+      user =
+        :user
+        |> insert()
+        |> Repo.preload(:fishes)
+
+      fish = insert(:fish)
+
+      assert {:ok, %User{} = user} =
+               Accounts.update_user(user, %{
+                 name: "Faust",
+                 surname: "NewSurname",
+                 birthday: ~D[2000-05-01],
+                 fishes_ids: [fish.id]
+               })
+
+      assert user.name == "Faust"
+      assert user.surname == "NewSurname"
+      assert user.birthday == ~D[2000-05-01]
+
+      assert Repo.preload(user, :fishes).fishes |> length() == 1
+    end
+
+    test "update_user/2 с валидными данными и с новой техникой ловли" do
+      user =
+        :user
+        |> insert()
+        |> Repo.preload(:techniques)
+
+      technique = insert(:technique)
+
+      assert {:ok, %User{} = user} =
+               Accounts.update_user(user, %{
+                 name: "Faust",
+                 surname: "NewSurname",
+                 birthday: ~D[2000-05-01],
+                 techniques_ids: [technique.id]
+               })
+
+      assert user.name == "Faust"
+      assert user.surname == "NewSurname"
+      assert user.birthday == ~D[2000-05-01]
+
+      assert Repo.preload(user, :techniques).techniques |> length() == 1
+    end
+
+    test "update_user/2 с обновление пользователя" do
       user = insert(:user)
 
       assert {:ok, %User{} = user} =

@@ -182,10 +182,11 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "редирект на страницу пользователя, когда данные валидны и пользователь авторизован", %{
-      conn: conn,
-      user: user
-    } do
+    test "редирект на страницу редактирования пользователя, когда данные валидны и пользователь авторизован",
+         %{
+           conn: conn,
+           user: user
+         } do
       conn =
         conn
         |> authorize_conn(user)
@@ -193,7 +194,7 @@ defmodule FaustWeb.UserControllerTest do
 
       assert conn.status == code(:found)
       assert conn.private[:phoenix_flash]["info"] == "User updated successfully."
-      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
+      assert redirected_to(conn) == Routes.user_path(conn, :edit, user)
     end
 
     test "редирект на страницу создания сессии, когда данные не валидны и пользователь не авторизован",

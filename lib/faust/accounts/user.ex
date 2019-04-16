@@ -8,7 +8,7 @@ defmodule Faust.Accounts.User do
   alias Ecto.Changeset
   alias Faust.Accounts.Credential
   alias Faust.Fishing
-  alias Faust.Fishing.Fish
+  alias Faust.Fishing.{Fish, Technique}
   alias FaustWeb.UserPolicy
 
   schema "users" do
@@ -17,10 +17,12 @@ defmodule Faust.Accounts.User do
     field :birthday, :date
 
     field :fishes_ids, :any, virtual: true
+    field :techniques_ids, :any, virtual: true
 
     timestamps()
 
     many_to_many :fishes, Fish, join_through: "fishes_users", on_replace: :delete
+    many_to_many :techniques, Technique, join_through: "techniques_users", on_replace: :delete
 
     belongs_to :credential, Credential
   end
@@ -45,10 +47,11 @@ defmodule Faust.Accounts.User do
 
   def update_changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :surname, :birthday, :fishes_ids])
+    |> cast(attrs, [:name, :surname, :birthday, :fishes_ids, :techniques_ids])
     |> validate_required([:name, :surname])
     |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
     |> fishes_pipeline()
+    |> techniques_pipeline()
   end
 
   # Приватные функции ----------------------------------------------------------
@@ -63,6 +66,22 @@ defmodule Faust.Accounts.User do
 
       %{fishes_ids: fishes_ids} ->
         put_assoc(changeset, :fishes, Fishing.list_fishes(fishes_ids))
+
+      _ ->
+        changeset
+    end
+  end
+
+  defp techniques_pipeline(%Changeset{changes: changes} = changeset) do
+    case changes do
+      %{techniques_ids: nil} ->
+        changeset
+
+      %{techniques_ids: []} ->
+        put_assoc(changeset, :techniques, [])
+
+      %{techniques_ids: techniques_ids} ->
+        put_assoc(changeset, :techniques, Fishing.list_techniques(techniques_ids))
 
       _ ->
         changeset
