@@ -5,5 +5,7 @@ defmodule Faust.Repo.Migrations.CreateFishes do
     create table(:fishes) do
       add :name, :string
     end
+
+    create unique_index(:fishes, :name)
   end
 end
