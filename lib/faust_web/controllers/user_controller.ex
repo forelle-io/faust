@@ -76,16 +76,18 @@ defmodule FaustWeb.UserController do
     current_user = current_user(conn)
 
     if current_user && current_user.id == String.to_integer(id) do
-      Repo.preload(current_user, :fishes)
+      Repo.preload(current_user, [:fishes, :techniques])
     else
       id
       |> Accounts.get_user!()
-      |> Repo.preload([:credential, :fishes])
+      |> Repo.preload([:credential, :fishes, :techniques])
     end
   end
 
   defp handle_user_params(user, user_params) do
-    handle_fish_params(user_params, user.fishes)
+    user_params
+    |> handle_fish_params(user.fishes)
+    |> handle_technique_params(user.techniques)
   end
 
   def handle_fish_params(user_params, user_fishes)
@@ -100,6 +102,27 @@ defmodule FaustWeb.UserController do
 
         if Enum.sort(user_fishes) == Enum.sort(fishes) do
           %{user_params | "fishes_ids" => nil}
+        else
+          user_params
+        end
+
+      _ ->
+        user_params
+    end
+  end
+
+  def handle_technique_params(user_params, user_techniques)
+      when is_map(user_params) and is_list(user_techniques) do
+    case user_params do
+      %{"techniques_ids" => []} ->
+        user_params
+
+      %{"techniques_ids" => techniques} ->
+        user_techniques = Enum.map(user_techniques, & &1.id)
+        techniques = Enum.map(techniques, &String.to_integer/1)
+
+        if Enum.sort(user_techniques) == Enum.sort(techniques) do
+          %{user_params | "techniques" => nil}
         else
           user_params
         end

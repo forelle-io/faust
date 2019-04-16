@@ -75,6 +75,11 @@
       <%= multiple_select f, :fishes_ids, fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), class: "form-control" %>
   </div>
 
+  <div class="form-group">
+      <%= label f, :techniques_ids, "Техника ловли" %>
+      <%= multiple_select f, :techniques_ids, techniques_for_multiple_select(), selected: Enum.map(@user.techniques, &(&1.id)), class: "form-control" %>
+  </div>
+
   <div class="row">
     <div class="col-md-12 form-group">
       <%= submit "Сохранить", class: "btn btn-outline-success btn-lg btn-block" %>

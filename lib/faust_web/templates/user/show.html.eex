@@ -33,6 +33,13 @@
     <% end %>
 </ul>
 
+<h3>Техника ловли</h3>
+<ul>
+  <%= for technique <- @user.techniques do %>
+      <li><%= technique.name %></li>
+    <% end %>
+</ul>
+
 <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), @user) do %>
   <span><%= link "Edit", to: Routes.user_path(@conn, :edit, @user) %></span>
 <% end %>
