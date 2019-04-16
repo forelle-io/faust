@@ -50,7 +50,7 @@ defmodule FaustWeb.UserController do
         {:ok, user} ->
           conn
           |> put_flash(:info, "User updated successfully.")
-          |> redirect(to: Routes.user_path(conn, :show, user))
+          |> redirect(to: Routes.user_path(conn, :edit, user))
 
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "edit.html", user: user, changeset: changeset)
@@ -86,15 +86,15 @@ defmodule FaustWeb.UserController do
 
   defp handle_user_params(user, user_params) do
     user_params
-    |> handle_fish_params(user.fishes)
-    |> handle_technique_params(user.techniques)
+    |> handle_fishes_params(user.fishes)
+    |> handle_techniques_params(user.techniques)
   end
 
-  def handle_fish_params(user_params, user_fishes)
+  def handle_fishes_params(user_params, user_fishes)
       when is_map(user_params) and is_list(user_fishes) do
     case user_params do
       %{"fishes_ids" => []} ->
-        user_params
+        %{user_params | "fishes_ids" => []}
 
       %{"fishes_ids" => fishes} ->
         user_fishes = Enum.map(user_fishes, & &1.id)
@@ -107,28 +107,40 @@ defmodule FaustWeb.UserController do
         end
 
       _ ->
-        user_params
+        case Enum.map(user_fishes, & &1.id) do
+          [] ->
+            user_params
+
+          _ ->
+            Map.put_new(user_params, "fishes_ids", [])
+        end
     end
   end
 
-  def handle_technique_params(user_params, user_techniques)
+  def handle_techniques_params(user_params, user_techniques)
       when is_map(user_params) and is_list(user_techniques) do
     case user_params do
       %{"techniques_ids" => []} ->
-        user_params
+        %{user_params | "techniques_ids" => []}
 
       %{"techniques_ids" => techniques} ->
         user_techniques = Enum.map(user_techniques, & &1.id)
         techniques = Enum.map(techniques, &String.to_integer/1)
 
         if Enum.sort(user_techniques) == Enum.sort(techniques) do
-          %{user_params | "techniques" => nil}
+          %{user_params | "techniques_ids" => nil}
         else
           user_params
         end
 
       _ ->
-        user_params
+        case Enum.map(user_techniques, & &1.id) do
+          [] ->
+            user_params
+
+          _ ->
+            Map.put_new(user_params, "techniques_ids", [])
+        end
     end
   end
 end

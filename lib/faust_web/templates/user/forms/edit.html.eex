@@ -51,7 +51,7 @@
     
     <div class="form-group">
       <%= label c, "Новый пароль" %>
-      <%= text_input c, :password, class: "form-control" %>
+      <%= password_input c, :password, class: "form-control" %>
       <%= error_tag c, :password %>
       <small class="text-muted">В целях безопасности Ваш пароль должен содержать не менее 8 символов</small>
     </div>

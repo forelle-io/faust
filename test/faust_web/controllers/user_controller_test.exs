@@ -193,7 +193,7 @@ defmodule FaustWeb.UserControllerTest do
 
       assert conn.status == code(:found)
       assert conn.private[:phoenix_flash]["info"] == "User updated successfully."
-      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
+      assert redirected_to(conn) == Routes.user_path(conn, :edit, user)
     end
 
     test "редирект на страницу создания сессии, когда данные не валидны и пользователь не авторизован",
