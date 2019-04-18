@@ -1,0 +1,13 @@
+<h1>Show Water</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @water.name %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.water_path(@conn, :edit, @water) %></span>
+<span><%= link "Back", to: Routes.water_path(@conn, :index) %></span>

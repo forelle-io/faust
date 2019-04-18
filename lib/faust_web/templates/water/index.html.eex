@@ -1,0 +1,26 @@
+<h1>Listing Waters</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for water <- @waters do %>
+    <tr>
+      <td><%= water.name %></td>
+
+      <td>
+        <%= link "Show", to: Routes.water_path(@conn, :show, water) %>
+        <%= link "Edit", to: Routes.water_path(@conn, :edit, water) %>
+        <%= link "Delete", to: Routes.water_path(@conn, :delete, water), method: :delete, data: [confirm: "Are you sure?"] %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Water", to: Routes.water_path(@conn, :new) %></span>

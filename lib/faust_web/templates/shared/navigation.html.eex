@@ -16,7 +16,7 @@
                     <a link href="#" class="nav-link">Поездки</a>
                 </li>
                 <li class="nav-item">
-                    <a link href="#" class="nav-link">Водоемы</a>
+                    <%= link "Водоемы", to: Routes.water_path(@conn, :index), class: "nav-link" %>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
