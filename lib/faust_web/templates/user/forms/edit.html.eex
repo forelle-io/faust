@@ -1,7 +1,10 @@
 <%= form_for @changeset, @action, fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+      <div class="text-center">
+        <b>Упс, что-то пошло не так!</b>
+      </div>
+      <div>Пожалуйста, проверьте правильность данных.</div>
     </div>
   <% end %>
 
@@ -26,7 +29,13 @@
 
   <div class="form-group">
     <%= label f, "День рождения" %>
-    <%= date_select f, :birthday %>
+    <div class="row">
+      <%= date_select f, :birthday, builder: fn b -> %>
+        <%= b.(:day, [class: "col-md-3"]) %>
+        <%= b.(:month, [class: "col-md-5"]) %>
+        <%= b.(:year, [class: "col-md-4"]) %>
+      <% end %>
+    </div>
     <%= error_tag f, :birthday %>
   </div>
 
@@ -72,12 +81,12 @@
 
   <div class="form-group">
       <%= label f, :fishes_ids, "Виды рыб" %>
-      <%= multiple_select f, :fishes_ids, fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), class: "form-control" %>
+      <%= multiple_select f, :fishes_ids, fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), id: "fishes_ids", class: "form-control" %>
   </div>
 
   <div class="form-group">
       <%= label f, :techniques_ids, "Техника ловли" %>
-      <%= multiple_select f, :techniques_ids, techniques_for_multiple_select(), selected: Enum.map(@user.techniques, &(&1.id)), class: "form-control" %>
+      <%= multiple_select f, :techniques_ids, techniques_for_multiple_select(), selected: Enum.map(@user.techniques, &(&1.id)), id: "techniques_ids", class: "form-control" %>
   </div>
 
   <div class="row">
@@ -86,3 +95,24 @@
     </div>
   </div>
 <% end %>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    // Использование bootstrap-select для "Виды рыб"
+    $('#fishes_ids').selectpicker({
+      size: 5,
+      noneSelectedText: "Не выбрано",
+      liveSearch: true,
+      liveSearchStyle: "contains"
+    });
+    // Использование bootstrap-select для "Техника ловли"
+    $('#techniques_ids').selectpicker({
+      size: 5,
+      noneSelectedText: "Не выбрано"
+    });
+    // Использование bootstrap-select для "День рождения"
+    $('#user_birthday_year').selectpicker({size: 10});
+    $('#user_birthday_month').selectpicker({size: 10});
+    $('#user_birthday_day').selectpicker({size: 10});
+  });
+</script>
