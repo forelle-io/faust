@@ -4,6 +4,11 @@ defmodule FaustWeb.WaterController do
   alias Faust.Reservoir
   alias Faust.Reservoir.Water
 
+  def index(conn, %{"user_id" => user_id}) do
+    waters = Reservoir.list_waters(user_id)
+    render(conn, "index.html", waters: waters)
+  end
+
   def index(conn, _params) do
     waters = Reservoir.list_waters()
     render(conn, "index.html", waters: waters)
@@ -15,10 +20,15 @@ defmodule FaustWeb.WaterController do
   end
 
   def create(conn, %{"water" => water_params}) do
-    case Reservoir.create_water(water_params) do
+    created_water =
+      water_params
+      |> Map.put_new("user", current_user(conn))
+      |> Reservoir.create_water()
+
+    case created_water do
       {:ok, water} ->
         conn
-        |> put_flash(:info, "Water created successfully.")
+        |> put_flash(:info, "Водоем успешно создан")
         |> redirect(to: Routes.water_path(conn, :show, water))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -43,7 +53,7 @@ defmodule FaustWeb.WaterController do
     case Reservoir.update_water(water, water_params) do
       {:ok, water} ->
         conn
-        |> put_flash(:info, "Water updated successfully.")
+        |> put_flash(:info, "Водоем успешно обновлен")
         |> redirect(to: Routes.water_path(conn, :edit, water))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -56,7 +66,7 @@ defmodule FaustWeb.WaterController do
     {:ok, _water} = Reservoir.delete_water(water)
 
     conn
-    |> put_flash(:info, "Water deleted successfully.")
+    |> put_flash(:info, "Водоем удален")
     |> redirect(to: Routes.water_path(conn, :index))
   end
 end

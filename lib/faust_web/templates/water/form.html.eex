@@ -9,6 +9,14 @@
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
 
+  <%= label f, :description %>
+  <%= text_input f, :description %>
+  <%= error_tag f, :description %>
+
+  <%= label f, :is_frozen %>
+  <%= checkbox f, :is_frozen %>
+  <%= error_tag f, :is_frozen %>
+
   <div>
     <%= submit "Save" %>
   </div>

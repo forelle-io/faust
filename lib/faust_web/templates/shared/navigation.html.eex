@@ -25,7 +25,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <%= link "Мой аккаунт", to: Routes.user_path(@conn, :show, current_user(@conn)), class: "dropdown-item" %>
                         <a href="#" class="dropdown-item">Мои поездки</a>
-                        <a href="#" class="dropdown-item">Мои водоемы</a>
+                        <%= link "Мои водоемы", to: Routes.user_water_path(@conn, :index, current_user(@conn)), class: "dropdown-item" %>
                         <div class="dropdown-divider"></div>
                         <%= link "Редактировать", to: Routes.user_path(@conn, :edit, current_user(@conn)), class: "dropdown-item" %>
                         <%= link "Выход", to: Routes.session_path(@conn, :delete, [action: "user"]), method: :delete, class: "dropdown-item" %>

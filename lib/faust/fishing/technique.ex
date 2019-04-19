@@ -31,7 +31,7 @@ defmodule Faust.Fishing.Technique do
     |> unique_constraint(:name)
   end
 
-  # SQL запрос -----------------------------------------------------------------
+  # SQL запросы ----------------------------------------------------------------
 
   def list_technique_query(ids) do
     from f in Technique,
