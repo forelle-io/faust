@@ -1,9 +1,10 @@
-<h1>Listing Waters</h1>
+<h1>Водоемы</h1>
 
 <table>
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Название</th>
+      <th>Описание</th>
 
       <th></th>
     </tr>
@@ -12,15 +13,20 @@
 <%= for water <- @waters do %>
     <tr>
       <td><%= water.name %></td>
+      <td><%= water.description %></td>
 
       <td>
-        <%= link "Show", to: Routes.water_path(@conn, :show, water) %>
-        <%= link "Edit", to: Routes.water_path(@conn, :edit, water) %>
-        <%= link "Delete", to: Routes.water_path(@conn, :delete, water), method: :delete, data: [confirm: "Are you sure?"] %>
+        <%= link "Показать", to: Routes.water_path(@conn, :show, water) %>
+        <%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), water) do %>
+          <%= link "Редактировать", to: Routes.water_path(@conn, :edit, water) %>
+        <% end %>
+        <%= if Bodyguard.permit?(Faust.Reservoir.Water, :delete, current_user(@conn), water) do %>
+          <%= link "Удалить", to: Routes.water_path(@conn, :delete, water), method: :delete, data: [confirm: "Are you sure?"] %>
+        <% end %>
       </td>
     </tr>
 <% end %>
   </tbody>
 </table>
 
-<span><%= link "New Water", to: Routes.water_path(@conn, :new) %></span>
+<span><%= link "Создать водоем", to: Routes.water_path(@conn, :new) %></span>

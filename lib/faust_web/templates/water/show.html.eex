@@ -1,13 +1,21 @@
-<h1>Show Water</h1>
+<h1>Водоем</h1>
 
 <ul>
 
   <li>
-    <strong>Name:</strong>
+    <strong>Название:</strong>
     <%= @water.name %>
+  </li>
+
+  <li>
+    <strong>Описание:</strong>
+    <%= @water.description %>
   </li>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.water_path(@conn, :edit, @water) %></span>
+<%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), @water) do %>
+  <%= link "Редактировать", to: Routes.water_path(@conn, :edit, @water) %>
+<% end %>
+
 <span><%= link "Back", to: Routes.water_path(@conn, :index) %></span>

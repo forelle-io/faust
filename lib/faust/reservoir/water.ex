@@ -7,6 +7,7 @@ defmodule Faust.Reservoir.Water do
 
   alias __MODULE__
   alias Faust.Accounts.User
+  alias FaustWeb.WaterPolicy
 
   schema "waters" do
     field :name, :string
@@ -17,6 +18,8 @@ defmodule Faust.Reservoir.Water do
 
     belongs_to :user, User
   end
+
+  defdelegate authorize(action, current_user, resource), to: WaterPolicy
 
   # Changesets -----------------------------------------------------------------
 
