@@ -1,5 +1,0 @@
-<h1>Edit Chief</h1>
-
-<%= render "forms/edit.html", Map.put(assigns, :action, Routes.chief_path(@conn, :update, @chief)) %>
-
-<span><%= link "Back", to: Routes.chief_path(@conn, :index) %></span>

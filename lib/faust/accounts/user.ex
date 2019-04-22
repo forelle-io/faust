@@ -9,6 +9,7 @@ defmodule Faust.Accounts.User do
   alias Faust.Accounts.Credential
   alias Faust.Fishing
   alias Faust.Fishing.{Fish, Technique}
+  alias Faust.Reservoir.Water
   alias FaustWeb.UserPolicy
 
   schema "users" do
@@ -20,6 +21,8 @@ defmodule Faust.Accounts.User do
     field :techniques_ids, :any, virtual: true
 
     timestamps()
+
+    has_many :waters, Water
 
     many_to_many :fishes, Fish, join_through: "fishes_users", on_replace: :delete
     many_to_many :techniques, Technique, join_through: "techniques_users", on_replace: :delete

@@ -49,6 +49,12 @@ defmodule Faust.Accounts do
     Repo.all(User)
   end
 
+  def list_users(preloads) when is_list(preloads) do
+    User
+    |> Repo.all()
+    |> Repo.preload(preloads)
+  end
+
   def get_user!(id), do: Repo.get!(User, id)
 
   def get_user(id), do: Repo.get(User, id)
