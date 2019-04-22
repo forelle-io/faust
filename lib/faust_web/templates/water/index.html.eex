@@ -1,32 +1,18 @@
-<h1>Водоемы</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Название</th>
-      <th>Описание</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
+<div class="row">
+  <div class="col-md-8">
+    <h1>Водоемы</h1>
+  </div>
+  <div class="col-md-4 text-right">
+    <%= link "Создать водоем", to: Routes.water_path(@conn, :new), class: "btn btn-success" %>
+  </div>
+</div>
 <%= for water <- @waters do %>
-    <tr>
-      <td><%= water.name %></td>
-      <td><%= water.description %></td>
-
-      <td>
-        <%= link "Показать", to: Routes.water_path(@conn, :show, water) %>
-        <%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), water) do %>
-          <%= link "Редактировать", to: Routes.water_path(@conn, :edit, water) %>
-        <% end %>
-        <%= if Bodyguard.permit?(Faust.Reservoir.Water, :delete, current_user(@conn), water) do %>
-          <%= link "Удалить", to: Routes.water_path(@conn, :delete, water), method: :delete, data: [confirm: "Are you sure?"] %>
-        <% end %>
-      </td>
-    </tr>
+<div class="row">
+  <div class="col-md-12">
+    <h4>
+      <b><%= link water.name, to: Routes.water_path(@conn, :show, water) %></b>
+    </h4>
+    <div><%= water.description %></div>
+  </div>
+</div>
 <% end %>
-  </tbody>
-</table>
-
-<span><%= link "Создать водоем", to: Routes.water_path(@conn, :new) %></span>

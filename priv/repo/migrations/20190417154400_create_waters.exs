@@ -5,6 +5,7 @@ defmodule Faust.Repo.Migrations.CreateWaters do
     create table(:waters) do
       add :name, :string
       add :description, :text
+      add :alchemic_avatar, :string
       add :is_frozen, :boolean
       add :user_id, references(:users, on_delete: :delete_all), null: false
 

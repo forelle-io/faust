@@ -19,7 +19,7 @@ h6{font-size: 1.4rem; letter-spacing: 0; line-height: 1.2}
     align-items: center;
 }
 
-.container{
+.container {
     margin: 0 auto;
     max-width: 80.0rem;
     padding: 0 2.0rem;
@@ -30,6 +30,20 @@ h6{font-size: 1.4rem; letter-spacing: 0; line-height: 1.2}
 .help-block {
     color: #a94442;
     display: block;
+}
+
+.topic {
+    color: #0366d6;
+    background-color: #f1f8ff;
+    margin: 0 .5em .5em 0;
+    padding: .3em .9em;
+    text-decoration: none;
+
+    &:hover {
+        color: #0366d6;
+        background-color: #deefff;
+        text-decoration: none;
+    }
 }
 
 /* Media */

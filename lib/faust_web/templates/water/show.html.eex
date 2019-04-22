@@ -12,10 +12,16 @@
     <%= @water.description %>
   </li>
 
+  <li>
+    <strong>Наличие льда на воде:</strong>
+    <%= @water.is_frozen %>
+  </li>
+
 </ul>
 
 <%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), @water) do %>
-  <%= link "Редактировать", to: Routes.water_path(@conn, :edit, @water) %>
+  <%= link "Редактировать", to: Routes.water_path(@conn, :edit, @water), class: "text-secondary" %>
 <% end %>
-
-<span><%= link "Back", to: Routes.water_path(@conn, :index) %></span>
+<%= if Bodyguard.permit?(Faust.Reservoir.Water, :delete, current_user(@conn), @water) do %>
+  <%= link "Удалить", to: Routes.water_path(@conn, :delete, @water), method: :delete, data: [confirm: "Вы уверены, что хотите удалить водоем?"], class: "text-secondary" %>
+<% end %>

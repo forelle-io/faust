@@ -27,20 +27,7 @@
 </ul>
 
 <h3>Предпочитаемая рыба</h3>
-<ul>
-  <%= for fish <- @user.fishes do %>
-      <li><%= fish.name %></li>
-    <% end %>
-</ul>
+<div><%= raw FaustWeb.FishView.fishes_tags(@conn, @user.fishes) %></div>
 
 <h3>Техника ловли</h3>
-<ul>
-  <%= for technique <- @user.techniques do %>
-      <li><%= technique.name %></li>
-    <% end %>
-</ul>
-
-<%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), @user) do %>
-  <span><%= link "Edit", to: Routes.user_path(@conn, :edit, @user) %></span>
-<% end %>
-<span><%= link "Back", to: Routes.user_path(@conn, :index) %></span>
+<div><%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @user.techniques) %></div>

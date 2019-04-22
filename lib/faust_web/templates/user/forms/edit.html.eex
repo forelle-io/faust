@@ -81,12 +81,12 @@
 
   <div class="form-group">
       <%= label f, :fishes_ids, "Виды рыб" %>
-      <%= multiple_select f, :fishes_ids, fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), id: "fishes_ids", class: "form-control" %>
+      <%= multiple_select f, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), id: "fishes_ids", class: "form-control" %>
   </div>
 
   <div class="form-group">
       <%= label f, :techniques_ids, "Техника ловли" %>
-      <%= multiple_select f, :techniques_ids, techniques_for_multiple_select(), selected: Enum.map(@user.techniques, &(&1.id)), id: "techniques_ids", class: "form-control" %>
+      <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), selected: Enum.map(@user.techniques, &(&1.id)), id: "techniques_ids", class: "form-control" %>
   </div>
 
   <div class="row">
