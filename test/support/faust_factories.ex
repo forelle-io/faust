@@ -5,6 +5,7 @@ defmodule Faust.Support.Factories do
 
   alias Faust.Accounts.{Chief, Credential, Organization, User}
   alias Faust.Fishing.{Fish, Technique}
+  alias Faust.Reservoir.Water
 
   def credential_factory do
     %Credential{
@@ -47,6 +48,14 @@ defmodule Faust.Support.Factories do
     %Technique{
       name: sequence(:name, &"name#{&1}"),
       description: sequence(:description, &"description#{&1}")
+    }
+  end
+
+  def water_factory do
+    %Water{
+      name: sequence(:name, &"Name#{&1}"),
+      description: sequence(:description, &"Description#{&1}"),
+      is_frozen: false
     }
   end
 end
