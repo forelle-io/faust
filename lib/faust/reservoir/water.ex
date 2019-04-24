@@ -7,6 +7,7 @@ defmodule Faust.Reservoir.Water do
 
   alias __MODULE__
   alias Faust.Accounts.User
+  alias Faust.Fishing.{Fish, Technique}
   alias FaustWeb.WaterPolicy
 
   schema "waters" do
@@ -14,7 +15,13 @@ defmodule Faust.Reservoir.Water do
     field :description, :string
     field :is_frozen, :boolean
 
+    field :fishes_ids, :any, virtual: true
+    field :techniques_ids, :any, virtual: true
+
     timestamps()
+
+    many_to_many :fishes, Fish, join_through: "fishes_waters", on_replace: :delete
+    many_to_many :techniques, Technique, join_through: "techniques_waters", on_replace: :delete
 
     belongs_to :user, User
   end
@@ -25,15 +32,19 @@ defmodule Faust.Reservoir.Water do
 
   def create_changeset(water, attrs) do
     water
-    |> cast(attrs, [:name, :description, :is_frozen])
+    |> cast(attrs, [:name, :description, :is_frozen, :fishes_ids, :techniques_ids])
     |> validate_required([:name, :description, :is_frozen])
     |> put_assoc(:user, attrs["user"], required: true)
+    |> Fish.fishes_pipeline()
+    |> Technique.techniques_pipeline()
   end
 
   def update_changeset(water, attrs) do
     water
-    |> cast(attrs, [:name, :description, :is_frozen])
+    |> cast(attrs, [:name, :description, :is_frozen, :fishes_ids, :techniques_ids])
     |> validate_required([:name, :description, :is_frozen])
+    |> Fish.fishes_pipeline()
+    |> Technique.techniques_pipeline()
   end
 
   # SQL запросы ----------------------------------------------------------------
