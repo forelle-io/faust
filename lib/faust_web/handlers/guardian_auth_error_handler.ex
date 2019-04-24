@@ -12,7 +12,7 @@ defmodule FaustWeb.GuardianAuthErrorHandler do
 
   def auth_error(%Conn{} = conn, {:unauthenticated, _reason}, _opts) do
     conn
-    |> put_flash(:error, "Please, sign in")
+    |> put_flash(:error, "Пожалуйста, авторизуйтесь")
     |> redirect(to: Router.session_path(conn, :new))
   end
 
@@ -20,9 +20,7 @@ defmodule FaustWeb.GuardianAuthErrorHandler do
     # TODO: при расширении системы аутентификации учитывать ключ из _opts и производить
     # pattern-matсhing по полученному ресурсу с помощью Guardian из соединения
     with %User{} = user <- Guardian.Plug.current_resource(conn, key: :user) do
-      conn
-      |> put_flash(:error, "You are already authenticated")
-      |> redirect(to: Router.user_path(conn, :show, user))
+      redirect(conn, to: Router.user_path(conn, :show, user))
     end
   end
 end
