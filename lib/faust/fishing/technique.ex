@@ -5,8 +5,10 @@ defmodule Faust.Fishing.Technique do
 
   import Ecto.{Changeset, Query}
 
+  alias __MODULE__
+  alias Ecto.Changeset
   alias Faust.Accounts.User
-  alias Faust.Fishing.Technique
+  alias Faust.Fishing
 
   schema "techniques" do
     field :name, :string, default: false
@@ -29,6 +31,24 @@ defmodule Faust.Fishing.Technique do
     |> cast(attrs, [:name, :description])
     |> validate_required([:name, :description])
     |> unique_constraint(:name)
+  end
+
+  # Changeset functions --------------------------------------------------------
+
+  def techniques_pipeline(%Changeset{changes: changes} = changeset) do
+    case changes do
+      %{techniques_ids: nil} ->
+        changeset
+
+      %{techniques_ids: []} ->
+        put_assoc(changeset, :techniques, [])
+
+      %{techniques_ids: techniques_ids} ->
+        put_assoc(changeset, :techniques, Fishing.list_techniques(techniques_ids))
+
+      _ ->
+        changeset
+    end
   end
 
   # SQL запросы ----------------------------------------------------------------

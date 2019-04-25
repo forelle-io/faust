@@ -9,8 +9,8 @@
     <h5>
       <b><%= link "#{user.name} #{user.surname}", to: Routes.user_path(@conn, :show, user) %></b>
     </h5>
-    <div><%= raw FaustWeb.FishView.fishes_tags(@conn, user.fishes) %></div>
-    <div><%= raw FaustWeb.TechniquesView.techniques_tags(@conn, user.techniques) %></div>
+    <div>Предпочитаемая рыба: <%= raw FaustWeb.FishView.fishes_tags(@conn, user.fishes) %></div>
+    <div>Техника ловли: <%= raw FaustWeb.TechniquesView.techniques_tags(@conn, user.techniques) %></div>
   </div>
 </div>
 <% end %>

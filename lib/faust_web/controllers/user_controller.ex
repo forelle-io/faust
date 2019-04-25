@@ -1,6 +1,9 @@
 defmodule FaustWeb.UserController do
   use FaustWeb, :controller
 
+  import FaustWeb.FishHelper, only: [fetch_fishes_params: 2]
+  import FaustWeb.TechniqueHelper, only: [fetch_techniques_params: 2]
+
   alias Faust.Accounts
   alias Faust.Accounts.User
   alias Faust.Repo
@@ -86,61 +89,7 @@ defmodule FaustWeb.UserController do
 
   defp handle_user_params(user, user_params) do
     user_params
-    |> handle_fishes_params(user.fishes)
-    |> handle_techniques_params(user.techniques)
-  end
-
-  def handle_fishes_params(user_params, user_fishes)
-      when is_map(user_params) and is_list(user_fishes) do
-    case user_params do
-      %{"fishes_ids" => []} ->
-        %{user_params | "fishes_ids" => []}
-
-      %{"fishes_ids" => fishes} ->
-        user_fishes = Enum.map(user_fishes, & &1.id)
-        fishes = Enum.map(fishes, &String.to_integer/1)
-
-        if Enum.sort(user_fishes) == Enum.sort(fishes) do
-          %{user_params | "fishes_ids" => nil}
-        else
-          user_params
-        end
-
-      _ ->
-        case Enum.map(user_fishes, & &1.id) do
-          [] ->
-            user_params
-
-          _ ->
-            Map.put_new(user_params, "fishes_ids", [])
-        end
-    end
-  end
-
-  def handle_techniques_params(user_params, user_techniques)
-      when is_map(user_params) and is_list(user_techniques) do
-    case user_params do
-      %{"techniques_ids" => []} ->
-        %{user_params | "techniques_ids" => []}
-
-      %{"techniques_ids" => techniques} ->
-        user_techniques = Enum.map(user_techniques, & &1.id)
-        techniques = Enum.map(techniques, &String.to_integer/1)
-
-        if Enum.sort(user_techniques) == Enum.sort(techniques) do
-          %{user_params | "techniques_ids" => nil}
-        else
-          user_params
-        end
-
-      _ ->
-        case Enum.map(user_techniques, & &1.id) do
-          [] ->
-            user_params
-
-          _ ->
-            Map.put_new(user_params, "techniques_ids", [])
-        end
-    end
+    |> fetch_fishes_params(user.fishes)
+    |> fetch_techniques_params(user.techniques)
   end
 end

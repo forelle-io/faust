@@ -1,23 +1,25 @@
-<h1>Водоем</h1>
+<h3>Водоем</h3>
 
 <ul>
-
   <li>
     <strong>Название:</strong>
     <%= @water.name %>
   </li>
-
   <li>
     <strong>Описание:</strong>
     <%= @water.description %>
   </li>
-
   <li>
     <strong>Наличие льда на воде:</strong>
     <%= @water.is_frozen %>
   </li>
-
 </ul>
+
+<h3>Запущенная рыба</h3>
+<div><%= raw FaustWeb.FishView.fishes_tags(@conn, @water.fishes) %></div>
+
+<h3>Разрешенные способы ловли</h3>
+<div><%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @water.techniques) %></div>
 
 <%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), @water) do %>
   <%= link "Редактировать", to: Routes.water_path(@conn, :edit, @water), class: "text-secondary" %>

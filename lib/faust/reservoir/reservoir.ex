@@ -9,11 +9,18 @@ defmodule Faust.Reservoir do
 
   alias Faust.Reservoir.Water
 
-  def list_waters(user_id)
-      when is_bitstring(user_id) or is_integer(user_id) do
+  def list_waters(preloads) when is_list(preloads) do
+    Water
+    |> Repo.all()
+    |> Repo.preload(preloads)
+  end
+
+  def list_waters(user_id, preloads)
+      when (is_bitstring(user_id) or is_integer(user_id)) and is_list(preloads) do
     user_id
     |> Water.list_water_query()
     |> Repo.all()
+    |> Repo.preload(preloads)
   end
 
   def list_waters do

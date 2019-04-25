@@ -99,20 +99,12 @@
 <script type="text/javascript">
   $(document).ready(function(){
     // Использование bootstrap-select для "Виды рыб"
-    $('#fishes_ids').selectpicker({
-      size: 5,
-      noneSelectedText: "Не выбрано",
-      liveSearch: true,
-      liveSearchStyle: "contains"
-    });
-    // Использование bootstrap-select для "Техника ловли"
-    $('#techniques_ids').selectpicker({
-      size: 5,
-      noneSelectedText: "Не выбрано"
-    });
+    $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true,liveSearchStyle: "contains"});
+    // Использование bootstrap-select для техники ловли
+    $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
     // Использование bootstrap-select для "День рождения"
-    $('#user_birthday_year').selectpicker({size: 10});
-    $('#user_birthday_month').selectpicker({size: 10});
-    $('#user_birthday_day').selectpicker({size: 10});
+    ["year", "month", "day"].forEach(function(item, i, array) {
+      $('#user_birthday_' + item).selectpicker({size: 10});
+    });
   });
 </script>
