@@ -16,7 +16,7 @@ defmodule FaustWeb.WaterController do
              params
              | "user_id" => String.to_integer(user_id)
            }) do
-      waters = Reservoir.list_waters(user_id)
+      waters = Reservoir.list_waters(user_id, [:fishes, :techniques])
       render(conn, "index.html", waters: waters)
     end
   end
