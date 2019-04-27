@@ -5,7 +5,7 @@ defmodule Faust.Accounts.Chief do
   import Ecto.Changeset
   alias Faust.Accounts.Credential
 
-  schema "chiefs" do
+  schema "accounts.chiefs" do
     timestamps()
 
     belongs_to :credential, Credential

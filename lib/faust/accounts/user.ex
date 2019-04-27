@@ -5,14 +5,12 @@ defmodule Faust.Accounts.User do
 
   import Ecto.Changeset
 
-  alias Ecto.Changeset
   alias Faust.Accounts.Credential
-  alias Faust.Fishing
-  alias Faust.Fishing.{Fish, Technique}
+  alias Faust.Fishing.{Fish, FishUser, Technique, TechniqueUser}
   alias Faust.Reservoir.Water
   alias FaustWeb.UserPolicy
 
-  schema "users" do
+  schema "accounts.users" do
     field :name, :string
     field :surname, :string
     field :birthday, :date
@@ -24,8 +22,13 @@ defmodule Faust.Accounts.User do
 
     has_many :waters, Water
 
-    many_to_many :fishes, Fish, join_through: "fishes_users", on_replace: :delete
-    many_to_many :techniques, Technique, join_through: "techniques_users", on_replace: :delete
+    many_to_many :fishes, Fish,
+      join_through: Faust.fetch_table_name(%FishUser{}, %{atomize: false}),
+      on_replace: :delete
+
+    many_to_many :techniques, Technique,
+      join_through: Faust.fetch_table_name(%TechniqueUser{}, %{atomize: false}),
+      on_replace: :delete
 
     belongs_to :credential, Credential
   end
@@ -53,41 +56,7 @@ defmodule Faust.Accounts.User do
     |> cast(attrs, [:name, :surname, :birthday, :fishes_ids, :techniques_ids])
     |> validate_required([:name, :surname])
     |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
-    |> fishes_pipeline()
-    |> techniques_pipeline()
-  end
-
-  # Приватные функции ----------------------------------------------------------
-
-  defp fishes_pipeline(%Changeset{changes: changes} = changeset) do
-    case changes do
-      %{fishes_ids: nil} ->
-        changeset
-
-      %{fishes_ids: []} ->
-        put_assoc(changeset, :fishes, [])
-
-      %{fishes_ids: fishes_ids} ->
-        put_assoc(changeset, :fishes, Fishing.list_fishes(fishes_ids))
-
-      _ ->
-        changeset
-    end
-  end
-
-  defp techniques_pipeline(%Changeset{changes: changes} = changeset) do
-    case changes do
-      %{techniques_ids: nil} ->
-        changeset
-
-      %{techniques_ids: []} ->
-        put_assoc(changeset, :techniques, [])
-
-      %{techniques_ids: techniques_ids} ->
-        put_assoc(changeset, :techniques, Fishing.list_techniques(techniques_ids))
-
-      _ ->
-        changeset
-    end
+    |> Fish.fishes_pipeline()
+    |> Technique.techniques_pipeline()
   end
 end

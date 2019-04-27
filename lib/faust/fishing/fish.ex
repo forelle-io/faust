@@ -5,13 +5,18 @@ defmodule Faust.Fishing.Fish do
 
   import Ecto.{Changeset, Query}
 
+  alias __MODULE__
+  alias Ecto.Changeset
   alias Faust.Accounts.User
-  alias Faust.Fishing.Fish
+  alias Faust.Fishing
+  alias Faust.Fishing.FishUser
 
-  schema "fishes" do
+  schema "fishing.fishes" do
     field :name, :string, default: false
 
-    many_to_many :users, User, join_through: "fishes_users", on_replace: :delete
+    many_to_many :users, User,
+      join_through: Faust.fetch_table_name(%FishUser{}, %{atomize: false}),
+      on_replace: :delete
   end
 
   # Changesets -----------------------------------------------------------------
@@ -28,6 +33,24 @@ defmodule Faust.Fishing.Fish do
     |> cast(attrs, [:name])
     |> validate_required([:name])
     |> unique_constraint(:name)
+  end
+
+  # Changeset functions --------------------------------------------------------
+
+  def fishes_pipeline(%Changeset{changes: changes} = changeset) do
+    case changes do
+      %{fishes_ids: nil} ->
+        changeset
+
+      %{fishes_ids: []} ->
+        put_assoc(changeset, :fishes, [])
+
+      %{fishes_ids: fishes_ids} ->
+        put_assoc(changeset, :fishes, Fishing.list_fishes(fishes_ids))
+
+      _ ->
+        changeset
+    end
   end
 
   # SQL запрос -----------------------------------------------------------------

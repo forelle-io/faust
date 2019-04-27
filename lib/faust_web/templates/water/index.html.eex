@@ -12,7 +12,11 @@
     <h4>
       <b><%= link water.name, to: Routes.water_path(@conn, :show, water) %></b>
     </h4>
-    <div><%= water.description %></div>
+    <div>
+      <h6><%= water.description %></h6>
+    </div>
+    <div>Запущенная рыба: <%= raw FaustWeb.FishView.fishes_tags(@conn, water.fishes) %></div>
+    <div>Разрешенные способы ловли: <%= raw FaustWeb.TechniquesView.techniques_tags(@conn, water.techniques) %></div>
   </div>
 </div>
 <% end %>

@@ -33,6 +33,20 @@
   </div>
 
   <div>
+    <h4>Специализация</h4>
+  </div>
+  <hr>
+
+  <div class="form-group">
+      <%= label f, :fishes_ids, "Виды рыб" %>
+      <%= multiple_select f, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), selected: Enum.map(@water.fishes, &(&1.id)), id: "fishes_ids", class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+      <%= label f, :techniques_ids, "Техника ловли" %>
+      <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), selected: Enum.map(@water.techniques, &(&1.id)), id: "techniques_ids", class: "form-control" %>
+  </div>
+  <div>
     <h4>История</h4>
   </div>
 
@@ -48,3 +62,12 @@
     </div>
   </div>
 <% end %>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    // Использование bootstrap-select для "Виды рыб"
+    $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true,liveSearchStyle: "contains"});
+    // Использование bootstrap-select для техники ловли
+    $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+  });
+</script>

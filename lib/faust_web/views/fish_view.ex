@@ -7,7 +7,7 @@ defmodule FaustWeb.FishView do
     Enum.map(Fishing.list_fishes(), &{&1.name, &1.id})
   end
 
-  def fishes_tags(conn, []), do: ""
+  def fishes_tags(_conn, []), do: ""
 
   def fishes_tags(conn, fishes) when is_list(fishes) do
     Enum.reduce(fishes, "", fn fish, acc ->

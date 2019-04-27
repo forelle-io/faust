@@ -16,7 +16,7 @@ defmodule FaustWeb.UserPolicyTest do
       assert UserPolicy.authorize(:edit, current_user, current_user)
     end
 
-    test "запрещен", %{current_user: current_user} do
+    test "запрещено", %{current_user: current_user} do
       refute UserPolicy.authorize(:edit, current_user, insert(:user))
     end
   end
@@ -26,7 +26,7 @@ defmodule FaustWeb.UserPolicyTest do
       assert UserPolicy.authorize(:update, current_user, current_user)
     end
 
-    test "запрещен", %{current_user: current_user} do
+    test "запрещено", %{current_user: current_user} do
       refute UserPolicy.authorize(:update, current_user, insert(:user))
     end
   end

@@ -22,6 +22,11 @@
         <%= @water.is_frozen %>
       </li>
     </ul>
+    <h3>Запущенная рыба</h3>
+    <div><%= raw FaustWeb.FishView.fishes_tags(@conn, @water.fishes) %></div>
+
+    <h3>Разрешенные способы ловли</h3>
+    <div><%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @water.techniques) %></div>
   </div>
   <div class="col-md-6">
     <%= for history <- @water.histories do %>

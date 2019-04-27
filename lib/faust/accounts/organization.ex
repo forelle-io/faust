@@ -7,7 +7,7 @@ defmodule Faust.Accounts.Organization do
 
   alias Faust.Accounts.Credential
 
-  schema "organizations" do
+  schema "accounts.organizations" do
     field :name, :string
     field :description, :string
     field :address, :string
