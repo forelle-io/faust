@@ -21,7 +21,7 @@
 
   <div class="form-group">
     <%= label f, "Описание" %>
-    <%= text_input f, :description, class: "form-control" %>
+    <%= textarea f, :description, class: "form-control" %>
     <%= error_tag f, :description %>
   </div>
 

@@ -1,13 +1,13 @@
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-7">
     <h1>Водоем</h1>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-5">
     <h3>История</h3>
   </div>
 </div>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-7">
     <ul>
       <li>
         <strong>Название:</strong>
@@ -28,13 +28,13 @@
     <h3>Разрешенные способы ловли</h3>
     <div><%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @water.techniques) %></div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-5">
     <%= for history <- @water.histories do %>
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
           Тип истории: <%= history.type %>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <%= history.inserted_at %>
         </div>
         <%= if history.description do %>
@@ -50,7 +50,8 @@
     <% end %>
     </div>
   </div>
-<div class="row">
+</div>
+<div class="row" style="margin-top: 30px;">
   <div class="col-md-offset-8"></div>
   <%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), @water) do %>
     <div class="col-md-2 text-right">

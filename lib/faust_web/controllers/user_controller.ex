@@ -6,6 +6,7 @@ defmodule FaustWeb.UserController do
 
   alias Faust.Accounts
   alias Faust.Accounts.User
+  alias Faust.Guardian.Plug, as: GuardianPlug
   alias Faust.Repo
 
   action_fallback FaustWeb.FallbackController
@@ -68,8 +69,9 @@ defmodule FaustWeb.UserController do
       {:ok, _user} = Accounts.delete_user(current_user)
 
       conn
+      |> GuardianPlug.sign_out(key: :user)
       |> put_flash(:info, "User deleted successfully.")
-      |> redirect(to: Routes.user_path(conn, :index))
+      |> redirect(to: Routes.page_path(conn, :index))
     end
   end
 

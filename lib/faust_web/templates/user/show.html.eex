@@ -31,3 +31,17 @@
 
 <h3>Техника ловли</h3>
 <div><%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @user.techniques) %></div>
+
+<div class="row" style="margin-top: 30px;">
+  <div class="col-md-offset-8"></div>
+  <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), @user) do %>
+    <div class="col-md-2 text-right">
+      <%= link "Редактировать", to: Routes.user_path(@conn, :edit, @user), class: "btn btn-light btn-lg btn-block" %>
+    </div>
+  <% end %>
+  <%= if Bodyguard.permit?(Faust.Accounts.User, :delete, current_user(@conn), @user) do %>
+    <div class="col-md-2 text-right">
+      <%= link "Удалить", to: Routes.user_path(@conn, :delete, @user), method: :delete, data: [confirm: "Вы уверены, что хотите удалить свой аккаунт?"], class: "btn btn-outline-danger btn-lg btn-block" %>
+    </div>
+  <% end %>
+</div>

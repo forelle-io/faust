@@ -10,7 +10,7 @@ defmodule Faust.Reservoir.History do
 
   @types ["создание", "реконструкция", "зарыбление", "закрытие"]
 
-  schema "histories" do
+  schema "reservoir.histories" do
     field :type, :string
     field :description, :string
 

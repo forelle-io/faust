@@ -30,8 +30,8 @@ defmodule Faust.Accounts.Credential do
     credential
     |> cast(attrs, [:unique, :email, :password, :password_confirmation])
     |> validate_required([:unique, :email, :password, :password_confirmation])
-    |> unique_constraint(:unique)
-    |> unique_constraint(:email)
+    |> unique_constraint(:unique, name: :accounts_credentials_unique_index)
+    |> unique_constraint(:email, name: :accounts_credentials_email_index)
     |> password_hash_pipeline()
   end
 
@@ -39,7 +39,7 @@ defmodule Faust.Accounts.Credential do
     credential
     |> cast(attrs, [:email, :password, :password_confirmation])
     |> validate_required([:email, :password_hash])
-    |> unique_constraint(:email)
+    |> unique_constraint(:email, name: :accounts_credentials_email_index)
     |> password_hash_pipeline()
   end
 

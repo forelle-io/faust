@@ -256,11 +256,7 @@ defmodule FaustWeb.UserControllerTest do
         |> delete(Routes.user_path(conn, :delete, user))
 
       assert conn.status == code(:found)
-      assert redirected_to(conn) == Routes.user_path(conn, :index)
-
-      assert_error_sent 404, fn ->
-        get(conn, Routes.user_path(conn, :show, user))
-      end
+      assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
     test "исключительная ситуация с кодом 403 при попытке редактировать запрещенный ресурс", %{

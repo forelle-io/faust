@@ -23,7 +23,7 @@ defmodule Faust.Reservoir.Water do
     timestamps()
 
     has_many :histories, History
-    
+
     many_to_many :fishes, Fish,
       join_through: Faust.fetch_table_name(%FishWater{}, %{atomize: false}),
       on_replace: :delete

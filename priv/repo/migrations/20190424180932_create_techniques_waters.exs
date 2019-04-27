@@ -6,12 +6,10 @@ defmodule Faust.Repo.Migrations.CreateTechniquesWaters do
 
   def change do
     fishing_techniques_waters_tn = Faust.fetch_table_name(%TechniqueWater{})
-    fishing_techniques_tn = Faust.fetch_table_name(%Technique{})
-    reservoir_waters_tn = Faust.fetch_table_name(%Water{})
 
     create table(fishing_techniques_waters_tn, primary_key: false) do
-      add :technique_id, references(fishing_techniques_tn, on_delete: :delete_all)
-      add :water_id, references(reservoir_waters_tn, on_delete: :delete_all)
+      add :technique_id, references(Faust.fetch_table_name(%Technique{}), on_delete: :delete_all)
+      add :water_id, references(Faust.fetch_table_name(%Water{}), on_delete: :delete_all)
     end
 
     create index(fishing_techniques_waters_tn, [:technique_id])

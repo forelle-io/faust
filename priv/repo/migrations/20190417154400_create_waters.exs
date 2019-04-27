@@ -6,14 +6,15 @@ defmodule Faust.Repo.Migrations.CreateWaters do
 
   def change do
     reservoir_waters_tn = Faust.fetch_table_name(%Water{})
-    accounts_users_tn = Faust.fetch_table_name(%User{})
 
     create table(reservoir_waters_tn) do
       add :name, :string
       add :description, :text
       add :alchemic_avatar, :string
       add :is_frozen, :boolean
-      add :user_id, references(accounts_users_tn, on_delete: :delete_all), null: false
+
+      add :user_id, references(Faust.fetch_table_name(%User{}), on_delete: :delete_all),
+        null: false
 
       timestamps()
     end
