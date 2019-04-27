@@ -1,5 +1,7 @@
 defmodule FaustWeb.HistoryView do
   use FaustWeb, :view
 
-  def types_select, do: Faust.Reservoir.History.types()
+  alias Faust.Reservoir.History
+
+  def types_select, do: History.types()
 end
