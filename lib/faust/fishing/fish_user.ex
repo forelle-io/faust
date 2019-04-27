@@ -3,8 +3,8 @@ defmodule Faust.Fishing.FishUser do
 
   use Ecto.Schema
 
-  alias Faust.Fishing.Fish
   alias Faust.Accounts.User
+  alias Faust.Fishing.Fish
 
   @primary_key false
 
