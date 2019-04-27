@@ -6,11 +6,11 @@ defmodule Faust.Accounts.User do
   import Ecto.Changeset
 
   alias Faust.Accounts.Credential
-  alias Faust.Fishing.{Fish, Technique}
+  alias Faust.Fishing.{Fish, FishUser, Technique, TechniqueUser}
   alias Faust.Reservoir.Water
   alias FaustWeb.UserPolicy
 
-  schema "users" do
+  schema "accounts.users" do
     field :name, :string
     field :surname, :string
     field :birthday, :date
@@ -22,8 +22,13 @@ defmodule Faust.Accounts.User do
 
     has_many :waters, Water
 
-    many_to_many :fishes, Fish, join_through: "fishes_users", on_replace: :delete
-    many_to_many :techniques, Technique, join_through: "techniques_users", on_replace: :delete
+    many_to_many :fishes, Fish,
+      join_through: Faust.fetch_table_name(%FishUser{}, %{atomize: false}),
+      on_replace: :delete
+
+    many_to_many :techniques, Technique,
+      join_through: Faust.fetch_table_name(%TechniqueUser{}, %{atomize: false}),
+      on_replace: :delete
 
     belongs_to :credential, Credential
   end
