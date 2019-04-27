@@ -8,7 +8,7 @@ defmodule Faust.Accounts.Credential do
   alias Ecto.Changeset
   alias Faust.Accounts.{Chief, Organization, User}
 
-  schema "credentials" do
+  schema "accounts.credentials" do
     field :unique, :string
     field :phone, :string
     field :email, :string

@@ -9,11 +9,14 @@ defmodule Faust.Fishing.Fish do
   alias Ecto.Changeset
   alias Faust.Accounts.User
   alias Faust.Fishing
+  alias Faust.Fishing.FishUser
 
-  schema "fishes" do
+  schema "fishing.fishes" do
     field :name, :string, default: false
 
-    many_to_many :users, User, join_through: "fishes_users", on_replace: :delete
+    many_to_many :users, User,
+      join_through: Faust.fetch_table_name(%FishUser{}, %{atomize: false}),
+      on_replace: :delete
   end
 
   # Changesets -----------------------------------------------------------------
