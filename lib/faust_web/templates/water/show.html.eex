@@ -1,29 +1,60 @@
-<h1>Водоем</h1>
-
-<ul>
-
-  <li>
-    <strong>Название:</strong>
-    <%= @water.name %>
-  </li>
-
-  <li>
-    <strong>Описание:</strong>
-    <%= @water.description %>
-  </li>
-
-  <li>
-    <strong>Наличие льда на воде:</strong>
-    <%= @water.is_frozen %>
-  </li>
-
-</ul>
-
-<%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), @water) do %>
-  <%= link "Редактировать", to: Routes.water_path(@conn, :edit, @water), class: "text-secondary" %>
-  <%= link "История", to: Routes.water_history_path(@conn, :index, @water), class: "text-secondary" %>
-  
-<% end %>
-<%= if Bodyguard.permit?(Faust.Reservoir.Water, :delete, current_user(@conn), @water) do %>
-  <%= link "Удалить", to: Routes.water_path(@conn, :delete, @water), method: :delete, data: [confirm: "Вы уверены, что хотите удалить водоем?"], class: "text-secondary" %>
-<% end %>
+<div class="row">
+  <div class="col-md-6">
+    <h1>Водоем</h1>
+  </div>
+  <div class="col-md-6">
+    <h3>История</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <ul>
+      <li>
+        <strong>Название:</strong>
+        <%= @water.name %>
+      </li>
+      <li>
+        <strong>Описание:</strong>
+        <%= @water.description %>
+      </li>
+      <li>
+        <strong>Наличие льда на воде:</strong>
+        <%= @water.is_frozen %>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <%= for history <- @water.histories do %>
+      <div class="row">
+        <div class="col-md-8">
+          Тип истории: <%= history.type %>
+        </div>
+        <div class="col-md-4">
+          <%= history.inserted_at %>
+        </div>
+        <%= if history.description do %>
+          <div class="col-md-12 small text-muted">
+            <%= history.description %>
+          </div>
+        <% end %>
+        <div class="col-md-12">
+          <%= link "Удалить", to: Routes.history_path(@conn, :delete, history), method: :delete, data: [confirm: "Вы уверены, что хотите удалить историю?"], class: "btn btn-light btn-lg btn-block" %>
+        </div>
+      </div>
+      <hr>
+    <% end %>
+    </div>
+  </div>
+<div class="row">
+  <div class="col-md-offset-8"></div>
+  <%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), @water) do %>
+    <div class="col-md-2 text-right">
+      <%= link "Редактировать", to: Routes.water_path(@conn, :edit, @water), class: "btn btn-light btn-lg btn-block" %>
+    </div>
+  <% end %>
+  <%= if Bodyguard.permit?(Faust.Reservoir.Water, :delete, current_user(@conn), @water) do %>
+    <div class="col-md-2 text-right">
+      <%= link "Удалить", to: Routes.water_path(@conn, :delete, @water), method: :delete, data: [confirm: "Вы уверены, что хотите удалить водоем?"], class: "btn btn-outline-danger btn-lg btn-block" %>
+    </div>
+  <% end %>
+</div>

@@ -8,6 +8,8 @@ defmodule Faust.Reservoir.History do
   alias __MODULE__
   alias Faust.Reservoir.Water
 
+  @types ["создание", "реконструкция", "зарыбление", "закрытие"]
+
   schema "histories" do
     field :type, :string
     field :description, :string
@@ -17,23 +19,21 @@ defmodule Faust.Reservoir.History do
     belongs_to :water, Water
   end
 
-  def types() do
-    types = ["создание", "реконструкция", "зарыбление", "закрытие"]
-  end
+  def types, do: @types
 
   # Changesets -----------------------------------------------------------------
 
   def create_changeset(history, attrs) do
     history
     |> cast(attrs, [:type, :description])
-    |> validate_required([:type, :description])
+    |> validate_required([:type])
     |> put_assoc(:water, attrs["water"], required: true)
   end
 
   def update_changeset(history, attrs) do
     history
     |> cast(attrs, [:type, :description])
-    |> validate_required([:type, :description])
+    |> validate_required([:type])
   end
 
   # SQL запросы ----------------------------------------------------------------
@@ -42,5 +42,4 @@ defmodule Faust.Reservoir.History do
     from h in History,
       where: h.water_id == ^water_id
   end
-
 end

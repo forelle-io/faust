@@ -45,7 +45,11 @@ defmodule FaustWeb.WaterController do
   end
 
   def show(conn, %{"id" => id}) do
-    water = Reservoir.get_water!(id)
+    water =
+      id
+      |> Reservoir.get_water!()
+      |> Faust.Repo.preload(:histories)
+
     render(conn, "show.html", water: water)
   end
 
@@ -53,7 +57,11 @@ defmodule FaustWeb.WaterController do
     water = Reservoir.get_water!(id)
 
     with :ok <- Bodyguard.permit(Water, :edit, current_user(conn), water) do
-      changeset = Reservoir.change_water(water)
+      changeset =
+        water
+        |> Faust.Repo.preload(:histories)
+        |> Reservoir.change_water()
+
       render(conn, "edit.html", water: water, changeset: changeset)
     end
   end

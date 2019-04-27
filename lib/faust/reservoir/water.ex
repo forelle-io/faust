@@ -7,6 +7,7 @@ defmodule Faust.Reservoir.Water do
 
   alias __MODULE__
   alias Faust.Accounts.User
+  alias Faust.Reservoir.History
   alias FaustWeb.WaterPolicy
 
   schema "waters" do
@@ -16,6 +17,7 @@ defmodule Faust.Reservoir.Water do
 
     timestamps()
 
+    has_many :histories, History
     belongs_to :user, User
   end
 

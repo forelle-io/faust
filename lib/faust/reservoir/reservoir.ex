@@ -6,10 +6,10 @@ defmodule Faust.Reservoir do
   import Ecto.Query, warn: false
 
   alias Faust.Repo
-
-  alias Faust.Reservoir.{Water, History}
+  alias Faust.Reservoir.{History, Water}
 
   # Waters scructure -----------------------------------------------------------------
+
   def list_waters(user_id)
       when is_bitstring(user_id) or is_integer(user_id) do
     user_id
@@ -59,8 +59,6 @@ defmodule Faust.Reservoir do
   def get_history!(id), do: Repo.get!(History, id)
 
   def create_history(attrs \\ %{}) do
-    IO.puts("create_history context")
-
     %History{}
     |> History.create_changeset(attrs)
     |> Repo.insert()

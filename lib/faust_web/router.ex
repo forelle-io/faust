@@ -44,10 +44,10 @@ defmodule FaustWeb.Router do
     resources "/organizations", OrganizationController, only: [:index, :show]
 
     resources "/waters", WaterController do
-      resources "/histories", HistoryController, only: [:index, :create, :new]
+      resources "/histories", HistoryController, only: [:create, :new]
     end
 
-    resources "/histories", HistoryController, only: [:show, :edit, :update, :delete]
+    resources "/histories", HistoryController, only: [:delete]
 
     delete "/session", SessionController, :delete
   end

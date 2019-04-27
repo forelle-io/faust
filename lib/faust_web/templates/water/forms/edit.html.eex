@@ -22,7 +22,7 @@
 
   <div class="form-group">
     <%= label f, "Описание" %>
-    <%= text_input f, :description, class: "form-control" %>
+    <%= textarea f, :description, class: "form-control" %>
     <%= error_tag f, :description %>
   </div>
 
@@ -30,6 +30,16 @@
     <%= label f, "Наличие льда на воде" %>
     <%= checkbox f, :is_frozen %>
     <%= error_tag f, :is_frozen %>
+  </div>
+
+  <div>
+    <h4>История</h4>
+  </div>
+
+  <hr>
+
+  <div class="form-group">
+    <%= link "Добавить", to: Routes.water_history_path(@conn, :new, @water), class: "btn btn-light btn-lg btn-block" %>
   </div>
 
   <div class="row">
