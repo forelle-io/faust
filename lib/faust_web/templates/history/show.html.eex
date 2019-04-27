@@ -1,0 +1,19 @@
+<h1>История</h1>
+
+<ul>
+  <li>
+    <strong>Описание:</strong>
+    <%= @history.description %>
+  </li>
+
+  <li>
+    <strong>Тип:</strong>
+    <%= @history.type %>
+  </li>
+
+</ul>
+
+
+  <%=link "Редактировать", to: Routes.history_path(@conn, :edit, @history), class: "text-secondary" %>
+  <%= link "Удалить", to: Routes.history_path(@conn, :delete, @history), method: :delete, data: [confirm: "Вы уверены, что хотите удалить историю?"], class: "text-secondary" %>
+

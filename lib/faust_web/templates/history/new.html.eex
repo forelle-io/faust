@@ -1,0 +1,8 @@
+<div class="row">
+    <div class="col-md-8 media-hide-block">
+        <h1>Новая история</h1>
+    </div>
+    <div class="col-md-4">
+         <%= render "forms/new.html", Map.put(assigns, :action, Routes.water_history_path(@conn, :create, @water)) %>
+    </div>
+</div>

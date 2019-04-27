@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-md-8">
+    <h1>Истории</h1>
+  </div>
+  <div class="col-md-4 text-right">
+     <%= link "Создать историю", to: Routes.water_history_path(@conn, :new, @water), class: "text-secondary" %>
+  </div>
+<%= for history <- @histories do %>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <h4>
+      <b><%= link history.type, to: Routes.history_path(@conn, :show, history) %></b>
+    </h4>
+    <div><%= history.description %></div>
+  </div>
+</div>
+<% end %>
