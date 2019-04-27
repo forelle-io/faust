@@ -22,7 +22,7 @@
 
   <div class="form-group">
     <%= label f, "Описание" %>
-    <%= text_input f, :description, class: "form-control" %>
+    <%= textarea f, :description, class: "form-control" %>
     <%= error_tag f, :description %>
   </div>
 
@@ -45,6 +45,15 @@
   <div class="form-group">
       <%= label f, :techniques_ids, "Техника ловли" %>
       <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), selected: Enum.map(@water.techniques, &(&1.id)), id: "techniques_ids", class: "form-control" %>
+  </div>
+  <div>
+    <h4>История</h4>
+  </div>
+
+  <hr>
+
+  <div class="form-group">
+    <%= link "Добавить", to: Routes.water_history_path(@conn, :new, @water), class: "btn btn-light btn-lg btn-block" %>
   </div>
 
   <div class="row">

@@ -8,6 +8,8 @@ defmodule Faust.Reservoir.Water do
   alias __MODULE__
   alias Faust.Accounts.User
   alias Faust.Fishing.{Fish, FishWater, Technique, TechniqueWater}
+  alias Faust.Reservoir.History
+
   alias FaustWeb.WaterPolicy
 
   schema "reservoir.waters" do
@@ -20,6 +22,8 @@ defmodule Faust.Reservoir.Water do
 
     timestamps()
 
+    has_many :histories, History
+    
     many_to_many :fishes, Fish,
       join_through: Faust.fetch_table_name(%FishWater{}, %{atomize: false}),
       on_replace: :delete

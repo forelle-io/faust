@@ -6,8 +6,9 @@ defmodule Faust.Reservoir do
   import Ecto.Query, warn: false
 
   alias Faust.Repo
+  alias Faust.Reservoir.{History, Water}
 
-  alias Faust.Reservoir.Water
+  # Waters scructure -----------------------------------------------------------------
 
   def list_waters(preloads) when is_list(preloads) do
     Water
@@ -47,5 +48,40 @@ defmodule Faust.Reservoir do
 
   def change_water(%Water{} = water) do
     Water.update_changeset(water, %{})
+  end
+
+  # History scructure -----------------------------------------------------------------
+
+  def list_histories(water_id)
+      when is_bitstring(water_id) or is_integer(water_id) do
+    water_id
+    |> History.list_history_query()
+    |> Repo.all()
+  end
+
+  def list_histories do
+    Repo.all(History)
+  end
+
+  def get_history!(id), do: Repo.get!(History, id)
+
+  def create_history(attrs \\ %{}) do
+    %History{}
+    |> History.create_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_history(%History{} = history, attrs) do
+    history
+    |> History.update_changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_history(%History{} = history) do
+    Repo.delete(history)
+  end
+
+  def change_history(%History{} = history) do
+    History.update_changeset(history, %{})
   end
 end
