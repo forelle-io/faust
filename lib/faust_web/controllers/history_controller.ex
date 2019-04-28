@@ -4,9 +4,15 @@ defmodule FaustWeb.HistoryController do
   alias Faust.Reservoir
   alias Faust.Reservoir.History
 
+  action_fallback FaustWeb.FallbackController
+
   def new(conn, %{"water_id" => water_id}) do
-    changeset = Reservoir.change_history(%History{})
-    render(conn, "new.html", changeset: changeset, water: Reservoir.get_water!(water_id))
+    water = Reservoir.get_water!(water_id)
+
+    with :ok <- Bodyguard.permit(History, :new, current_user(conn), water) do
+      changeset = Reservoir.change_history(%History{})
+      render(conn, "new.html", changeset: changeset, water: water)
+    end
   end
 
   def create(conn, %{"water_id" => water_id, "history" => history_params}) do

@@ -7,6 +7,7 @@ defmodule Faust.Reservoir.History do
 
   alias __MODULE__
   alias Faust.Reservoir.Water
+  alias FaustWeb.Reservoir.HistoryPolicy
 
   @types ["создание", "реконструкция", "зарыбление", "закрытие"]
 
@@ -18,6 +19,8 @@ defmodule Faust.Reservoir.History do
 
     belongs_to :water, Water
   end
+
+  defdelegate authorize(action, current_user, resource), to: HistoryPolicy
 
   def types, do: @types
 
