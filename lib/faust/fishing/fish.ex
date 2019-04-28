@@ -25,14 +25,14 @@ defmodule Faust.Fishing.Fish do
     fish
     |> cast(attrs, [:name])
     |> validate_required([:name])
-    |> unique_constraint(:name)
+    |> unique_constraint(:name, name: :fishing_fishes_name_index)
   end
 
   def update_changeset(fish, attrs) do
     fish
     |> cast(attrs, [:name])
     |> validate_required([:name])
-    |> unique_constraint(:name)
+    |> unique_constraint(:name, name: :fishing_fishes_name_index)
   end
 
   # Changeset functions --------------------------------------------------------

@@ -28,6 +28,12 @@ defmodule Faust.Fishing do
     |> Repo.insert()
   end
 
+  def create_fish!(attrs \\ %{}) do
+    %Fish{}
+    |> Fish.create_changeset(attrs)
+    |> Repo.insert!()
+  end
+
   def update_fish(%Fish{} = fish, attrs) do
     fish
     |> Fish.update_changeset(attrs)
@@ -60,6 +66,12 @@ defmodule Faust.Fishing do
     %Technique{}
     |> Technique.create_changeset(attrs)
     |> Repo.insert()
+  end
+
+  def create_technique!(attrs \\ %{}) do
+    %Technique{}
+    |> Technique.create_changeset(attrs)
+    |> Repo.insert!()
   end
 
   def update_technique(%Technique{} = technique, attrs) do

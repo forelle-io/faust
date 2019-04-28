@@ -28,7 +28,7 @@ defmodule Faust.FishingTest do
         fish_attrs()
         |> Fishing.create_fish()
 
-      assert fish.name == "щука"
+      assert fish.name == "форель"
     end
 
     test "create_fishe/1 с невалидными данными возврат ошибочного changeset" do
@@ -86,26 +86,20 @@ defmodule Faust.FishingTest do
         technique_attrs()
         |> Fishing.create_technique()
 
-      assert technique.name == "троллинг"
-      assert technique.description == "описание троллинга"
+      assert technique.name == "спиннинг"
     end
 
     test "create_technique/1 с невалидными данными воврат ошибочного changeset" do
-      assert {:error, %Ecto.Changeset{}} =
-               Fishing.create_technique(%{name: nil, description: nil})
+      assert {:error, %Ecto.Changeset{}} = Fishing.create_technique(%{name: nil})
     end
 
     test "update_technique/2 с валидными данными обнволения техники ловли" do
       technique = insert(:technique)
 
       assert {:ok, %Technique{} = technique} =
-               Fishing.update_technique(technique, %{
-                 name: "спиннинг",
-                 description: "описание спиннинга"
-               })
+               Fishing.update_technique(technique, %{name: "спиннинг"})
 
       assert technique.name == "спиннинг"
-      assert technique.description == "описание спиннинга"
     end
 
     test "update_technique/2 с невалидными данными воврат ошибочного changeset" do
@@ -113,8 +107,7 @@ defmodule Faust.FishingTest do
 
       assert {:ok, %Technique{}} = Fishing.delete_technique(technique)
 
-      assert {:error, %Ecto.Changeset{}} =
-               Fishing.update_technique(technique, %{name: nil, description: nil})
+      assert {:error, %Ecto.Changeset{}} = Fishing.update_technique(technique, %{name: nil})
     end
 
     test "delete_technique/1 удаление техники ловли" do

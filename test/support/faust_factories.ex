@@ -46,8 +46,7 @@ defmodule Faust.Support.Factories do
 
   def technique_factory do
     %Technique{
-      name: sequence(:name, &"name#{&1}"),
-      description: sequence(:description, &"description#{&1}")
+      name: sequence(:name, &"name#{&1}")
     }
   end
 

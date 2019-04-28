@@ -13,7 +13,6 @@ defmodule Faust.Fishing.Technique do
 
   schema "fishing.techniques" do
     field :name, :string, default: false
-    field :description, :string, default: false
 
     many_to_many :users, User,
       join_through: Faust.fetch_table_name(%TechniqueUser{}, %{atomize: false}),
@@ -24,16 +23,16 @@ defmodule Faust.Fishing.Technique do
 
   def create_changeset(technique, attrs) do
     technique
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
-    |> unique_constraint(:name)
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> unique_constraint(:name, name: :fishing_techniques_name_index)
   end
 
   def update_changeset(technique, attrs) do
     technique
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
-    |> unique_constraint(:name)
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> unique_constraint(:name, name: :fishing_techniques_name_index)
   end
 
   # Changeset functions --------------------------------------------------------

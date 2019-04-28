@@ -4,12 +4,11 @@ defmodule Faust.Support.FishesFixtures do
   alias Faust.Fishing.{Fish, Technique}
 
   @fish_attrs %{
-    name: "щука"
+    name: "форель"
   }
 
   @technique_attrs %{
-    name: "троллинг",
-    description: "описание троллинга"
+    name: "спиннинг"
   }
 
   def fish_attrs, do: @fish_attrs
