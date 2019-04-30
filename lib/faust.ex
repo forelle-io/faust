@@ -8,8 +8,8 @@ defmodule Faust do
   """
 
   def fetch_table_name(%_{} = struct) do
-    :source
-    |> struct.__struct__.__schema__()
+    struct
+    |> fetch_table_name(%{atomize: false})
     |> String.to_atom()
   end
 
