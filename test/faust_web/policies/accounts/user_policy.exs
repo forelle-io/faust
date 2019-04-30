@@ -1,11 +1,11 @@
-defmodule FaustWeb.UserPolicyTest do
+defmodule FaustWeb.Accounts.UserPolicyTest do
   @moduledoc false
 
   use Faust.DataCase
 
   import Faust.Support.Factories
 
-  alias FaustWeb.UserPolicy
+  alias FaustWeb.Accounts.UserPolicy
 
   setup do
     {:ok, current_user: insert(:user)}
