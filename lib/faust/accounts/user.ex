@@ -8,7 +8,7 @@ defmodule Faust.Accounts.User do
   alias Faust.Accounts.Credential
   alias Faust.Fishing.{Fish, FishUser, Technique, TechniqueUser}
   alias Faust.Reservoir.Water
-  alias FaustWeb.UserPolicy
+  alias FaustWeb.Accounts.UserPolicy
 
   schema "accounts.users" do
     field :name, :string

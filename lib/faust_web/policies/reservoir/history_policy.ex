@@ -1,16 +1,12 @@
-defmodule FaustWeb.WaterPolicy do
+defmodule FaustWeb.Reservoir.HistoryPolicy do
   @moduledoc false
   @behaviour Bodyguard.Policy
 
   alias Faust.Accounts.User
   alias Faust.Reservoir.Water
 
-  def authorize(:index, %User{id: id}, %{"user_id" => id}) do
-    true
-  end
-
   def authorize(action, %User{id: id}, %Water{user_id: id})
-      when action in [:edit, :update, :delete] do
+      when action in [:new, :create, :delete] do
     true
   end
 

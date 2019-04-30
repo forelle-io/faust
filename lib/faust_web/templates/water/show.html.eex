@@ -42,9 +42,11 @@
             <%= history.description %>
           </div>
         <% end %>
-        <div class="col-md-12">
-          <%= link "Удалить", to: Routes.history_path(@conn, :delete, history), method: :delete, data: [confirm: "Вы уверены, что хотите удалить историю?"], class: "btn btn-light btn-lg btn-block" %>
-        </div>
+        <%= if Bodyguard.permit?(Faust.Reservoir.History, :delete, current_user(@conn), @water) do %>
+          <div class="col-md-12">
+            <%= link "Удалить", to: Routes.history_path(@conn, :delete, history), method: :delete, data: [confirm: "Вы уверены, что хотите удалить историю?"], class: "btn btn-light btn-lg btn-block" %>
+          </div>
+        <% end %>
       </div>
       <hr>
     <% end %>

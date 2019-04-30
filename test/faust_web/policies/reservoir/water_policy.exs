@@ -1,4 +1,4 @@
-defmodule FaustWeb.WaterPolicyTest do
+defmodule FaustWeb.Reservoir.WaterPolicyTest do
   @moduledoc false
 
   use Faust.DataCase
@@ -6,7 +6,7 @@ defmodule FaustWeb.WaterPolicyTest do
   import Faust.Support.Factories
   import Faust.Support.ReservoirFixture
 
-  alias FaustWeb.WaterPolicy
+  alias FaustWeb.Reservoir.WaterPolicy
 
   setup do
     current_user = insert(:user)

@@ -10,7 +10,7 @@ defmodule Faust.Reservoir.Water do
   alias Faust.Fishing.{Fish, FishWater, Technique, TechniqueWater}
   alias Faust.Reservoir.History
 
-  alias FaustWeb.WaterPolicy
+  alias FaustWeb.Reservoir.WaterPolicy
 
   schema "reservoir.waters" do
     field :name, :string
