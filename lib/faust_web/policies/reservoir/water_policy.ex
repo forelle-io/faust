@@ -1,4 +1,4 @@
-defmodule FaustWeb.WaterPolicy do
+defmodule FaustWeb.Reservoir.WaterPolicy do
   @moduledoc false
   @behaviour Bodyguard.Policy
 

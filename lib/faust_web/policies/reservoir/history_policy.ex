@@ -5,7 +5,8 @@ defmodule FaustWeb.Reservoir.HistoryPolicy do
   alias Faust.Accounts.User
   alias Faust.Reservoir.Water
 
-  def authorize(:new, %User{id: id}, %Water{user_id: id}) do
+  def authorize(action, %User{id: id}, %Water{user_id: id})
+      when action in [:new, :create, :delete] do
     true
   end
 

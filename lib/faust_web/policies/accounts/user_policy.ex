@@ -1,4 +1,4 @@
-defmodule FaustWeb.UserPolicy do
+defmodule FaustWeb.Accounts.UserPolicy do
   @moduledoc false
   @behaviour Bodyguard.Policy
 
