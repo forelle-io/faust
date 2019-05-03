@@ -11,6 +11,8 @@ defmodule FaustWeb.WaterController do
   action_fallback FaustWeb.FallbackController
 
   def index(conn, %{"user_id" => user_id} = params) do
+    IO.puts("water controller index 1")
+
     with :ok <-
            Bodyguard.permit(Water, :index, current_user(conn), %{
              params

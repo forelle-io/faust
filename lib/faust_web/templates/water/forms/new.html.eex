@@ -31,6 +31,15 @@
     <%= error_tag f, :is_frozen %>
   </div>
 
+  <div class="row">
+    <div class="col-6 form-group">
+      <%= hidden_input f, :latitude %>
+    </div>
+    <div class="col-6 form-group">
+      <%= hidden_input f, :longitude %>
+    </div>
+  </div>
+
   <div>
     <h4>Специализация</h4>
   </div>
