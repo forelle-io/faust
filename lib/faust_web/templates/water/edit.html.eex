@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-md-8 media-hide-block">
         <h1>Редактирование водоема</h1>
+        <div id="mapid" style="width: 640px; height: 480px;"></div>
     </div>
     <div class="col-md-4">
         <%= render "forms/edit.html", Map.put(assigns, :action, Routes.water_path(@conn, :update, @water)) %>

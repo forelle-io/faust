@@ -16,6 +16,8 @@ defmodule Faust.Reservoir.Water do
     field :name, :string
     field :description, :string
     field :is_frozen, :boolean
+    field :latitude, :float, default: 55.7458
+    field :longitude, :float, default: 37.6227
 
     field :fishes_ids, :any, virtual: true
     field :techniques_ids, :any, virtual: true
@@ -41,7 +43,15 @@ defmodule Faust.Reservoir.Water do
 
   def create_changeset(water, attrs) do
     water
-    |> cast(attrs, [:name, :description, :is_frozen, :fishes_ids, :techniques_ids])
+    |> cast(attrs, [
+      :name,
+      :description,
+      :is_frozen,
+      :fishes_ids,
+      :techniques_ids,
+      :latitude,
+      :longitude
+    ])
     |> validate_required([:name, :description, :is_frozen])
     |> put_assoc(:user, attrs["user"], required: true)
     |> Fish.fishes_pipeline()
@@ -50,7 +60,15 @@ defmodule Faust.Reservoir.Water do
 
   def update_changeset(water, attrs) do
     water
-    |> cast(attrs, [:name, :description, :is_frozen, :fishes_ids, :techniques_ids])
+    |> cast(attrs, [
+      :name,
+      :description,
+      :is_frozen,
+      :fishes_ids,
+      :techniques_ids,
+      :latitude,
+      :longitude
+    ])
     |> validate_required([:name, :description, :is_frozen])
     |> Fish.fishes_pipeline()
     |> Technique.techniques_pipeline()

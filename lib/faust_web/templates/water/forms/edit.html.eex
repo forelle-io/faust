@@ -72,3 +72,57 @@
     $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
   });
 </script>
+
+<script>
+	window.onload=function(){
+		var mymap = L.map('mapid').setView([<%= @water.latitude %>, <%= @water.longitude %>], 13);
+	
+	var titleStreets=L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoieWFkeWdpbmlkIiwiYSI6ImNqdXRnam54NDA3Nm00M29hMDZwcWNlb20ifQ.wJfRr7FzfSjmVNju1wMTHg'
+	})
+	marker = L
+    .marker([<%= @water.latitude %>, <%= @water.longitude %>])
+    .addTo(mymap)
+    .bindPopup("Faust.Water")
+    .openPopup();
+
+	titleStreets.addTo(mymap);	
+	
+	var popup = L.popup();
+
+	function onMapClick(e) {
+		marker.remove();	
+		popup
+			.setLatLng(e.latlng)
+			.setContent("You clicked the map at " + e.latlng.toString())
+			.openOn(mymap);
+
+		marker = L
+      .marker([e.latlng.lat, e.latlng.lng])
+      .addTo(mymap);	
+		
+   var latitude = e.latlng.lat
+   var longitude =  e.latlng.lng
+
+    update_water_coordinates(latitude, longitude);
+	}
+
+	mymap.on('click', onMapClick);
+
+  function update_water_coordinates(latitude, longitude){
+    $.ajax({
+      type: 'PATCH',
+      url: '/waters/<%= @water.id %>',
+      data: {"latitude": latitude, "longitude": longitude},
+      headers: {
+        "X-CSRF-TOKEN": "<%= Plug.CSRFProtection.get_csrf_token() %>"
+      },
+      success: function (data) {}
+    });
+  }
+}
+</script>
+

@@ -11,6 +11,8 @@ defmodule FaustWeb.WaterController do
   action_fallback FaustWeb.FallbackController
 
   def index(conn, %{"user_id" => user_id} = params) do
+    IO.puts("water controller index 1")
+
     with :ok <-
            Bodyguard.permit(Water, :index, current_user(conn), %{
              params
@@ -22,16 +24,20 @@ defmodule FaustWeb.WaterController do
   end
 
   def index(conn, _params) do
+    IO.puts("water controller index 2")
     waters = Reservoir.list_waters([:fishes, :techniques])
     render(conn, "index.html", waters: waters)
   end
 
   def new(conn, _params) do
+    IO.puts("water controller new")
     changeset = Reservoir.change_water(%Water{})
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"water" => water_params}) do
+    IO.puts("water controller create")
+
     created_water =
       water_params
       |> Map.put_new("user", current_user(conn))
@@ -55,6 +61,7 @@ defmodule FaustWeb.WaterController do
   end
 
   def edit(conn, %{"id" => id}) do
+    IO.puts("water controller edit")
     water = water_preloader(id)
 
     with :ok <- Bodyguard.permit(Water, :edit, current_user(conn), water) do
@@ -68,6 +75,7 @@ defmodule FaustWeb.WaterController do
   end
 
   def update(conn, %{"id" => id, "water" => water_params}) do
+    IO.puts("water controller update")
     water = water_preloader(id)
 
     with :ok <- Bodyguard.permit(Water, :update, current_user(conn), water) do
@@ -75,6 +83,26 @@ defmodule FaustWeb.WaterController do
         {:ok, water} ->
           conn
           |> put_flash(:info, "Водоем успешно обновлен")
+          |> redirect(to: Routes.water_path(conn, :edit, water))
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "edit.html", water: water, changeset: changeset)
+      end
+    end
+  end
+
+  def update(conn, %{"id" => id, "latitude" => latitude, "longitude" => longitude}) do
+    IO.puts("water controller update 3")
+    water = water_preloader(id)
+
+    with :ok <- Bodyguard.permit(Water, :update, current_user(conn), water) do
+      case Reservoir.update_water(water, %{
+             "latitude" => String.to_float(latitude),
+             "longitude" => String.to_float(longitude)
+           }) do
+        {:ok, water} ->
+          conn
+          |> put_flash(:info, "Кординаты водоема успешно обновлено")
           |> redirect(to: Routes.water_path(conn, :edit, water))
 
         {:error, %Ecto.Changeset{} = changeset} ->

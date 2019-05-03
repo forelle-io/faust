@@ -12,6 +12,8 @@ defmodule Faust.Repo.Migrations.CreateWaters do
       add :description, :text
       add :alchemic_avatar, :string
       add :is_frozen, :boolean
+      add :latitude, :float
+      add :longitude, :float
 
       add :user_id, references(Faust.fetch_table_name(%User{}), on_delete: :delete_all),
         null: false
