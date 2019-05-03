@@ -85,23 +85,6 @@ defmodule FaustWeb.WaterController do
     end
   end
 
-  def update(conn, %{"id" => id, "latitude" => latitude, "longitude" => longitude}) do
-    water = water_preloader(id)
-
-    with :ok <- Bodyguard.permit(Water, :update, current_user(conn), water) do
-      case Reservoir.update_water(water, %{
-             "latitude" => String.to_float(latitude),
-             "longitude" => String.to_float(longitude)
-           }) do
-        {:ok, _water} ->
-          text(conn, "ok")
-
-        {:error, %Ecto.Changeset{} = _changeset} ->
-          text(conn, "error")
-      end
-    end
-  end
-
   def delete(conn, %{"id" => id}) do
     water = Reservoir.get_water!(id)
 
