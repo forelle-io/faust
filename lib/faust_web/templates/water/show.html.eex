@@ -8,6 +8,7 @@
 </div>
 <div class="row">
   <div class="col-md-7">
+    <div id="mapid" style="width: 640px; height: 480px;"></div>
     <ul>
       <li>
         <strong>Название:</strong>
@@ -66,3 +67,20 @@
     </div>
   <% end %>
 </div>
+
+<script>
+	$(document).ready(function(){
+		var waterMap = L.map('mapid').setView([<%= @water.latitude %>, <%= @water.longitude %>], 13);
+    var titles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox.streets',
+      accessToken: 'pk.eyJ1IjoieWFkeWdpbmlkIiwiYSI6ImNqdXRnam54NDA3Nm00M29hMDZwcWNlb20ifQ.wJfRr7FzfSjmVNju1wMTHg'
+    })
+    marker = L
+      .marker([<%= @water.latitude %>, <%= @water.longitude %>])
+      .addTo(waterMap)
+      .openPopup();
+    titles.addTo(waterMap);
+  })
+</script>

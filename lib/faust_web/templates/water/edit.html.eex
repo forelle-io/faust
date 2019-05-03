@@ -7,3 +7,46 @@
         <%= render "forms/edit.html", Map.put(assigns, :action, Routes.water_path(@conn, :update, @water)) %>
     </div>
 </div>
+
+<script>
+	$(document).ready(function(){
+		var waterMap = L.map('mapid').setView([<%= @water.latitude %>, <%= @water.longitude %>], 13);
+        var titles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: 'pk.eyJ1IjoieWFkeWdpbmlkIiwiYSI6ImNqdXRnam54NDA3Nm00M29hMDZwcWNlb20ifQ.wJfRr7FzfSjmVNju1wMTHg'
+        })
+        marker = L
+            .marker([<%= @water.latitude %>, <%= @water.longitude %>])
+            .addTo(waterMap)
+            .openPopup();
+
+        titles.addTo(waterMap);	
+        
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            marker.remove();
+            marker = L
+                .marker([e.latlng.lat, e.latlng.lng])
+                .addTo(waterMap);
+
+            update_water_coordinates(e.latlng.lat, e.latlng.lng);
+        }
+
+        waterMap.on('click', onMapClick);
+
+        function update_water_coordinates(latitude, longitude){
+            $.ajax({
+                type: 'PATCH',
+                url: '/waters/<%= @water.id %>',
+                data: {"latitude": latitude, "longitude": longitude},
+                headers: {
+                    "X-CSRF-TOKEN": "<%= Plug.CSRFProtection.get_csrf_token() %>"
+                },
+                success: function (data) {}
+            });
+        }
+  })
+</script>
