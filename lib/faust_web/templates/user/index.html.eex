@@ -1,16 +1,27 @@
 <div class="row">
   <div class="col-md-12">
-    <h1>Пользователи</h1>
+    <h3><b>ПОЛЬЗОВАТЕЛИ</b></h3>
   </div>
 </div>
 <%= for user <- @users do %>
-<div class="row">
-  <div class="col-md-12">
+<div class="row" style="margin-top: 20px;">
+  <div class="col-md-1">
+    <%= Routes.static_path(@conn, user.credential.alchemic_avatar) |> img_tag(width: 96, class: "rounded") %>
+  </div>
+  <div class="col-md-8" style="padding-left: 30px;">
     <h5>
       <b><%= link "#{user.name} #{user.surname}", to: Routes.user_path(@conn, :show, user) %></b>
     </h5>
-    <div>Предпочитаемая рыба: <%= raw FaustWeb.FishView.fishes_tags(@conn, user.fishes) %></div>
-    <div>Техника ловли: <%= raw FaustWeb.TechniquesView.techniques_tags(@conn, user.techniques) %></div>
+    <%= if Enum.any?(user.fishes) do %>
+      <div><span class="text-muted">Предпочитаемая рыба:</span> <%= raw FaustWeb.FishView.fishes_tags(@conn, user.fishes) %></div>
+    <% end %>
+  </div>
+  <div class="col-md-3">
+    <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), user) do %>
+      <%= link "Редактировать", to: Routes.user_path(@conn, :edit, user), class: "btn btn-outline-primary" %>
+    <% else %>
+      <%= link "Подписаться", to: "#", class: "btn btn-outline-primary" %>
+    <% end %>
   </div>
 </div>
 <% end %>

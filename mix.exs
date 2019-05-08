@@ -53,6 +53,7 @@ defmodule Faust.MixProject do
       {:bcrypt_elixir, "~> 1.1"},
       {:guardian, "~> 1.2"},
       {:bodyguard, "~> 2.2.3"},
+      {:alchemic_avatar, "~> 0.1.0"},
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.3", only: :test}

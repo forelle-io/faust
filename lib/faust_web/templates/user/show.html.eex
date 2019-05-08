@@ -1,47 +1,47 @@
-<h3>Информация о пользователе</h3>
-<ul>
-  <li>
-    <strong>Имя:</strong>
-    <%= @user.name %>
-  </li>
-  <li>
-    <strong>Фамилия:</strong>
-    <%= @user.surname %>
-  </li>
-  <li>
-    <strong>День рождения:</strong>
-    <%= @user.birthday %>
-  </li>
-</ul>
-
-<h3>Информация удостоверения</h3>
-<ul>
-  <li>
-    <strong>Логин</strong>
-    <%= @user.credential.unique %>
-  </li>
-  <li>
-    <strong>Почта:</strong>
-    <%= @user.credential.email %>
-  </li>
-</ul>
-
-<h3>Предпочитаемая рыба</h3>
-<div><%= raw FaustWeb.FishView.fishes_tags(@conn, @user.fishes) %></div>
-
-<h3>Техника ловли</h3>
-<div><%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @user.techniques) %></div>
-
-<div class="row" style="margin-top: 30px;">
-  <div class="col-md-offset-8"></div>
-  <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), @user) do %>
-    <div class="col-md-2 text-right">
-      <%= link "Редактировать", to: Routes.user_path(@conn, :edit, @user), class: "btn btn-light btn-lg btn-block" %>
+<div class="row">
+  <div class="col-md-3">
+    <%= Routes.static_path(@conn, @user.credential.alchemic_avatar) |> img_tag(width: "100%", class: "rounded") %>
+    <div class="text-center" style="margin-top: 20px;">
+      <div>
+        <b><%= "#{@user.name} #{@user.surname}" |> String.upcase() %></b>
+      </div>
+      <div class="text-muted small">@<%= @user.credential.unique %></div>
     </div>
-  <% end %>
-  <%= if Bodyguard.permit?(Faust.Accounts.User, :delete, current_user(@conn), @user) do %>
-    <div class="col-md-2 text-right">
-      <%= link "Удалить", to: Routes.user_path(@conn, :delete, @user), method: :delete, data: [confirm: "Вы уверены, что хотите удалить свой аккаунт?"], class: "btn btn-outline-danger btn-lg btn-block" %>
+    <div style="margin-top: 20px;">
+      <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), @user) do %>
+        <%= link "Редактировать", to: Routes.user_path(@conn, :edit, @user), class: "btn btn-outline-primary btn-lg btn-block" %>
+      <% else %>
+        <%= link "Подписаться", to: "#", class: "btn btn-outline-primary btn-lg btn-block" %>
+      <% end %>
     </div>
-  <% end %>
+    <%= if Enum.any?(@user.fishes) do %>
+      <hr>
+      <div class="row" style="padding-top: 15px;">
+        <div class="col-md-12">
+          <span class="text-muted">ПРЕДПОЧИТАЕМАЯ РЫБА</span>
+        </div>
+        <div class="col-md-12" style="padding-top: 15px;">
+          <%= raw FaustWeb.FishView.fishes_tags(@conn, @user.fishes) %>
+        </div>
+      </div>
+    <% end %>
+    <%= if Enum.any?(@user.techniques) do %>
+      <hr/>
+      <div class="row" style="padding-top: 15px;">
+        <div class="col-md-12">
+          <span class="text-muted">ТЕХНИКА ЛОВЛИ</span>
+        </div>
+        <div class="col-md-12" style="padding-top: 15px;">
+          <%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @user.techniques) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-md-9">
+    <div class="row">
+      <div>
+        <h4>ПОЛЬЗОВАТЕЛЬСКИЙ КОНТЕНТ</h4>
+      </div>
+    </div>
+  </div>
 </div>

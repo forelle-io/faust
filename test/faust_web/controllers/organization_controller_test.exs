@@ -2,7 +2,7 @@ defmodule FaustWeb.OrganizationControllerTest do
   @moduledoc false
   use FaustWeb.ConnCase
 
-  import Faust.Support.Factories
+  import Faust.Support.{AccountFixtures, Factories}
   import Phoenix.Controller, only: [controller_module: 1, view_template: 1]
   import Plug.Conn.Status, only: [code: 1]
 
@@ -17,7 +17,7 @@ defmodule FaustWeb.OrganizationControllerTest do
     end
 
     test "список всех организаций, когда когда пользователь авторизован", %{conn: conn} do
-      user = insert(:user)
+      user = user_fixture()
       insert_list(1, :organization)
 
       conn =
@@ -49,7 +49,7 @@ defmodule FaustWeb.OrganizationControllerTest do
       conn: conn,
       organization: organization
     } do
-      user = insert(:user)
+      user = user_fixture()
 
       conn =
         conn

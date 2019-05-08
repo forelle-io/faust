@@ -13,6 +13,7 @@ defmodule Faust.Accounts.Credential do
     field :phone, :string
     field :email, :string
     field :password_hash, :string
+    field :alchemic_avatar, :string
 
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
@@ -33,6 +34,7 @@ defmodule Faust.Accounts.Credential do
     |> unique_constraint(:unique, name: :accounts_credentials_unique_index)
     |> unique_constraint(:email, name: :accounts_credentials_email_index)
     |> password_hash_pipeline()
+    |> generate_alchemic_avatar()
   end
 
   def update_changeset(credential, attrs) do
@@ -64,6 +66,24 @@ defmodule Faust.Accounts.Credential do
       %Changeset{valid?: true, changes: %{password: password}} ->
         password_hash = Bcrypt.hash_pwd_salt(password)
         Changeset.put_change(changeset, :password_hash, password_hash)
+
+      _ ->
+        changeset
+    end
+  end
+
+  defp generate_alchemic_avatar(%Changeset{} = changeset) do
+    case changeset do
+      %Changeset{valid?: true, changes: %{unique: unique}} ->
+        file_path =
+          unique
+          |> String.upcase()
+          |> AlchemicAvatar.generate(240)
+          |> String.split("/")
+          |> Enum.take(-4)
+          |> Enum.join("/")
+
+        Changeset.put_change(changeset, :alchemic_avatar, "/#{file_path}")
 
       _ ->
         changeset

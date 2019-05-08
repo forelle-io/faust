@@ -11,20 +11,20 @@ defmodule FaustWeb.WaterController do
   action_fallback FaustWeb.FallbackController
 
   def index(conn, %{"user_id" => user_id} = params) do
-    IO.puts("water controller index 1")
-
     with :ok <-
            Bodyguard.permit(Water, :index, current_user(conn), %{
              params
              | "user_id" => String.to_integer(user_id)
            }) do
-      waters = Reservoir.list_waters(user_id, [:fishes, :techniques])
+      waters = Reservoir.list_waters(user_id, [[user: :credential], :fishes, :techniques])
+
       render(conn, "index.html", waters: waters)
     end
   end
 
   def index(conn, _params) do
-    waters = Reservoir.list_waters([:fishes, :techniques])
+    waters = Reservoir.list_waters([[user: :credential], :fishes, :techniques])
+
     render(conn, "index.html", waters: waters)
   end
 
@@ -51,26 +51,23 @@ defmodule FaustWeb.WaterController do
   end
 
   def show(conn, %{"id" => id}) do
-    water = water_preloader(id)
+    water = water_preloader(conn, id)
 
     render(conn, "show.html", water: water)
   end
 
   def edit(conn, %{"id" => id}) do
-    water = water_preloader(id)
+    water = water_preloader(conn, id)
 
     with :ok <- Bodyguard.permit(Water, :edit, current_user(conn), water) do
-      changeset =
-        water
-        |> Faust.Repo.preload(:histories)
-        |> Reservoir.change_water()
+      changeset = Reservoir.change_water(water)
 
       render(conn, "edit.html", water: water, changeset: changeset)
     end
   end
 
   def update(conn, %{"id" => id, "water" => water_params}) do
-    water = water_preloader(id)
+    water = water_preloader(conn, id)
 
     with :ok <- Bodyguard.permit(Water, :update, current_user(conn), water) do
       case Reservoir.update_water(water, handle_water_params(water, water_params)) do
@@ -99,10 +96,16 @@ defmodule FaustWeb.WaterController do
 
   # Приватные функции ----------------------------------------------------------
 
-  defp water_preloader(id) do
-    id
-    |> Reservoir.get_water!()
-    |> Repo.preload([:fishes, :techniques, :histories])
+  defp water_preloader(conn, id) do
+    water = Reservoir.get_water!(id)
+
+    case action_name(conn) do
+      :show ->
+        Repo.preload(water, [[user: :credential], :fishes, :techniques, :histories])
+
+      _ ->
+        Repo.preload(water, [:fishes, :techniques])
+    end
   end
 
   defp handle_water_params(water, water_params) do

@@ -11,6 +11,7 @@ defmodule Faust.Repo.Migrations.CreateCredentials do
       add :email, :string, null: false
       add :phone, :string
       add :password_hash, :string, null: false
+      add :alchemic_avatar, :string
 
       timestamps()
     end
