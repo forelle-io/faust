@@ -29,6 +29,14 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Creating letter avatar from user's name
+config :alchemic_avatar,
+  cache_base_path: "static",
+  colors_palette: :iwanthue,
+  weight: 500,
+  annotate_position: "-0+10",
+  app_name: :faust
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

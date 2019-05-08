@@ -1,73 +1,78 @@
 <div class="row">
-  <div class="col-md-7">
-    <h1>Водоем</h1>
-  </div>
-  <div class="col-md-5">
-    <h3>История</h3>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-7">
-    <div id="mapid" style="width: 640px; height: 480px;"></div>
-    <ul>
-      <li>
-        <strong>Название:</strong>
-        <%= @water.name %>
-      </li>
-      <li>
-        <strong>Описание:</strong>
-        <%= @water.description %>
-      </li>
-      <li>
-        <strong>Наличие льда на воде:</strong>
-        <%= @water.is_frozen %>
-      </li>
-    </ul>
-    <h3>Запущенная рыба</h3>
-    <div><%= raw FaustWeb.FishView.fishes_tags(@conn, @water.fishes) %></div>
-
-    <h3>Разрешенные способы ловли</h3>
-    <div><%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @water.techniques) %></div>
-  </div>
-  <div class="col-md-5">
-    <%= for history <- @water.histories do %>
-      <div class="row">
-        <div class="col-md-6">
-          Тип истории: <%= history.type %>
-        </div>
-        <div class="col-md-6">
-          <%= history.inserted_at %>
-        </div>
-        <%= if history.description do %>
-          <div class="col-md-12 small text-muted">
-            <%= history.description %>
-          </div>
-        <% end %>
-        <%= if Bodyguard.permit?(Faust.Reservoir.History, :delete, current_user(@conn), @water) do %>
-          <div class="col-md-12">
-            <%= link "Удалить", to: Routes.history_path(@conn, :delete, history), method: :delete, data: [confirm: "Вы уверены, что хотите удалить историю?"], class: "btn btn-light btn-lg btn-block" %>
-          </div>
-        <% end %>
+  <div class="col-md-4">
+    <div id="mapid" style="width: 100%; height: 256px;"></div>
+    <div class="text-center" style="margin-top: 20px;">
+      <div>
+        <b><%= "#{@water.name}" |> String.upcase() %></b>
       </div>
-      <hr>
-    <% end %>
     </div>
+    <div style="margin-top: 20px;">
+      <%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), @water) do %>
+        <%= link "Редактировать", to: Routes.water_path(@conn, :edit, @water), class: "btn btn-outline-primary btn-lg btn-block" %>
+      <% end %>
+    </div>
+    <%= if Enum.any?(@water.fishes) do %>
+      <hr>
+      <div class="row" style="padding-top: 15px;">
+        <div class="col-md-12">
+          <span class="text-muted">РЫБНАЯ КАРТА</span>
+        </div>
+        <div class="col-md-12" style="padding-top: 15px;">
+          <%= raw FaustWeb.FishView.fishes_tags(@conn, @water.fishes) %>
+        </div>
+      </div>
+    <% end %>
+    <%= if Enum.any?(@water.techniques) do %>
+      <hr/>
+      <div class="row" style="padding-top: 15px;">
+        <div class="col-md-12">
+          <span class="text-muted">РАЗРЕШЕННЫЕ СПОСОБЫ ЛОВЛИ</span>
+        </div>
+        <div class="col-md-12" style="padding-top: 15px;">
+          <%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @water.techniques) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-md-6">
+    <div>
+      <h4>ДЕТАЛЬНАЯ ИНФОРМАЦИЯ</h4>
+    </div>
+    <div>
+      <%= @water.description %>
+    </div>
+    <div style="margin-top: 20px;">
+      <%= Routes.static_path(@conn, @water.user.credential.alchemic_avatar) |> img_tag(width: 32, class: "rounded") %>
+      <b><%= link "#{@water.user.name} #{@water.user.surname}", to: Routes.user_path(@conn, :show, @water.user) %></b>
+    </div>
+    <%= if Enum.any?(@water.histories) do %>
+      <div style="margin-top: 30px;">
+        <h4>ИСТОРИЯ ВОДОЕМА</h4>
+      </div>
+      <%= for history <- @water.histories do %>
+        <div class="row" style="margin-top: 30px;">
+          <div class="col-md-6">
+            Тип истории: <%= history.type %>
+          </div>
+          <div class="col-md-6">
+            <%= history.inserted_at %>
+          </div>
+          <%= if history.description do %>
+            <div class="col-md-12 small text-muted">
+              <%= history.description %>
+            </div>
+          <% end %>
+          <%= if Bodyguard.permit?(Faust.Reservoir.History, :delete, current_user(@conn), @water) do %>
+            <div class="col-md-12 text-right">
+              <%= link "Удалить", to: Routes.history_path(@conn, :delete, history), method: :delete, data: [confirm: "Вы уверены, что хотите удалить историю?"], class: "btn btn-outline-danger" %>
+            </div>
+          <% end %>
+        </div>
+        <hr/>
+      <% end %>
+    <% end %>
   </div>
 </div>
-<div class="row" style="margin-top: 30px;">
-  <div class="col-md-offset-8"></div>
-  <%= if Bodyguard.permit?(Faust.Reservoir.Water, :edit, current_user(@conn), @water) do %>
-    <div class="col-md-2 text-right">
-      <%= link "Редактировать", to: Routes.water_path(@conn, :edit, @water), class: "btn btn-light btn-lg btn-block" %>
-    </div>
-  <% end %>
-  <%= if Bodyguard.permit?(Faust.Reservoir.Water, :delete, current_user(@conn), @water) do %>
-    <div class="col-md-2 text-right">
-      <%= link "Удалить", to: Routes.water_path(@conn, :delete, @water), method: :delete, data: [confirm: "Вы уверены, что хотите удалить водоем?"], class: "btn btn-outline-danger btn-lg btn-block" %>
-    </div>
-  <% end %>
-</div>
-
 <script>
 	$(document).ready(function(){
 		var map = L.map('mapid').setView([<%= @water.latitude %>, <%= @water.longitude %>], 13);

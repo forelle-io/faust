@@ -19,7 +19,7 @@ defmodule FaustWeb.UserControllerTest do
     end
 
     test "список всех пользователей, когда пользователь авторизован", %{conn: conn} do
-      user = insert(:user)
+      user = user_fixture()
 
       conn =
         conn
@@ -273,5 +273,5 @@ defmodule FaustWeb.UserControllerTest do
 
   # Приватные функции ----------------------------------------------------------
 
-  defp create_user(_), do: {:ok, user: insert(:user)}
+  defp create_user(_), do: {:ok, user: user_fixture()}
 end

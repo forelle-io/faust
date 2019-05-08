@@ -13,18 +13,22 @@
                     <%= link "Пользователи", to: Routes.user_path(@conn, :index), class: "nav-link" %>
                 </li>
                 <li class="nav-item">
-                    <a link href="#" class="nav-link">Поездки</a>
+                    <a link href="#" class="nav-link">Выезды</a>
+                </li>
+                <li class="nav-item">
+                    <a link href="#" class="nav-link">Отчеты</a>
                 </li>
                 <li class="nav-item">
                     <%= link "Водоемы", to: Routes.water_path(@conn, :index), class: "nav-link" %>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <%= current_user(@conn).credential.unique %>
+                        <%= Routes.static_path(@conn, current_user(@conn).credential.alchemic_avatar) |> img_tag(width: 24, height: 24, class: "rounded") %>
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <%= link "Мой аккаунт", to: Routes.user_path(@conn, :show, current_user(@conn)), class: "dropdown-item" %>
                         <a href="#" class="dropdown-item">Мои поездки</a>
+                        <a href="#" class="dropdown-item">Мои отчеты</a>
                         <%= link "Мои водоемы", to: Routes.user_water_path(@conn, :index, current_user(@conn)), class: "dropdown-item" %>
                         <div class="dropdown-divider"></div>
                         <%= link "Редактировать", to: Routes.user_path(@conn, :edit, current_user(@conn)), class: "dropdown-item" %>

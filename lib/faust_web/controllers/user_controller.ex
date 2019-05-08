@@ -12,7 +12,7 @@ defmodule FaustWeb.UserController do
   action_fallback FaustWeb.FallbackController
 
   def index(conn, _params) do
-    users = Accounts.list_users([:fishes, :techniques])
+    users = Accounts.list_users([:credential, :fishes, :techniques])
     render(conn, "index.html", users: users)
   end
 
