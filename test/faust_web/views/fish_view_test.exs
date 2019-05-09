@@ -7,6 +7,24 @@ defmodule FaustWeb.FishViewTest do
 
   alias FaustWeb.FishView
 
+  describe "techniques_for_multiple_select" do
+    test "когда рыба не создана" do
+      assert FishView.fishes_for_multiple_select() == []
+    end
+
+    test "когда рыба создана" do
+      fish_fixture()
+
+      case FishView.fishes_for_multiple_select() do
+        [{"форель", _id}] ->
+          assert true
+
+        _ ->
+          assert false
+      end
+    end
+  end
+
   describe "fishes_tags" do
     test "с пустым списком рыб", %{conn: conn} do
       assert FishView.fishes_tags(conn, []) == ""
