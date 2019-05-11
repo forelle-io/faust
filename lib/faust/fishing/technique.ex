@@ -15,7 +15,7 @@ defmodule Faust.Fishing.Technique do
     field :name, :string, default: false
 
     many_to_many :users, User,
-      join_through: Faust.fetch_table_name(%TechniqueUser{}, %{atomize: false}),
+      join_through: TechniqueUser,
       on_replace: :delete
   end
 
