@@ -87,3 +87,19 @@ header nav ul {
 header nav a {
     display: block;
 }
+
+.color-circle {  
+    width: 19px;
+    height: 19px;
+
+    border-radius: 84px;
+    margin: 3px;
+    margin-bottom: 0px;
+    float:left
+}
+
+.clearfix:after {
+    clear: both;
+    content: "";
+    display: table;
+}

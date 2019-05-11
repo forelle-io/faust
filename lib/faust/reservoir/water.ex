@@ -12,12 +12,26 @@ defmodule Faust.Reservoir.Water do
 
   alias FaustWeb.Reservoir.WaterPolicy
 
+  @colors %{
+    "прозрачный" => "#FFFFFF",
+    "коричневый" => "#CD853F",
+    "зеленый" => "#008000",
+    "синий" => "#00FFFF"
+  }
+  @types ["море", "озеро", "пруд", "река", "водохранилище", "карьер"]
+  @bottom_types ["илистое", "песчаное", "каменистое", "вязкое", "скалистое", "подводные леса"]
+  @environments ["лес", "степь", "луг", "поле", "сад"]
+
   schema "reservoir.waters" do
     field :name, :string
     field :description, :string
     field :is_frozen, :boolean
     field :latitude, :float, default: 55.7458
     field :longitude, :float, default: 37.6227
+    field :type, :string
+    field :bottom_type, :string
+    field :color, :string
+    field :environment, :string
 
     field :fishes_ids, :any, virtual: true
     field :techniques_ids, :any, virtual: true
@@ -37,6 +51,11 @@ defmodule Faust.Reservoir.Water do
     belongs_to :user, User
   end
 
+  def types, do: @types
+  def colors, do: @colors
+  def bottom_types, do: @bottom_types
+  def environments, do: @environments
+
   defdelegate authorize(action, current_user, resource), to: WaterPolicy
 
   # Changesets -----------------------------------------------------------------
@@ -50,7 +69,11 @@ defmodule Faust.Reservoir.Water do
       :fishes_ids,
       :techniques_ids,
       :latitude,
-      :longitude
+      :longitude,
+      :type,
+      :bottom_type,
+      :color,
+      :environment
     ])
     |> validate_required([:name, :description, :is_frozen])
     |> put_assoc(:user, attrs["user"], required: true)
@@ -67,7 +90,11 @@ defmodule Faust.Reservoir.Water do
       :fishes_ids,
       :techniques_ids,
       :latitude,
-      :longitude
+      :longitude,
+      :type,
+      :bottom_type,
+      :color,
+      :environment
     ])
     |> validate_required([:name, :description, :is_frozen])
     |> Fish.fishes_pipeline()

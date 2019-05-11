@@ -39,12 +39,38 @@
       <h4>ДЕТАЛЬНАЯ ИНФОРМАЦИЯ</h4>
     </div>
     <div>
+      <h5>Описание:</h5>
       <%= @water.description %>
     </div>
+    
+    <div>
+     <h5>Тип:</h5>
+      <%= @water.type %>
+    </div>
+
+    <div>
+       <h5>Тип дна:</h5>
+      <%= @water.bottom_type %>
+    </div>
+
+    <div>
+       <h5>Цвет:</h5>
+       <div class="color-circle clearfix" id ="color-circle" style="background:<%= FaustWeb.WaterView.prepare_color(@water.color) %>;">
+      </div>
+      <%= @water.color %>
+    </div>
+
+    <div>
+     <h5>Окружение:</h5>
+      <%= @water.environment %>
+    </div>
+  
     <div style="margin-top: 20px;">
+       <h5>Добавил:</h5>
       <%= Routes.static_path(@conn, @water.user.credential.alchemic_avatar) |> img_tag(width: 32, class: "rounded") %>
       <b><%= link "#{@water.user.name} #{@water.user.surname}", to: Routes.user_path(@conn, :show, @water.user) %></b>
     </div>
+
     <%= if Enum.any?(@water.histories) do %>
       <div style="margin-top: 30px;">
         <h4>ИСТОРИЯ ВОДОЕМА</h4>

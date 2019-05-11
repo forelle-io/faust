@@ -56,6 +56,28 @@
       <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), selected: Enum.map(@water.techniques, &(&1.id)), id: "techniques_ids", class: "form-control" %>
   </div>
 
+ <div class="form-group">
+    <%= label f, :type, "Тип" %>
+    <%= select f, :type, Faust.Reservoir.Water.types(), id: "type_id", class: "form-control" %> 
+  </div>
+
+  <div class="form-group">
+     <%= label f, :bottom_type, "Тип дна" %>
+     <%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types(), id: "bottom_type_id", class: "form-control" %> 
+  </div>
+
+   <div class="form-group">
+      <%= label f, :environment, "Окружение" %>
+      <%= select f, :environment, Faust.Reservoir.Water.environments(), id: "environment_id", class: "form-control" %> 
+  </div>
+
+  <div class="form-group">
+      <%= label f, :color, "Цвет" %>
+      <div class="color-circle" id ="color-circle" style="background:<%= FaustWeb.WaterView.prepare_color(@water.color) %>;">
+      </div>
+       <%= select f, :color, FaustWeb.WaterView.colors_for_select(), id: "select_color_id", class: "form-control" %> 
+  </div>
+  
   <div>
     <h4>История</h4>
   </div>
@@ -79,6 +101,20 @@
     $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true,liveSearchStyle: "contains"});
     // Использование bootstrap-select для техники ловли
     $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    // Использование bootstrap-select для типа 
+    $('#type_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    // Использование bootstrap-select для типа дна
+    $('#bottom_type_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    // Использование bootstrap-select для окружения
+    $('#environment_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    // Использование bootstrap-select для цвета
+    $('#select_color_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+
+    let colors = <%= raw Jason.encode!(Faust.Reservoir.Water.colors()) %>;
+    $('#select_color_id').change(function (e) {
+      if (colors[e.target.value]) {
+        document.getElementById('color-circle').style.background = colors[e.target.value];
+      }
+    });
   });
 </script>
-
