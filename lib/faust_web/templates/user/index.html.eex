@@ -20,8 +20,62 @@
     <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), user) do %>
       <%= link "Редактировать", to: Routes.user_path(@conn, :edit, user), class: "btn btn-outline-primary" %>
     <% else %>
-      <%= link "Подписаться", to: "#", class: "btn btn-outline-primary" %>
+      <%= link "Подписаться", to: "#", class: "btn btn-outline-primary", id: user.id, onclick: "follow_user(this);" %>
     <% end %>
   </div>
 </div>
 <% end %>
+
+<script type="text/javascript">
+    function follow_user(object) {
+      switch ($(object).text().toLowerCase()) {
+        case "подписаться":
+          var type = "POST";
+          var url = "/followers";
+          var data = {"follower_id": object.id}
+          break;
+        
+        case "отписаться":
+          var type = "DELETE";
+          var url = `/followers/${object.id}`;
+          break;
+      }
+
+      $.ajax({
+        type: type,
+        url: url,
+        data: data || {},
+        headers: {
+          "X-CSRF-TOKEN": "<%= Plug.CSRFProtection.get_csrf_token() %>"
+        },
+        success: function (data) {
+          let response = JSON.parse(data);
+
+          if (response.status == "ok") {
+            switch (response.action) {
+              case "create":
+                $(object)
+                  .text("Отписаться")
+                  .addClass("btn-primary")
+                  .removeClass("btn-outline-primary");
+                break;
+
+              case "delete":
+                $(object)
+                  .text("Подписаться")
+                  .addClass("btn btn-outline-primary")
+                  .removeClass("btn-primary");
+                break;
+            }
+          } else {
+            $(object)
+              .text("Произошла ошибка")
+              .removeClass()
+              .addClass("btn btn-danger disabled");
+          }
+
+          $(object).blur();
+        }
+      });
+    }
+</script>
