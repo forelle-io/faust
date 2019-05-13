@@ -8,8 +8,11 @@ defmodule Faust.Repo.Migrations.CreateFishesUsers do
     fishing_fishes_users_tn = Faust.fetch_table_name(%FishUser{})
 
     create table(fishing_fishes_users_tn, primary_key: false) do
-      add :fish_id, references(Faust.fetch_table_name(%Fish{}), on_delete: :delete_all), null: false
-      add :user_id, references(Faust.fetch_table_name(%User{}), on_delete: :delete_all), null: false
+      add :fish_id, references(Faust.fetch_table_name(%Fish{}), on_delete: :delete_all),
+        null: false
+
+      add :user_id, references(Faust.fetch_table_name(%User{}), on_delete: :delete_all),
+        null: false
     end
 
     create index(fishing_fishes_users_tn, [:fish_id])
