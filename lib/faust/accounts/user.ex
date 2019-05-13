@@ -25,17 +25,19 @@ defmodule Faust.Accounts.User do
     has_many :waters, Water
 
     many_to_many :fishes, Fish,
-      join_through: FishUser,
+      join_through: Faust.fetch_table_name(%FishUser{}, "string"),
       on_replace: :delete
 
     many_to_many :techniques, Technique,
-      join_through: TechniqueUser,
+      join_through: Faust.fetch_table_name(%TechniqueUser{}, "string"),
       on_replace: :delete
 
     many_to_many :followee, User,
       join_through: Follower,
       join_keys: [user_id: :id, follower_id: :id],
       on_replace: :delete
+
+    has_many :followee_ids, Follower
 
     many_to_many :followers, User,
       join_through: Follower,

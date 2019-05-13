@@ -20,12 +20,13 @@
     <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), user) do %>
       <%= link "Редактировать", to: Routes.user_path(@conn, :edit, user), class: "btn btn-outline-primary" %>
     <% else %>
-      <%= link "Подписаться", to: "#", class: "btn btn-outline-primary", id: user.id, onclick: "follow_user(this);" %>
+      <%= follower_link(@conn, @current_followee_ids, user) %>
     <% end %>
   </div>
 </div>
 <% end %>
 
+<!-- TODO: отрефакторить по конвенции DRY -->
 <script type="text/javascript">
     function follow_user(object) {
       switch ($(object).text().toLowerCase()) {

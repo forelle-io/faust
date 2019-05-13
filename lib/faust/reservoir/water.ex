@@ -27,11 +27,11 @@ defmodule Faust.Reservoir.Water do
     has_many :histories, History
 
     many_to_many :fishes, Fish,
-      join_through: FishWater,
+      join_through: Faust.fetch_table_name(%FishWater{}, "string"),
       on_replace: :delete
 
     many_to_many :techniques, Technique,
-      join_through: TechniqueWater,
+      join_through: Faust.fetch_table_name(%TechniqueWater{}, "string"),
       on_replace: :delete
 
     belongs_to :user, User

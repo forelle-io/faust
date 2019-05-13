@@ -11,6 +11,12 @@ defmodule Faust.Snoop do
 
   alias Faust.Snoop.Follower
 
+  def list_followee_ids(user_id) when is_integer(user_id) do
+    user_id
+    |> Follower.list_followee_ids_query()
+    |> Repo.all()
+  end
+
   def get_follower_by(params) do
     Repo.get_by(Follower, params)
   end

@@ -8,12 +8,29 @@ defmodule FaustWeb.UserController do
   alias Faust.Accounts.User
   alias Faust.Guardian.Plug, as: GuardianPlug
   alias Faust.Repo
+  alias Faust.Snoop
 
   action_fallback FaustWeb.FallbackController
 
-  def index(conn, _params) do
-    users = Accounts.list_users([:credential, :fishes, :techniques])
-    render(conn, "index.html", users: users)
+  def action(conn, _) do
+    action_name = action_name(conn)
+
+    args =
+      case action_name do
+        action when action in [:index, :show] ->
+          %User{id: id} = current_user(conn)
+          [conn, conn.params, Snoop.list_followee_ids(id)]
+
+        _ ->
+          [conn, conn.params]
+      end
+
+    apply(__MODULE__, action_name, args)
+  end
+
+  def index(conn, _params, current_followee_ids) do
+    users = Accounts.list_users([:credential, :fishes])
+    render(conn, "index.html", users: users, current_followee_ids: current_followee_ids)
   end
 
   def new(conn, _params) do
@@ -33,9 +50,9 @@ defmodule FaustWeb.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"id" => id}, current_followee_ids) do
     user = user_preloader(conn, id)
-    render(conn, "show.html", user: user)
+    render(conn, "show.html", user: user, current_followee_ids: current_followee_ids)
   end
 
   def edit(conn, %{"id" => id}) do
