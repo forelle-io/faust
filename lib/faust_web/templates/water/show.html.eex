@@ -55,8 +55,6 @@
 
     <div>
        <h5>Цвет:</h5>
-       <div class="color-circle clearfix" id ="color-circle" style="background:<%= FaustWeb.WaterView.prepare_color(@water.color) %>;">
-      </div>
       <%= @water.color %>
     </div>
 

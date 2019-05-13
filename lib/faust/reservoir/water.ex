@@ -9,15 +9,9 @@ defmodule Faust.Reservoir.Water do
   alias Faust.Accounts.User
   alias Faust.Fishing.{Fish, FishWater, Technique, TechniqueWater}
   alias Faust.Reservoir.History
-
   alias FaustWeb.Reservoir.WaterPolicy
 
-  @colors %{
-    "прозрачный" => "#FFFFFF",
-    "коричневый" => "#CD853F",
-    "зеленый" => "#008000",
-    "синий" => "#00FFFF"
-  }
+  @colors ["коричневый", "зеленый", "синий", "прозрачный"]
   @types ["море", "озеро", "пруд", "река", "водохранилище", "карьер"]
   @bottom_types ["илистое", "песчаное", "каменистое", "вязкое", "скалистое", "подводные леса"]
   @environments ["лес", "степь", "луг", "поле", "сад"]

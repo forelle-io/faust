@@ -72,9 +72,7 @@
 
   <div class="form-group">
       <%= label f, :color, "Цвет" %>
-      <div class="color-circle" id ="color-circle" style="background: #008000">
-      </div>
-       <%= select f, :color, FaustWeb.WaterView.colors_for_select(), id: "select_color_id", class: "form-control" %> 
+       <%= select f, :color,  Faust.Reservoir.Water.colors(), id: "select_color_id", class: "form-control" %> 
   </div>
 
   <div class="row">
@@ -100,10 +98,4 @@
     $('#select_color_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
   });
 
-  let colors = <%= raw Jason.encode!(Faust.Reservoir.Water.colors()) %>;
-  $('#select_color_id').change(function (e) {
-    if (colors[e.target.value]) {
-      document.getElementById('color-circle').style.background = colors[e.target.value];
-    }
-  });
 </script>
