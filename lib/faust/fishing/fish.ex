@@ -15,7 +15,7 @@ defmodule Faust.Fishing.Fish do
     field :name, :string, default: false
 
     many_to_many :users, User,
-      join_through: Faust.fetch_table_name(%FishUser{}, %{atomize: false}),
+      join_through: FishUser,
       on_replace: :delete
   end
 

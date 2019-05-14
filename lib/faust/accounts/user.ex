@@ -5,7 +5,9 @@ defmodule Faust.Accounts.User do
 
   import Ecto.Changeset
 
+  alias __MODULE__
   alias Faust.Accounts.Credential
+  alias Faust.Snoop.Follower
   alias Faust.Fishing.{Fish, FishUser, Technique, TechniqueUser}
   alias Faust.Reservoir.Water
   alias FaustWeb.Accounts.UserPolicy
@@ -23,11 +25,23 @@ defmodule Faust.Accounts.User do
     has_many :waters, Water
 
     many_to_many :fishes, Fish,
-      join_through: Faust.fetch_table_name(%FishUser{}, %{atomize: false}),
+      join_through: Faust.fetch_table_name(%FishUser{}, "string"),
       on_replace: :delete
 
     many_to_many :techniques, Technique,
-      join_through: Faust.fetch_table_name(%TechniqueUser{}, %{atomize: false}),
+      join_through: Faust.fetch_table_name(%TechniqueUser{}, "string"),
+      on_replace: :delete
+
+    many_to_many :followee, User,
+      join_through: Follower,
+      join_keys: [user_id: :id, follower_id: :id],
+      on_replace: :delete
+
+    # has_many :followee_ids, Follower
+
+    many_to_many :followers, User,
+      join_through: Follower,
+      join_keys: [follower_id: :id, user_id: :id],
       on_replace: :delete
 
     belongs_to :credential, Credential

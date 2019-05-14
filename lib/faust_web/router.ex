@@ -37,6 +37,8 @@ defmodule FaustWeb.Router do
   scope "/", FaustWeb do
     pipe_through [:browser, :maybe_authentication, :ensure_authentication]
 
+    delete "/session", SessionController, :delete
+
     resources "/users", UserController, except: [:new, :create] do
       resources "/waters", WaterController, only: [:index]
     end
@@ -49,6 +51,6 @@ defmodule FaustWeb.Router do
 
     resources "/histories", HistoryController, only: [:delete]
 
-    delete "/session", SessionController, :delete
+    resources "/followers", FollowerController, only: [:create, :delete]
   end
 end

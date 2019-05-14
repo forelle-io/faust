@@ -22,10 +22,10 @@
   </head>
   <body>
     <header>
-        <%= render FaustWeb.SharedView, "navigation.html", conn: @conn %>
+        <%= render FaustWeb.PartialView, "navigation.html", conn: @conn %>
     </header>
     <main role="main" class="container">
-      <%= render FaustWeb.SharedView, "flash.html", conn: @conn %>
+      <%= render FaustWeb.PartialView, "flash.html", conn: @conn %>
       <%= render @view_module, @view_template, assigns %>
     </main>
   </body>

@@ -8,12 +8,43 @@ defmodule FaustWeb.UserController do
   alias Faust.Accounts.User
   alias Faust.Guardian.Plug, as: GuardianPlug
   alias Faust.Repo
+  alias Faust.Snoop
 
   action_fallback FaustWeb.FallbackController
 
-  def index(conn, _params) do
-    users = Accounts.list_users([:credential, :fishes, :techniques])
-    render(conn, "index.html", users: users)
+  def action(conn, _) do
+    action_name = action_name(conn)
+
+    args =
+      case action_name do
+        :index ->
+          %User{id: id} = current_user(conn)
+          [conn, conn.params, Snoop.list_followee_ids(id)]
+
+        :show ->
+          current_user = current_user(conn)
+
+          user_id =
+            conn.params
+            |> Map.get("id")
+            |> String.to_integer()
+
+          if user_id == current_user.id do
+            [conn, conn.params]
+          else
+            [conn, conn.params, Snoop.list_followee_ids(current_user.id)]
+          end
+
+        _ ->
+          [conn, conn.params]
+      end
+
+    apply(__MODULE__, action_name, args)
+  end
+
+  def index(conn, _params, current_followee_ids) do
+    users = Accounts.list_users([:credential, :fishes])
+    render(conn, "index.html", users: users, current_followee_ids: current_followee_ids)
   end
 
   def new(conn, _params) do
@@ -36,6 +67,11 @@ defmodule FaustWeb.UserController do
   def show(conn, %{"id" => id}) do
     user = user_preloader(conn, id)
     render(conn, "show.html", user: user)
+  end
+
+  def show(conn, %{"id" => id}, current_followee_ids) do
+    user = user_preloader(conn, id)
+    render(conn, "show.html", user: user, current_followee_ids: current_followee_ids)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -80,12 +116,21 @@ defmodule FaustWeb.UserController do
   defp user_preloader(conn, id) do
     current_user = current_user(conn)
 
-    if current_user && current_user.id == String.to_integer(id) do
-      Repo.preload(current_user, [:fishes, :techniques])
-    else
-      id
-      |> Accounts.get_user!()
-      |> Repo.preload([:credential, :fishes, :techniques])
+    current_user =
+      if current_user && current_user.id == String.to_integer(id) do
+        Repo.preload(current_user, [:fishes, :techniques])
+      else
+        id
+        |> Accounts.get_user!()
+        |> Repo.preload([:credential, :fishes, :techniques])
+      end
+
+    case action_name(conn) do
+      :show ->
+        Repo.preload(current_user, [[followee: :credential], [followers: :credential]])
+
+      _ ->
+        current_user
     end
   end
 
