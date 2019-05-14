@@ -7,7 +7,7 @@ defmodule FaustWeb.FishViewTest do
 
   alias FaustWeb.FishView
 
-  describe "techniques_for_multiple_select" do
+  describe "fishes_for_multiple_select" do
     test "когда рыба не создана" do
       assert FishView.fishes_for_multiple_select() == []
     end
