@@ -39,12 +39,36 @@
       <h4>ДЕТАЛЬНАЯ ИНФОРМАЦИЯ</h4>
     </div>
     <div>
+      <h6>Описание:</h6>
       <%= @water.description %>
     </div>
+    
+    <div>
+     <h6>Тип водоема:</h6>
+      <%= @water.type %>
+    </div>
+
+    <div>
+       <h6>Тип дна:</h6>
+      <%= @water.bottom_type %>
+    </div>
+
+    <div>
+       <h6>Цвет воды:</h6>
+      <%= @water.color %>
+    </div>
+
+    <div>
+     <h6>Окружение:</h6>
+      <%= @water.environment %>
+    </div>
+  
     <div style="margin-top: 20px;">
+       <h5>Добавил:</h5>
       <%= Routes.static_path(@conn, @water.user.credential.alchemic_avatar) |> img_tag(width: 32, class: "rounded") %>
       <b><%= link "#{@water.user.name} #{@water.user.surname}", to: Routes.user_path(@conn, :show, @water.user) %></b>
     </div>
+
     <%= if Enum.any?(@water.histories) do %>
       <div style="margin-top: 30px;">
         <h4>ИСТОРИЯ ВОДОЕМА</h4>

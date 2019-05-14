@@ -55,6 +55,26 @@
       <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), id: "techniques_ids", class: "form-control" %>
   </div>
 
+ <div class="form-group">
+    <%= label f, :type, "Тип" %>
+    <%= select f, :type, Faust.Reservoir.Water.types(), id: "type_id", class: "form-control" %> 
+  </div>
+
+  <div class="form-group">
+     <%= label f, :bottom_type, "Тип дна" %>
+     <%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types(), id: "bottom_type_id", class: "form-control" %> 
+  </div>
+
+   <div class="form-group">
+      <%= label f, :environment, "Окружение" %>
+      <%= select f, :environment, Faust.Reservoir.Water.environments(), id: "environment_id", class: "form-control" %> 
+  </div>
+
+  <div class="form-group">
+      <%= label f, :color, "Цвет" %>
+       <%= select f, :color,  Faust.Reservoir.Water.colors(), id: "select_color_id", class: "form-control" %> 
+  </div>
+
   <div class="row">
     <div class="col-md-12 form-group">
       <%= submit "Создать", class: "btn btn-outline-success btn-lg btn-block" %>
@@ -68,5 +88,14 @@
     $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true,liveSearchStyle: "contains"});
     // Использование bootstrap-select для техники ловли
     $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    // Использование bootstrap-select для типа 
+    $('#type_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    // Использование bootstrap-select для типа дна
+    $('#bottom_type_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    // Использование bootstrap-select для окружения
+    $('#environment_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    // Использование bootstrap-select для цвета
+    $('#select_color_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
   });
+
 </script>
