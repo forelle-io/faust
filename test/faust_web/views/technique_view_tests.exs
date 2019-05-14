@@ -25,7 +25,7 @@ defmodule FaustWeb.TechniqueTest do
     end
   end
 
-  describe "techniques test" do
+  describe "techniques_tags" do
     test "с пустым списком техник ловли", %{conn: conn} do
       assert TechniquesView.techniques_tags(conn, []) == ""
     end
