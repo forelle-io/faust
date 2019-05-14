@@ -39,27 +39,27 @@
       <h4>ДЕТАЛЬНАЯ ИНФОРМАЦИЯ</h4>
     </div>
     <div>
-      <h5>Описание:</h5>
+      <h6>Описание:</h6>
       <%= @water.description %>
     </div>
     
     <div>
-     <h5>Тип:</h5>
+     <h6>Тип водоема:</h6>
       <%= @water.type %>
     </div>
 
     <div>
-       <h5>Тип дна:</h5>
+       <h6>Тип дна:</h6>
       <%= @water.bottom_type %>
     </div>
 
     <div>
-       <h5>Цвет:</h5>
+       <h6>Цвет воды:</h6>
       <%= @water.color %>
     </div>
 
     <div>
-     <h5>Окружение:</h5>
+     <h6>Окружение:</h6>
       <%= @water.environment %>
     </div>
   
