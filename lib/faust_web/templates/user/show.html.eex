@@ -38,9 +38,18 @@
     <% end %>
   </div>
   <div class="col-md-9">
-    <div class="row">
-      <div>
-        <h4>ПОЛЬЗОВАТЕЛЬСКИЙ КОНТЕНТ</h4>
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-followee-tab" data-toggle="tab" href="#nav-followee" role="tab" aria-controls="nav-followee" aria-selected="false">Подписки</a>
+        <a class="nav-item nav-link" id="nav-followers-tab" data-toggle="tab" href="#nav-followers" role="tab" aria-controls="nav-followers" aria-selected="false">Подписчики</a>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-followee" role="tabpanel" aria-labelledby="nav-followee-tab">
+        <%= render "partials/follower.html", conn: @conn, followers: @user.followee %>
+      </div>
+      <div class="tab-pane fade" id="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
+        <%= render "partials/follower.html", conn: @conn, followers: @user.followers %>
       </div>
     </div>
   </div>

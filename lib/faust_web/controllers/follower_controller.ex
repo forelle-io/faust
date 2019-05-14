@@ -4,8 +4,6 @@ defmodule FaustWeb.FollowerController do
   alias Faust.Snoop
   alias Faust.Snoop.Follower
 
-  action_fallback FaustWeb.FallbackController
-
   def action(conn, _) do
     args = [conn, conn.params, current_user(conn)]
     apply(__MODULE__, action_name(conn), args)
