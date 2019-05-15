@@ -16,7 +16,7 @@
 
 Обновление системы и установка требуемых зависимостей
 ```bash
-$ sudo apt update && sudo apt upgrade && sudo apt install git automake autoconf libreadline-dev libncurses-dev libssl-dev libyaml-dev libxslt-dev libffi-dev libtool unixodbc-dev openjdk-11-jre openjdk-11-jdk fop libncurses5-dev unixodbc-dev g++ libssl-dev libwxgtk3.0-dev xsltproc libwxbase3.0-dev libqt4-opengl-dev libgtk2.0-dev inotify-tools
+$ sudo apt update && sudo apt upgrade && sudo apt install git automake autoconf libreadline-dev libncurses-dev libssl-dev libyaml-dev libxslt-dev libffi-dev libtool unixodbc-dev openjdk-11-jre openjdk-11-jdk fop libncurses5-dev unixodbc-dev g++ libssl-dev libwxgtk3.0-dev xsltproc libwxbase3.0-dev libqt4-opengl-dev libgtk2.0-dev inotify-tools curl
 ```
 Клонирование исходников `asdf` менеджера на целевую машину
 ```bash
