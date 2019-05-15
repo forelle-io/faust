@@ -7,8 +7,13 @@ defmodule FaustWeb.UserView do
   alias Plug.Conn
 
   def follower_link(%Conn{} = conn, [], %User{id: id}) do
-    class = follower_css_class(conn, "btn btn-outline-primary")
-    link("Подписаться", to: "#", class: class, id: id, onclick: "follow_user(this);")
+    link("Подписаться",
+      to: "#",
+      class: follower_css_class(conn, "btn btn-outline-primary"),
+      id: id,
+      onclick: "follow_user(\"#{Plug.CSRFProtection.get_csrf_token()}\", this);",
+      data: [action: "follow"]
+    )
   end
 
   def follower_link(%Conn{} = conn, current_followee_ids, %User{id: id})
@@ -18,14 +23,16 @@ defmodule FaustWeb.UserView do
         to: "#",
         class: follower_css_class(conn, "btn btn-primary"),
         id: id,
-        onclick: "follow_user(this);"
+        onclick: "follow_user(\"#{Plug.CSRFProtection.get_csrf_token()}\", this);",
+        data: [action: "unfollow"]
       )
     else
       link("Подписаться",
         to: "#",
         class: follower_css_class(conn, "btn btn-outline-primary"),
         id: id,
-        onclick: "follow_user(this);"
+        onclick: "follow_user(\"#{Plug.CSRFProtection.get_csrf_token()}\", this);",
+        data: [action: "follow"]
       )
     end
   end
