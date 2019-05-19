@@ -29,8 +29,10 @@ defmodule Faust.Accounts.Credential do
 
   def create_changeset(credential, attrs) do
     credential
-    |> cast(attrs, [:unique, :email, :password, :password_confirmation])
+    |> cast(attrs, [:unique, :email, :password, :password_confirmation, :phone])
     |> validate_required([:unique, :email, :password, :password_confirmation])
+    |> validate_format(:email, ~r/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/)
+    |> validate_format(:unique, ~r/^[a-z0-9]+$/)
     |> unique_constraint(:unique, name: :accounts_credentials_unique_index)
     |> unique_constraint(:email, name: :accounts_credentials_email_index)
     |> password_hash_pipeline()
@@ -39,8 +41,11 @@ defmodule Faust.Accounts.Credential do
 
   def update_changeset(credential, attrs) do
     credential
-    |> cast(attrs, [:email, :password, :password_confirmation])
+    |> cast(attrs, [:email, :password, :password_confirmation, :phone])
     |> validate_required([:email, :password_hash])
+    |> validate_format(:email, ~r/^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/)
+    |> validate_format(:unique, ~r/^[a-z0-9]+$/)
+    |> validate_format(:phone, ~r/^\d{11}$/)
     |> unique_constraint(:email, name: :accounts_credentials_email_index)
     |> password_hash_pipeline()
   end

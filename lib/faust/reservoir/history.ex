@@ -30,6 +30,7 @@ defmodule Faust.Reservoir.History do
     history
     |> cast(attrs, [:type, :description])
     |> validate_required([:type])
+    |> validate_inclusion(:type, @types)
     |> put_assoc(:water, attrs["water"], required: true)
   end
 
@@ -37,6 +38,7 @@ defmodule Faust.Reservoir.History do
     history
     |> cast(attrs, [:type, :description])
     |> validate_required([:type])
+    |> validate_inclusion(:type, @types)
   end
 
   # SQL запросы ----------------------------------------------------------------

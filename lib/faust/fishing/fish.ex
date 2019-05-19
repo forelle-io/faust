@@ -25,6 +25,7 @@ defmodule Faust.Fishing.Fish do
     fish
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> validate_format(:name, ~r/^[a-zа-я ]+$/u)
     |> unique_constraint(:name, name: :fishing_fishes_name_index)
   end
 
@@ -32,6 +33,7 @@ defmodule Faust.Fishing.Fish do
     fish
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> validate_format(:name, ~r/^[a-zа-я ]+$/u)
     |> unique_constraint(:name, name: :fishing_fishes_name_index)
   end
 

@@ -55,6 +55,8 @@ defmodule Faust.Accounts.User do
     user
     |> cast(attrs, [:name, :surname])
     |> validate_required([:name, :surname])
+    |> validate_format(:name, ~r/^[A-ZА-Я]{1}[a-zа-я]+$/u)
+    |> validate_format(:surname, ~r/^[A-ZА-Я]{1}[a-zа-я]+$/u)
     |> cast_assoc(:credential, with: &Credential.create_changeset/2, required: true)
   end
 
@@ -62,6 +64,8 @@ defmodule Faust.Accounts.User do
     user
     |> cast(attrs, [:name, :surname])
     |> validate_required([:name, :surname])
+    |> validate_format(:name, ~r/^[A-ZА-Я]{1}[a-zа-я]+$/u)
+    |> validate_format(:surname, ~r/^[A-ZА-Я]{1}[a-zа-я]+$/u)
     |> cast_assoc(:credential, with: &Credential.create_changeset/2, required: true)
   end
 
@@ -70,6 +74,8 @@ defmodule Faust.Accounts.User do
     |> cast(attrs, [:name, :surname, :birthday, :fishes_ids, :techniques_ids])
     |> validate_required([:name, :surname])
     |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
+    |> validate_format(:name, ~r/^[A-ZА-Я]{1}[a-zа-я]+$/u)
+    |> validate_format(:surname, ~r/^[A-ZА-Я]{1}[a-zа-я]+$/u)
     |> Fish.fishes_pipeline()
     |> Technique.techniques_pipeline()
   end

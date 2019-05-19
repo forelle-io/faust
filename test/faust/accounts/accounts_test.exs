@@ -245,13 +245,13 @@ defmodule Faust.AccountsTest do
       assert {:ok, %User{} = user} =
                Accounts.update_user(user, %{
                  name: "Faust",
-                 surname: "NewSurname",
+                 surname: "Newsurname",
                  birthday: ~D[2000-05-01],
                  fishes_ids: [fish.id]
                })
 
       assert user.name == "Faust"
-      assert user.surname == "NewSurname"
+      assert user.surname == "Newsurname"
       assert user.birthday == ~D[2000-05-01]
 
       assert Repo.preload(user, :fishes).fishes |> length() == 1
@@ -268,13 +268,13 @@ defmodule Faust.AccountsTest do
       assert {:ok, %User{} = user} =
                Accounts.update_user(user, %{
                  name: "Faust",
-                 surname: "NewSurname",
+                 surname: "Newsurname",
                  birthday: ~D[2000-05-01],
                  techniques_ids: [technique.id]
                })
 
       assert user.name == "Faust"
-      assert user.surname == "NewSurname"
+      assert user.surname == "Newsurname"
       assert user.birthday == ~D[2000-05-01]
 
       assert Repo.preload(user, :techniques).techniques |> length() == 1
@@ -286,12 +286,12 @@ defmodule Faust.AccountsTest do
       assert {:ok, %User{} = user} =
                Accounts.update_user(user, %{
                  name: "Faust",
-                 surname: "NewSurname",
+                 surname: "Newsurname",
                  birthday: ~D[2000-05-01]
                })
 
       assert user.name == "Faust"
-      assert user.surname == "NewSurname"
+      assert user.surname == "Newsurname"
       assert user.birthday == ~D[2000-05-01]
     end
 
