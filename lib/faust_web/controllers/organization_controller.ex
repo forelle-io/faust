@@ -4,7 +4,7 @@ defmodule FaustWeb.OrganizationController do
   alias Faust.Accounts
 
   def index(conn, _params) do
-    organization = Accounts.list_organization()
+    organization = Accounts.list_organizations()
     render(conn, "index.html", organization: organization)
   end
 
