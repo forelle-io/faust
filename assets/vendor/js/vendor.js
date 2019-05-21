@@ -14,8 +14,6 @@ $(document).ready(function () {
                 follow_request(link, "DELETE", `/followers/${link.id}`);
                 break;
         }
-
-        $(link).blur();
     }
 
     function follow_request(link, type, url, data = {}) {

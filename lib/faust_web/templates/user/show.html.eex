@@ -11,7 +11,11 @@
       <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), @user) do %>
         <%= link "Редактировать", to: Routes.user_path(@conn, :edit, @user), class: "btn btn-outline-primary btn-lg btn-block" %>
       <% else %>
-        <%= follower_link(@conn, @current_followee_ids, @user) %>
+        <%= if Enum.member?(@current_followee_ids, @user.id) do
+          render "forms/show/unfollow.html", assigns
+        else
+          render "forms/show/follow.html", assigns
+        end %>
       <% end %>
     </div>
     <%= if Enum.any?(@user.fishes) do %>
