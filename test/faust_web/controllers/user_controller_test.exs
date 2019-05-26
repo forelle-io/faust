@@ -68,7 +68,8 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "страница входа, когда пользователь не авторизован и данные не валидны", %{conn: conn} do
+    test "страница создания нового пользователя, когда пользователь не авторизован и данные не валидны",
+         %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: %{user_attrs() | "name" => nil})
 
       assert conn.status == code(:ok)
@@ -116,7 +117,7 @@ defmodule FaustWeb.UserControllerTest do
 
     test "страница другого пользователя, когда текущий пользователь авторизован", %{conn: conn} do
       current_user = user_fixture()
-      other_user = create_other_user()
+      other_user = other_user_fixture()
 
       conn =
         conn
@@ -161,7 +162,7 @@ defmodule FaustWeb.UserControllerTest do
       conn: conn
     } do
       current_user = user_fixture()
-      other_user = create_other_user()
+      other_user = other_user_fixture()
 
       assert_error_sent 403, fn ->
         conn
@@ -195,11 +196,33 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.user_path(conn, :edit, current_user)
     end
 
+    test "страница редактирования пользователя, когда пользователь авторизован и данные не валидны",
+         %{
+           conn: conn
+         } do
+      current_user = user_fixture()
+
+      conn =
+        conn
+        |> authorize_conn(current_user)
+        |> put(Routes.user_path(conn, :update, current_user), %{
+          "user" => %{"name" => nil, "surname" => nil}
+        })
+
+      assert conn.status == code(:ok)
+      assert %Changeset{errors: errors, valid?: false} = conn.assigns.changeset
+      assert errors[:name] == {"can't be blank", [validation: :required]}
+      assert errors[:surname] == {"can't be blank", [validation: :required]}
+      assert controller_module(conn) == UserController
+      assert view_module(conn) == UserView
+      assert view_template(conn) == "edit.html"
+    end
+
     test "запрет редактирования другого пользователя, когда пользователь авторизован", %{
       conn: conn
     } do
       current_user = user_fixture()
-      other_user = create_other_user()
+      other_user = other_user_fixture()
 
       assert_error_sent 403, fn ->
         conn
@@ -219,7 +242,9 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "редирект на главную страницу, когда пользователь авторизован и удален", %{conn: conn} do
+    test "редирект на страницу пользователей, когда пользователь авторизован и удален", %{
+      conn: conn
+    } do
       current_user = user_fixture()
 
       conn =
@@ -234,27 +259,12 @@ defmodule FaustWeb.UserControllerTest do
 
     test "запрет удаления другого пользователя, когда пользователь авторизован", %{conn: conn} do
       current_user = user_fixture()
-      other_user = create_other_user()
 
       assert_error_sent 403, fn ->
         conn
         |> authorize_conn(current_user)
-        |> delete(Routes.user_path(conn, :delete, other_user))
+        |> delete(Routes.user_path(conn, :delete, other_user_fixture()))
       end
     end
-  end
-
-  # Приватные функции ----------------------------------------------------------
-
-  defp create_other_user do
-    %{
-      user_attrs()
-      | "credential" => %{
-          credential_attrs(:user)
-          | "email" => "other@forelle.io",
-            "unique" => "other"
-        }
-    }
-    |> user_fixture()
   end
 end
