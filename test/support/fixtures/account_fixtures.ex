@@ -81,6 +81,20 @@ defmodule Faust.Support.AccountFixtures do
     user
   end
 
+  def other_user_fixture do
+    %{
+      user_attrs()
+      | "credential" => %{
+          credential_attrs(:user)
+          | "email" => "other@forelle.io",
+            "unique" => "other"
+        },
+        "name" => "Other",
+        "surname" => "User"
+    }
+    |> user_fixture()
+  end
+
   def organization_fixture(attrs \\ %{}) do
     {:ok, %Organization{} = organization} =
       attrs

@@ -21,12 +21,16 @@ defmodule Faust.Support.ReservoirFixtures do
     "description" => "Запуск форели средней навеской по 1кг общим весом 500кг"
   }
 
-  def water_attrs(%User{} = user) do
-    Map.put_new(@water_attrs, "user", user)
+  def water_attrs(%User{} = user, attrs \\ %{}) do
+    @water_attrs
+    |> Map.merge(attrs)
+    |> Map.put_new("user", user)
   end
 
-  def history_attrs(%Water{} = water) do
-    Map.put_new(@history_atrs, "water", water)
+  def history_attrs(%Water{} = water, attrs \\ %{}) do
+    @history_atrs
+    |> Map.merge(attrs)
+    |> Map.put_new("water", water)
   end
 
   def water_fixture(%User{} = user, attrs \\ %{}) do
