@@ -57,7 +57,13 @@
       <%= text_input c, :email, class: "form-control" %>
       <%= error_tag c, :email %>
     </div>
-    
+
+    <div class="form-group">
+      <%= label c, "Телефон" %>
+      <%= text_input c, :phone, class: "form-control" %>
+      <%= error_tag c, :phone %>
+    </div>
+
     <div class="form-group">
       <%= label c, "Новый пароль" %>
       <%= password_input c, :password, class: "form-control" %>

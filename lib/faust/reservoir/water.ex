@@ -16,6 +16,8 @@ defmodule Faust.Reservoir.Water do
   @bottom_types ["илистое", "песчаное", "каменистое", "вязкое", "скалистое", "подводные леса"]
   @environments ["лес", "степь", "луг", "поле", "сад"]
 
+  @regex_name ~r/\A[a-zA-Zа-яА-Я ]+\z/u
+
   schema "reservoir.waters" do
     field :name, :string
     field :description, :string
@@ -70,6 +72,11 @@ defmodule Faust.Reservoir.Water do
       :environment
     ])
     |> validate_required([:name, :description, :is_frozen])
+    |> validate_format(:name, @regex_name)
+    |> validate_inclusion(:type, @types)
+    |> validate_inclusion(:color, @colors)
+    |> validate_inclusion(:bottom_type, @bottom_types)
+    |> validate_inclusion(:environment, @environments)
     |> put_assoc(:user, attrs["user"], required: true)
     |> Fish.fishes_pipeline()
     |> Technique.techniques_pipeline()
@@ -91,6 +98,11 @@ defmodule Faust.Reservoir.Water do
       :environment
     ])
     |> validate_required([:name, :description, :is_frozen])
+    |> validate_format(:name, @regex_name)
+    |> validate_inclusion(:type, @types)
+    |> validate_inclusion(:color, @colors)
+    |> validate_inclusion(:bottom_type, @bottom_types)
+    |> validate_inclusion(:environment, @environments)
     |> Fish.fishes_pipeline()
     |> Technique.techniques_pipeline()
   end

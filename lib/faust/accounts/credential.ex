@@ -8,6 +8,9 @@ defmodule Faust.Accounts.Credential do
   alias Ecto.Changeset
   alias Faust.Accounts.{Chief, Organization, User}
 
+  @regex_email ~r/\A[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}\z/
+  @regex_unique ~r/\A[a-z0-9]+\z/
+
   schema "accounts.credentials" do
     field :unique, :string
     field :phone, :string
@@ -29,8 +32,10 @@ defmodule Faust.Accounts.Credential do
 
   def create_changeset(credential, attrs) do
     credential
-    |> cast(attrs, [:unique, :email, :password, :password_confirmation])
+    |> cast(attrs, [:unique, :email, :password, :password_confirmation, :phone])
     |> validate_required([:unique, :email, :password, :password_confirmation])
+    |> validate_format(:email, @regex_email)
+    |> validate_format(:unique, @regex_unique)
     |> unique_constraint(:unique, name: :accounts_credentials_unique_index)
     |> unique_constraint(:email, name: :accounts_credentials_email_index)
     |> password_hash_pipeline()
@@ -39,8 +44,11 @@ defmodule Faust.Accounts.Credential do
 
   def update_changeset(credential, attrs) do
     credential
-    |> cast(attrs, [:email, :password, :password_confirmation])
+    |> cast(attrs, [:email, :password, :password_confirmation, :phone])
     |> validate_required([:email, :password_hash])
+    |> validate_format(:email, @regex_email)
+    |> validate_format(:unique, @regex_unique)
+    |> validate_format(:phone, ~r/^\d{11}$/)
     |> unique_constraint(:email, name: :accounts_credentials_email_index)
     |> password_hash_pipeline()
   end

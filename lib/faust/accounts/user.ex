@@ -12,6 +12,8 @@ defmodule Faust.Accounts.User do
   alias Faust.Reservoir.Water
   alias FaustWeb.Accounts.UserPolicy
 
+  @regex_name ~r/\A[A-ZА-Я]{1}[a-zа-я]+\z/u
+
   schema "accounts.users" do
     field :name, :string
     field :surname, :string
@@ -53,6 +55,8 @@ defmodule Faust.Accounts.User do
     user
     |> cast(attrs, [:name, :surname])
     |> validate_required([:name, :surname])
+    |> validate_format(:name, @regex_name)
+    |> validate_format(:surname, @regex_name)
     |> cast_assoc(:credential, with: &Credential.create_changeset/2, required: true)
   end
 
@@ -60,6 +64,8 @@ defmodule Faust.Accounts.User do
     user
     |> cast(attrs, [:name, :surname])
     |> validate_required([:name, :surname])
+    |> validate_format(:name, @regex_name)
+    |> validate_format(:surname, @regex_name)
     |> cast_assoc(:credential, with: &Credential.create_changeset/2, required: true)
   end
 
@@ -68,6 +74,8 @@ defmodule Faust.Accounts.User do
     |> cast(attrs, [:name, :surname, :birthday, :fishes_ids, :techniques_ids])
     |> validate_required([:name, :surname])
     |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
+    |> validate_format(:name, @regex_name)
+    |> validate_format(:surname, @regex_name)
     |> Fish.fishes_pipeline()
     |> Technique.techniques_pipeline()
   end
