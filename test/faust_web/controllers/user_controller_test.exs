@@ -1,65 +1,66 @@
 defmodule FaustWeb.UserControllerTest do
   @moduledoc false
-
   use FaustWeb.ConnCase
 
-  import Faust.Support.{AccountFixtures, Factories}
-  import Phoenix.Controller, only: [controller_module: 1, view_template: 1]
+  import Faust.Support.AccountFixtures
+  import Phoenix.Controller, only: [controller_module: 1, view_template: 1, view_module: 1]
   import Plug.Conn.Status, only: [code: 1]
 
   alias Ecto.Changeset
-  alias FaustWeb.UserController
+  alias Faust.Accounts.User
+  alias FaustWeb.{UserController, UserView}
 
   describe "index" do
-    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{conn: conn} do
+    test "редирект на страницу входа, когда пользователь не авторизован", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :index))
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "список всех пользователей, когда пользователь авторизован", %{conn: conn} do
-      user = user_fixture()
+    test "страница списка всех пользователей, когда пользователь авторизован", %{conn: conn} do
+      current_user = user_fixture()
 
       conn =
         conn
-        |> authorize_conn(user)
+        |> authorize_conn(current_user)
         |> get(Routes.user_path(conn, :index))
 
       assert conn.status == code(:ok)
       assert length(conn.assigns.users) == 1
       assert controller_module(conn) == UserController
+      assert view_module(conn) == UserView
       assert view_template(conn) == "index.html"
     end
   end
 
   describe "new" do
-    test "рендеринг страницы создания нового пользователя, когда пользователь не авторизован", %{
-      conn: conn
-    } do
+    test "страница создания пользователя, когда пользователь не авторизован", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :new))
 
       assert conn.status == code(:ok)
       assert controller_module(conn) == UserController
+      assert view_module(conn) == UserView
       assert view_template(conn) == "new.html"
     end
 
     test "редирект на страницу пользователя, когда пользователь авторизован", %{conn: conn} do
-      user = insert(:user)
+      current_user = user_fixture()
 
       conn =
         conn
-        |> authorize_conn(user)
+        |> authorize_conn(current_user)
         |> get(Routes.user_path(conn, :new))
 
       assert conn.status == code(:found)
-      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
+      assert redirected_to(conn) == Routes.user_path(conn, :show, current_user)
     end
   end
 
   describe "create" do
-    test "редирект на страницу создания сессии, когда данные валидны пользователь не авторизован",
-         %{conn: conn} do
+    test "редирект на страницу входа, когда пользователь не авторизован и данные валидны", %{
+      conn: conn
+    } do
       conn = post(conn, Routes.user_path(conn, :create), user: user_attrs())
 
       assert conn.status == code(:found)
@@ -67,211 +68,203 @@ defmodule FaustWeb.UserControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "редирект на страницу пользователя, когда данные валидны и пользователь авторизован", %{
-      conn: conn
-    } do
-      user = insert(:user)
-
-      conn =
-        conn
-        |> authorize_conn(user)
-        |> post(Routes.user_path(conn, :create), user: user_attrs())
-
-      assert conn.status == code(:found)
-      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
-    end
-
-    test "рендеринг ошибок, когда данные не валидны и пользователь не авторизован", %{conn: conn} do
-      conn = post(conn, Routes.user_path(conn, :create), user: %{user_attrs() | name: nil})
+    test "страница создания нового пользователя, когда пользователь не авторизован и данные не валидны",
+         %{conn: conn} do
+      conn = post(conn, Routes.user_path(conn, :create), user: %{user_attrs() | "name" => nil})
 
       assert conn.status == code(:ok)
-      assert %Changeset{valid?: false} = conn.assigns.changeset
+      assert %Changeset{errors: errors, valid?: false} = conn.assigns.changeset
+      assert errors[:name] == {"can't be blank", [validation: :required]}
       assert controller_module(conn) == UserController
+      assert view_module(conn) == UserView
       assert view_template(conn) == "new.html"
     end
 
-    test "редирект на страницу пользователя, когда данные не валидны и пользователь авторизован",
-         %{conn: conn} do
-      user = insert(:user)
+    test "редирект на страницу пользователя, когда пользователь авторизован", %{conn: conn} do
+      current_user = user_fixture()
 
       conn =
         conn
-        |> authorize_conn(user)
-        |> post(Routes.user_path(conn, :create), user: %{user_attrs() | name: nil})
+        |> authorize_conn(current_user)
+        |> post(Routes.user_path(conn, :create), user: user_attrs())
 
       assert conn.status == code(:found)
-      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
+      assert redirected_to(conn) == Routes.user_path(conn, :show, current_user)
     end
   end
 
   describe "show" do
-    setup [:create_user]
-
-    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{
-      conn: conn,
-      user: user
-    } do
-      conn = get(conn, Routes.user_path(conn, :show, user))
+    test "редирект на страницу входа, когда пользователь не авторизован", %{conn: conn} do
+      conn = get(conn, Routes.user_path(conn, :show, 1))
 
       assert conn.status == code(:found)
+      assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "рендер страницы пользователя, когда пользователь авторизован", %{conn: conn, user: user} do
+    test "страница текущего пользователя, когда пользователь авторизован", %{conn: conn} do
+      current_user = user_fixture()
+
       conn =
         conn
-        |> authorize_conn(user)
-        |> get(Routes.user_path(conn, :show, user))
+        |> authorize_conn(current_user)
+        |> get(Routes.user_path(conn, :show, current_user))
 
       assert conn.status == code(:ok)
-      assert conn.assigns.user.id == user.id
       assert controller_module(conn) == UserController
+      assert view_module(conn) == UserView
       assert view_template(conn) == "show.html"
+    end
+
+    test "страница другого пользователя, когда текущий пользователь авторизован", %{conn: conn} do
+      current_user = user_fixture()
+      other_user = other_user_fixture()
+
+      conn =
+        conn
+        |> authorize_conn(current_user)
+        |> get(Routes.user_path(conn, :show, other_user))
+
+      assert conn.status == code(:ok)
+      assert controller_module(conn) == UserController
+      assert view_module(conn) == UserView
+      assert view_template(conn) == "show.html"
+      assert %User{} = conn.assigns.user
+      assert Enum.empty?(conn.assigns.current_followee_ids)
     end
   end
 
   describe "edit" do
-    setup [:create_user]
-
-    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{
-      conn: conn,
-      user: user
-    } do
-      conn = get(conn, Routes.user_path(conn, :edit, user))
+    test "редирект на страницу входа, когда пользователь не авторизован", %{conn: conn} do
+      conn = get(conn, Routes.user_path(conn, :edit, 1))
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "рендеринг страницы редактирования пользователя, когда пользователь авторизован", %{
-      conn: conn,
-      user: user
+    test "страница редактирования текущего пользователя, когда пользователь авторизован", %{
+      conn: conn
     } do
+      current_user = user_fixture()
+
       conn =
         conn
-        |> authorize_conn(user)
-        |> get(Routes.user_path(conn, :edit, user))
+        |> authorize_conn(current_user)
+        |> get(Routes.user_path(conn, :edit, current_user))
 
       assert conn.status == code(:ok)
-      assert %Changeset{valid?: true} = conn.assigns.changeset
       assert controller_module(conn) == UserController
+      assert view_module(conn) == UserView
       assert view_template(conn) == "edit.html"
+      assert %User{} = conn.assigns.user
     end
 
-    test "исключительная ситуация с кодом 403 при попытке редактировать запрещенный ресурс", %{
-      conn: conn,
-      user: user
+    test "запрет редактирования страницы другого пользователя, когда пользователь авторизован", %{
+      conn: conn
     } do
-      assert_error_sent(403, fn ->
+      current_user = user_fixture()
+      other_user = other_user_fixture()
+
+      assert_error_sent 403, fn ->
         conn
-        |> authorize_conn(user)
-        |> get(Routes.user_path(conn, :edit, insert(:user)))
-      end)
+        |> authorize_conn(current_user)
+        |> get(Routes.user_path(conn, :edit, other_user))
+      end
     end
   end
 
   describe "update" do
-    setup [:create_user]
-
-    test "редирект на страницу создания сессии, когда пользователь не авторизован", %{
-      conn: conn,
-      user: user
-    } do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: %{name: "Faust"})
+    test "редирект на страницу входа, когда пользователь не авторизован", %{conn: conn} do
+      conn = get(conn, Routes.user_path(conn, :update, 1))
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "редирект на страницу редактирования пользователя, когда данные валидны и пользователь авторизован",
-         %{
-           conn: conn,
-           user: user
-         } do
+    test "редирект на страницу редактирования пользователя, когда пользователь авторизован и данные валидны",
+         %{conn: conn} do
+      current_user = user_fixture()
+
       conn =
         conn
-        |> authorize_conn(user)
-        |> put(Routes.user_path(conn, :update, user), user: %{name: "Faust"})
+        |> authorize_conn(current_user)
+        |> put(Routes.user_path(conn, :update, current_user), %{
+          "user" => %{"name" => "Карл", "surname" => "Фридрих"}
+        })
 
       assert conn.status == code(:found)
       assert conn.private[:phoenix_flash]["info"] == "User updated successfully."
-      assert redirected_to(conn) == Routes.user_path(conn, :edit, user)
+      assert redirected_to(conn) == Routes.user_path(conn, :edit, current_user)
     end
 
-    test "редирект на страницу создания сессии, когда данные не валидны и пользователь не авторизован",
+    test "страница редактирования пользователя, когда пользователь авторизован и данные не валидны",
          %{
-           conn: conn,
-           user: user
+           conn: conn
          } do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: %{name: nil})
+      current_user = user_fixture()
 
-      assert conn.status == code(:found)
-      assert redirected_to(conn) == Routes.session_path(conn, :new)
-    end
-
-    test "рендеринг ошибок, когда данные не валидны и пользователь авторизован", %{
-      conn: conn,
-      user: user
-    } do
       conn =
         conn
-        |> authorize_conn(user)
-        |> put(Routes.user_path(conn, :update, user), user: %{name: nil})
+        |> authorize_conn(current_user)
+        |> put(Routes.user_path(conn, :update, current_user), %{
+          "user" => %{"name" => nil, "surname" => nil}
+        })
 
       assert conn.status == code(:ok)
-      assert %Changeset{valid?: false} = conn.assigns.changeset
+      assert %Changeset{errors: errors, valid?: false} = conn.assigns.changeset
+      assert errors[:name] == {"can't be blank", [validation: :required]}
+      assert errors[:surname] == {"can't be blank", [validation: :required]}
       assert controller_module(conn) == UserController
+      assert view_module(conn) == UserView
       assert view_template(conn) == "edit.html"
     end
 
-    test "исключительная ситуация с кодом 403 при попытке редактировать запрещенный ресурс", %{
-      conn: conn,
-      user: user
+    test "запрет редактирования другого пользователя, когда пользователь авторизован", %{
+      conn: conn
     } do
-      assert_error_sent(403, fn ->
+      current_user = user_fixture()
+      other_user = other_user_fixture()
+
+      assert_error_sent 403, fn ->
         conn
-        |> authorize_conn(user)
-        |> put(Routes.user_path(conn, :update, insert(:user)), user: %{name: "Faust"})
-      end)
+        |> authorize_conn(current_user)
+        |> put(Routes.user_path(conn, :update, other_user), %{
+          "user" => %{"name" => "Карл", "surname" => "Фридрих"}
+        })
+      end
     end
   end
 
   describe "delete" do
-    setup [:create_user]
-
-    test "редирект на страницу создания сессии, когда данные не валидны и пользователь не авторизован",
-         %{conn: conn, user: user} do
-      conn = delete(conn, Routes.user_path(conn, :delete, user))
+    test "редирект на страницу входа, когда пользователь не авторизован", %{conn: conn} do
+      conn = delete(conn, Routes.user_path(conn, :delete, 1))
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "редирект на страницу списка всех пользователей, когда пользователь авторизован", %{
-      conn: conn,
-      user: user
+    test "редирект на страницу пользователей, когда пользователь авторизован и удален", %{
+      conn: conn
     } do
+      current_user = user_fixture()
+
       conn =
         conn
-        |> authorize_conn(user)
-        |> delete(Routes.user_path(conn, :delete, user))
+        |> authorize_conn(current_user)
+        |> delete(Routes.user_path(conn, :delete, current_user))
 
       assert conn.status == code(:found)
+      assert conn.private[:phoenix_flash]["info"] == "User deleted successfully."
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
-    test "исключительная ситуация с кодом 403 при попытке редактировать запрещенный ресурс", %{
-      conn: conn,
-      user: user
-    } do
-      assert_error_sent(403, fn ->
+    test "запрет удаления другого пользователя, когда пользователь авторизован", %{conn: conn} do
+      current_user = user_fixture()
+
+      assert_error_sent 403, fn ->
         conn
-        |> authorize_conn(user)
-        |> delete(Routes.user_path(conn, :delete, insert(:user)))
-      end)
+        |> authorize_conn(current_user)
+        |> delete(Routes.user_path(conn, :delete, other_user_fixture()))
+      end
     end
   end
-
-  # Приватные функции ----------------------------------------------------------
-
-  defp create_user(_), do: {:ok, user: user_fixture()}
 end

@@ -11,10 +11,12 @@ defmodule FaustWeb.WaterController do
   action_fallback FaustWeb.FallbackController
 
   def index(conn, %{"user_id" => user_id} = params) do
+    user_id = String.to_integer(user_id)
+
     with :ok <-
            Bodyguard.permit(Water, :index, current_user(conn), %{
              params
-             | "user_id" => String.to_integer(user_id)
+             | "user_id" => user_id
            }) do
       waters = Reservoir.list_waters(user_id, [[user: :credential], :fishes, :techniques])
 

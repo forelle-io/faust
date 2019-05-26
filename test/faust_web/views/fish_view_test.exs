@@ -1,38 +1,33 @@
-defmodule FaustWeb.FishViewTest do
+defmodule FaustWeb.Views.FishViewTest do
   @moduledoc false
 
-  use FaustWeb.ConnCase, async: true
+  use FaustWeb.ConnCase
 
-  import Faust.Support.FishesFixtures, only: [fish_fixture: 0]
+  import Faust.Support.Factories
 
   alias FaustWeb.FishView
 
-  describe "fishes_for_multiple_select" do
-    test "когда рыба не создана" do
-      assert FishView.fishes_for_multiple_select() == []
-    end
+  test "fishes_for_multiple_select" do
+    insert_list(2, :fishing_fish)
 
-    test "когда рыба создана" do
-      fish_fixture()
+    case FishView.fishes_for_multiple_select() do
+      fishes_list when is_list(fishes_list) ->
+        Enum.all?(fishes_list, fn {k, v} -> is_bitstring(k) and is_integer(v) end)
 
-      case FishView.fishes_for_multiple_select() do
-        [{"форель", _id}] ->
-          assert true
-
-        _ ->
-          assert false
-      end
+      _ ->
+        false
     end
   end
 
   describe "fishes_tags" do
-    test "с пустым списком рыб", %{conn: conn} do
+    test "когда список пустой", %{conn: conn} do
       assert FishView.fishes_tags(conn, []) == ""
     end
 
-    test "с одной рыбой в списке", %{conn: conn} do
-      assert FishView.fishes_tags(conn, [fish_fixture()]) ==
-               "<a class=\"topic\" href=\"/users\">форель</a>"
+    test "когда список содержит 2 рыбы", %{conn: conn} do
+      fishes_list = insert_list(2, :fishing_fish)
+      regex = ~r/\A(<a class=\"topic\" href=\"\/users\">[а-я]{1,}_[a-z]{4}<\/a>){1,}\z/u
+      assert FishView.fishes_tags(conn, fishes_list) =~ regex
     end
   end
 end

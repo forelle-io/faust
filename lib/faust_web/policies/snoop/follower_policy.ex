@@ -6,7 +6,10 @@ defmodule FaustWeb.Snoop.FollowerPolicy do
   alias Faust.Snoop.Follower
 
   def authorize(:create, %User{id: id}, follower_id) do
-    if id == follower_id, do: false, else: true
+    case follower_id do
+      ^id -> false
+      _ -> true
+    end
   end
 
   def authorize(:delete, %User{id: id}, %Follower{user_id: id}) do
