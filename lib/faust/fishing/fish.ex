@@ -11,6 +11,8 @@ defmodule Faust.Fishing.Fish do
   alias Faust.Fishing
   alias Faust.Fishing.FishUser
 
+  @regex_name ~r/\A[a-zа-я ]+\z/u
+
   schema "fishing.fishes" do
     field :name, :string
 
@@ -25,7 +27,7 @@ defmodule Faust.Fishing.Fish do
     fish
     |> cast(attrs, [:name])
     |> validate_required([:name])
-    |> validate_format(:name, ~r/^[a-zа-я ]+$/u)
+    |> validate_format(:name, @regex_name)
     |> unique_constraint(:name, name: :fishing_fishes_name_index)
   end
 
@@ -33,7 +35,7 @@ defmodule Faust.Fishing.Fish do
     fish
     |> cast(attrs, [:name])
     |> validate_required([:name])
-    |> validate_format(:name, ~r/^[a-zа-я ]+$/u)
+    |> validate_format(:name, @regex_name)
     |> unique_constraint(:name, name: :fishing_fishes_name_index)
   end
 
