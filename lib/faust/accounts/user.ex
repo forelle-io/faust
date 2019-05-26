@@ -37,8 +37,6 @@ defmodule Faust.Accounts.User do
       join_keys: [user_id: :id, follower_id: :id],
       on_replace: :delete
 
-    # has_many :followee_ids, Follower
-
     many_to_many :followers, User,
       join_through: Follower,
       join_keys: [follower_id: :id, user_id: :id],

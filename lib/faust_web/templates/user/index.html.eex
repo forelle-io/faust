@@ -20,7 +20,7 @@
       <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), user) do %>
         <%= link "Редактировать", to: Routes.user_path(@conn, :edit, user), class: "btn btn-outline-primary" %>
       <% else %>
-        <%= follower_link(@conn, @current_followee_ids, user) %>
+        <%= follower_link(@current_followee_ids, user) %>
       <% end %>
     </div>
   </div>

@@ -12,7 +12,7 @@ defmodule Faust.Fishing.Technique do
   alias Faust.Fishing.TechniqueUser
 
   schema "fishing.techniques" do
-    field :name, :string, default: false
+    field :name, :string
 
     many_to_many :users, User,
       join_through: TechniqueUser,

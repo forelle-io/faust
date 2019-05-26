@@ -70,7 +70,7 @@ defmodule Faust.Reservoir.Water do
       :environment
     ])
     |> validate_required([:name, :description, :is_frozen])
-    |> validate_format(:name, ~r/^[a-zа-я ]+$/u)
+    |> validate_format(:name, ~r/^[a-zA-Zа-яА-Я ]+$/u)
     |> validate_inclusion(:type, @types)
     |> validate_inclusion(:color, @colors)
     |> validate_inclusion(:bottom_type, @bottom_types)
@@ -96,7 +96,7 @@ defmodule Faust.Reservoir.Water do
       :environment
     ])
     |> validate_required([:name, :description, :is_frozen])
-    |> validate_format(:name, ~r/^[a-zа-я ]+$/u)
+    |> validate_format(:name, ~r/^[a-zA-Zа-яА-Я ]+$/u)
     |> validate_inclusion(:type, @types)
     |> validate_inclusion(:color, @colors)
     |> validate_inclusion(:bottom_type, @bottom_types)

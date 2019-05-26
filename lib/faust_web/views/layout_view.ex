@@ -1,7 +1,9 @@
 defmodule FaustWeb.LayoutView do
   use FaustWeb, :view
 
-  def clickable_logotype(conn) do
+  alias Plug.Conn
+
+  def clickable_logotype(%Conn{} = conn) do
     conn
     |> Routes.static_path("/images/logotype.png")
     |> img_tag(height: 72)

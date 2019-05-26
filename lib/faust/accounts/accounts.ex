@@ -87,7 +87,7 @@ defmodule Faust.Accounts do
 
   alias Faust.Accounts.Organization
 
-  def list_organization do
+  def list_organizations do
     Repo.all(Organization)
   end
 
@@ -119,7 +119,7 @@ defmodule Faust.Accounts do
 
   alias Faust.Accounts.Chief
 
-  def list_chief do
+  def list_chiefs do
     Repo.all(Chief)
   end
 
