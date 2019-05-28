@@ -69,7 +69,7 @@ defmodule FaustWeb.AuthenticationHelper do
     Guardian.Plug.authenticated?(conn, key: :chief)
   end
 
-  # Private functions ----------------------------------------------------------
+  # Приватные функции ----------------------------------------------------------
 
   defp prepare_current_resource(%Credential{} = credential, association)
        when association in ["user", "organization", "chief"] do
