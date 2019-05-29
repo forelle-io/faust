@@ -15,7 +15,13 @@ config :faust, FaustWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "TySzoftkwbMfzcIYzz8LucWCK6xI1015SBCeAuMXs1sTnN7QU7gUqbctEi/uvR84",
   render_errors: [view: FaustWeb.ErrorView, accepts: ~w(html json)],
+  live_view: [
+    signing_salt: "7HekGYwxATz33gM/rH9q2mV+uKJq5/Hu"
+  ],
   pubsub: [name: Faust.PubSub, adapter: Phoenix.PubSub.PG2]
+
+config :phoenix,
+  template_engines: [leex: Phoenix.LiveView.Engine]
 
 config :faust, Faust.Guardian,
   issuer: "faust",
