@@ -57,3 +57,4 @@ defmodule FaustWeb.OrhanizationControllerTest do
     end
   end
 end
+

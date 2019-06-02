@@ -31,3 +31,4 @@ defmodule FaustWeb.PageControllerTest do
     end
   end
 end
+

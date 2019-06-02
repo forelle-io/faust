@@ -120,7 +120,7 @@ defmodule Faust.Reservoir.HistoryTest do
       assert %Ecto.Changeset{errors: errors, valid?: false} = Reservoir.change_history(%History{})
 
       errors
-      |> Enum.filter(fn {k, _v} -> Enum.member?([:type, :description], k) end)
+      |> Enum.filter(fn {k, _v} -> Enum.member?([:type], k) end)
       |> Enum.each(fn {_k, v} -> assert v == {"can't be blank", [validation: :required]} end)
     end
   end

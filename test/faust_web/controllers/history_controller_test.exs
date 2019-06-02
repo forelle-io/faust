@@ -117,3 +117,4 @@ defmodule FaustWeb.HistoryControllerTest do
     end
   end
 end
+

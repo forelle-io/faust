@@ -109,7 +109,6 @@ defmodule Faust.Support.AccountFixtures do
     |> organization_fixture()
   end
 
-  @spec organization_fixture(any()) :: Faust.Accounts.Organization.t()
   def organization_fixture(attrs \\ %{}) do
     {:ok, %Organization{} = organization} =
       attrs
