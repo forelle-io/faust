@@ -22,6 +22,7 @@ defmodule FaustWeb do
       use Phoenix.Controller, namespace: FaustWeb
 
       import Plug.Conn
+      import Phoenix.LiveView.Controller, only: [live_render: 3]
       import FaustWeb.Gettext
 
       import FaustWeb.AuthenticationHelper,

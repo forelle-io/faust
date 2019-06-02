@@ -1,60 +1,55 @@
 <div class="row">
-  <div class="col-md-3">
-    <%= Routes.static_path(@conn, @user.credential.alchemic_avatar) |> img_tag(width: "100%", class: "rounded") %>
-    <div class="text-center" style="margin-top: 20px;">
-      <div>
-        <b><%= "#{@user.name} #{@user.surname}" |> String.upcase() %></b>
+  <div class="col-md-4">
+    <div class="content-block">
+      <div class="text-center">
+        <div>
+          <%= Routes.static_path(@conn, @user.credential.alchemic_avatar) |> img_tag(width: "128px", height: "128px", class: "rounded-circle", style: "margin-top: 30px;") %>
+        </div>
+        <div style="margin-top: 20px;">
+          <b><%= "#{@user.name} #{@user.surname}" %></b>
+        </div>
+        <div style="margin-top: 20px;">
+          <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, @current_user, @user) do %>
+            <%= link "Редактировать", to: Routes.user_path(FaustWeb.Endpoint, :edit, @user), class: "btn btn-outline-primary" %>
+          <% else %>
+            <%= live_render(@conn, FaustWeb.Accounts.UserFollowerActionLive, session: %{current_user: @current_user, list_followee_ids: @list_followee_ids, user: @user }) %>
+          <% end %>
+        </div>
       </div>
-      <div class="text-muted small">@<%= @user.credential.unique %></div>
-    </div>
-    <div style="margin-top: 20px;">
-      <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, current_user(@conn), @user) do %>
-        <%= link "Редактировать", to: Routes.user_path(@conn, :edit, @user), class: "btn btn-outline-primary btn-lg btn-block" %>
-      <% else %>
-        <%= if Enum.member?(@current_followee_ids, @user.id) do
-          render "forms/show/unfollow.html", assigns
-        else
-          render "forms/show/follow.html", assigns
-        end %>
-      <% end %>
-    </div>
-    <%= if Enum.any?(@user.fishes) do %>
       <hr>
-      <div class="row" style="padding-top: 15px;">
-        <div class="col-md-12">
-          <span class="text-muted">ПРЕДПОЧИТАЕМАЯ РЫБА</span>
+      <div>
+        <div class="row text-center">
+          <div class="col-md-6">
+            <div><b>23</b></div>
+            <div style="color: #6C758A;">Подписчика</div>
+          </div>
+          <div class="col-md-6">
+            <div><b>6</b></div>
+            <div style="color: #6C758A;">Подписки</div>
+          </div>
         </div>
-        <div class="col-md-12" style="padding-top: 15px;">
-          <%= raw FaustWeb.FishView.fishes_tags(@conn, @user.fishes) %>
-        </div>
-      </div>
-    <% end %>
-    <%= if Enum.any?(@user.techniques) do %>
-      <hr/>
-      <div class="row" style="padding-top: 15px;">
-        <div class="col-md-12">
-          <span class="text-muted">ТЕХНИКА ЛОВЛИ</span>
-        </div>
-        <div class="col-md-12" style="padding-top: 15px;">
-          <%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @user.techniques) %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-  <div class="col-md-9">
-    <nav>
-      <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-followee-tab" data-toggle="tab" href="#nav-followee" role="tab" aria-controls="nav-followee" aria-selected="false">Подписки</a>
-        <a class="nav-item nav-link" id="nav-followers-tab" data-toggle="tab" href="#nav-followers" role="tab" aria-controls="nav-followers" aria-selected="false">Подписчики</a>
-      </div>
-    </nav>
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="nav-followee" role="tabpanel" aria-labelledby="nav-followee-tab">
-        <%= render "partials/follower.html", conn: @conn, followers: @user.followee %>
-      </div>
-      <div class="tab-pane fade" id="nav-followers" role="tabpanel" aria-labelledby="nav-followers-tab">
-        <%= render "partials/follower.html", conn: @conn, followers: @user.followers %>
+        <div style="height: 20px;"></div>
       </div>
     </div>
+    <div class="content-block" style="margin-top: 20px;">
+      <div class="row">
+        <div class="offset-md-1 col-md-10" style="margin-top: 20px;">
+          <b>Техника ловли</b>
+          <div style="margin-top: 20px;">
+            <%= raw FaustWeb.TechniquesView.techniques_tags(@conn, @user.techniques) %>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="offset-md-1 col-md-10" style="margin-top: 20px;">
+          <b>Предпочитаемая рыба</b>
+          <div style="margin-top: 20px;">
+            <%= raw FaustWeb.FishView.fishes_tags(@conn, @user.fishes) %>
+          </div>
+        </div>
+      </div>
+      <div style="height: 20px;"></div>
+    </div>
   </div>
+  <div class="col-md-8">КОНТЕНТ</div>
 </div>

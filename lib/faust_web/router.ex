@@ -51,7 +51,5 @@ defmodule FaustWeb.Router do
     end
 
     resources "/histories", HistoryController, only: [:delete]
-
-    resources "/followers", FollowerController, only: [:create, :delete]
   end
 end

@@ -26,11 +26,8 @@ defmodule FaustWeb.UserControllerTest do
         |> authorize_conn(current_user)
         |> get(Routes.user_path(conn, :index))
 
+      # TODO: Написать тестирование для LiveView
       assert conn.status == code(:ok)
-      assert length(conn.assigns.users) == 1
-      assert controller_module(conn) == UserController
-      assert view_module(conn) == UserView
-      assert view_template(conn) == "index.html"
     end
   end
 
@@ -61,10 +58,14 @@ defmodule FaustWeb.UserControllerTest do
     test "редирект на страницу входа, когда пользователь не авторизован и данные валидны", %{
       conn: conn
     } do
-      conn = post(conn, Routes.user_path(conn, :create), user: user_attrs())
+      user_attrs = user_attrs()
+      conn = post(conn, Routes.user_path(conn, :create), user: user_attrs)
 
       assert conn.status == code(:found)
-      assert conn.private[:phoenix_flash]["info"] == "User created successfully."
+
+      assert conn.private[:phoenix_flash]["info"] ==
+               "Добро пожаловать, #{Map.get(user_attrs, "name")} #{Map.get(user_attrs, "surname")}"
+
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
@@ -129,7 +130,7 @@ defmodule FaustWeb.UserControllerTest do
       assert view_module(conn) == UserView
       assert view_template(conn) == "show.html"
       assert %User{} = conn.assigns.user
-      assert Enum.empty?(conn.assigns.current_followee_ids)
+      assert Enum.empty?(conn.assigns.list_followee_ids)
     end
   end
 
@@ -192,7 +193,7 @@ defmodule FaustWeb.UserControllerTest do
         })
 
       assert conn.status == code(:found)
-      assert conn.private[:phoenix_flash]["info"] == "User updated successfully."
+      assert conn.private[:phoenix_flash]["info"] == "Аккаунт обновлен"
       assert redirected_to(conn) == Routes.user_path(conn, :edit, current_user)
     end
 
@@ -253,7 +254,6 @@ defmodule FaustWeb.UserControllerTest do
         |> delete(Routes.user_path(conn, :delete, current_user))
 
       assert conn.status == code(:found)
-      assert conn.private[:phoenix_flash]["info"] == "User deleted successfully."
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
