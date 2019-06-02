@@ -1,14 +1,14 @@
 defmodule FaustWeb.UserController do
   use FaustWeb, :controller
 
-  import FaustWeb.FishHelper, only: [fetch_fishes_params: 2]
-  import FaustWeb.TechniqueHelper, only: [fetch_techniques_params: 2]
+  import FaustWeb.Accounts.UserHelper
+  import Phoenix.LiveView.Controller
 
   alias Faust.Accounts
   alias Faust.Accounts.User
-  alias Faust.Guardian.Plug, as: GuardianPlug
-  alias Faust.Repo
   alias Faust.Snoop
+  alias FaustWeb.Accounts.{UserHelper, UserIndexLive}
+  alias FaustWeb.AuthenticationHelper
 
   action_fallback FaustWeb.FallbackController
 
@@ -16,35 +16,26 @@ defmodule FaustWeb.UserController do
     action_name = action_name(conn)
 
     args =
-      case action_name do
-        :index ->
-          %User{id: id} = current_user(conn)
-          [conn, conn.params, Snoop.list_followee_ids(id)]
-
-        :show ->
-          current_user = current_user(conn)
-
-          user_id =
-            conn.params
-            |> Map.get("id")
-            |> String.to_integer()
-
-          if user_id == current_user.id do
-            [conn, conn.params]
-          else
-            [conn, conn.params, Snoop.list_followee_ids(current_user.id)]
-          end
-
-        _ ->
-          [conn, conn.params]
+      if action_name in [:new, :create] do
+        [conn, conn.params]
+      else
+        [conn, conn.params, current_user(conn)]
       end
 
     apply(__MODULE__, action_name, args)
   end
 
-  def index(conn, _params, current_followee_ids) do
-    users = Accounts.list_users([:credential, :fishes])
-    render(conn, "index.html", users: users, current_followee_ids: current_followee_ids)
+  def index(conn, _params, %User{} = current_user) do
+    list_followee_ids_task = Task.async(Snoop, :list_followee_ids, [current_user.id])
+    users_task = Task.async(Accounts, :list_users, [[:credential]])
+
+    live_render(conn, UserIndexLive,
+      session: %{
+        current_user: current_user,
+        list_followee_ids: Task.await(list_followee_ids_task),
+        users: Task.await(users_task)
+      }
+    )
   end
 
   def new(conn, _params) do
@@ -54,9 +45,9 @@ defmodule FaustWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
-      {:ok, _user} ->
+      {:ok, user} ->
         conn
-        |> put_flash(:info, "User created successfully.")
+        |> put_flash(:info, "Добро пожаловать, #{user.name} #{user.surname}")
         |> redirect(to: Routes.session_path(conn, :new))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -64,32 +55,53 @@ defmodule FaustWeb.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    user = user_preloader(conn, id)
-    render(conn, "show.html", user: user)
+  def show(conn, %{"id" => id}, %User{} = current_user) do
+    user_task = Task.async(UserHelper, :user_preloads, [current_user, id])
+
+    args =
+      if current_user.id == String.to_integer(id) do
+        %{}
+      else
+        %{list_followee_ids: Snoop.list_followee_ids(current_user.id)}
+      end
+
+    user = Task.await(user_task)
+
+    # TODO: сделать фоновое обновление через широковещательный запрос
+    count_user_followee_task = Task.async(Snoop, :count_user_followee, [user.id])
+    count_user_followers_task = Task.async(Snoop, :count_user_followers, [user.id])
+
+    render(
+      conn,
+      "show.html",
+      Map.merge(
+        %{
+          current_user: current_user,
+          user: user,
+          count_user_followee: Task.await(count_user_followee_task),
+          count_user_followers: Task.await(count_user_followers_task)
+        },
+        args
+      )
+    )
   end
 
-  def show(conn, %{"id" => id}, current_followee_ids) do
-    user = user_preloader(conn, id)
-    render(conn, "show.html", user: user, current_followee_ids: current_followee_ids)
-  end
-
-  def edit(conn, %{"id" => id}) do
-    with :ok <- Bodyguard.permit(User, :edit, current_user(conn), String.to_integer(id)) do
-      user = user_preloader(conn, id)
+  def edit(conn, %{"id" => id}, %User{} = current_user) do
+    with :ok <- Bodyguard.permit(User, :edit, current_user, String.to_integer(id)) do
+      user = user_preloads(current_user, id)
       changeset = Accounts.change_user(user)
       render(conn, "edit.html", user: user, changeset: changeset)
     end
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    with :ok <- Bodyguard.permit(User, :update, current_user(conn), String.to_integer(id)) do
-      user = user_preloader(conn, id)
+  def update(conn, %{"id" => id, "user" => user_params}, %User{} = current_user) do
+    with :ok <- Bodyguard.permit(User, :update, current_user, String.to_integer(id)) do
+      user = user_preloads(current_user, id)
 
       case Accounts.update_user(user, handle_user_params(user, user_params)) do
         {:ok, user} ->
           conn
-          |> put_flash(:info, "User updated successfully.")
+          |> put_flash(:info, "Аккаунт обновлен")
           |> redirect(to: Routes.user_path(conn, :edit, user))
 
         {:error, %Ecto.Changeset{} = changeset} ->
@@ -98,45 +110,10 @@ defmodule FaustWeb.UserController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    current_user = current_user(conn)
-
+  def delete(conn, %{"id" => id}, %User{} = current_user) do
     with :ok <- Bodyguard.permit(User, :delete, current_user, String.to_integer(id)) do
       {:ok, _user} = Accounts.delete_user(current_user)
-
-      conn
-      |> GuardianPlug.sign_out(key: :user)
-      |> put_flash(:info, "User deleted successfully.")
-      |> redirect(to: Routes.page_path(conn, :index))
+      AuthenticationHelper.sign_out(conn, %{"action" => "user"})
     end
-  end
-
-  # Приватные функции ----------------------------------------------------------
-
-  defp user_preloader(conn, id) do
-    current_user = current_user(conn)
-
-    current_user =
-      if current_user && current_user.id == String.to_integer(id) do
-        Repo.preload(current_user, [:fishes, :techniques])
-      else
-        id
-        |> Accounts.get_user!()
-        |> Repo.preload([:credential, :fishes, :techniques])
-      end
-
-    case action_name(conn) do
-      :show ->
-        Repo.preload(current_user, [[followee: :credential], [followers: :credential]])
-
-      _ ->
-        current_user
-    end
-  end
-
-  defp handle_user_params(user, user_params) do
-    user_params
-    |> fetch_fishes_params(user.fishes)
-    |> fetch_techniques_params(user.techniques)
   end
 end

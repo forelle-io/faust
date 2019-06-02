@@ -37,7 +37,7 @@ defmodule FaustWeb.AuthenticationHelper do
   def sign_in(%Conn{} = conn, _), do: redirect(conn, to: "/")
 
   def sign_out(%Conn{} = conn, %{"action" => action})
-      when action in ["user", "credential", "chief"] do
+      when action in ["user", "organization", "chief"] do
     conn
     |> Guardian.Plug.sign_out(key: String.to_atom(action))
     |> redirect(to: "/")

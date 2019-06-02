@@ -5,6 +5,7 @@ defmodule FaustWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
+    plug Phoenix.LiveView.Flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -50,7 +51,5 @@ defmodule FaustWeb.Router do
     end
 
     resources "/histories", HistoryController, only: [:delete]
-
-    resources "/followers", FollowerController, only: [:create, :delete]
   end
 end

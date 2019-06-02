@@ -17,6 +17,18 @@ defmodule Faust.Snoop do
     |> Repo.all()
   end
 
+  def count_user_followee(user_id) when is_integer(user_id) do
+    user_id
+    |> Follower.count_user_followee_query()
+    |> Repo.aggregate(:count, :user_id)
+  end
+
+  def count_user_followers(user_id) when is_integer(user_id) do
+    user_id
+    |> Follower.count_user_followers_query()
+    |> Repo.aggregate(:count, :follower_id)
+  end
+
   def get_follower_by(params) do
     Repo.get_by(Follower, params)
   end

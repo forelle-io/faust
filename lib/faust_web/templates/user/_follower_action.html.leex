@@ -1,0 +1,9 @@
+<%= if Enum.member?(@list_followee_ids, @user.id) do %>
+    <%= link to: "#", "phx-click": "follower_delete", "phx-value": @user.id, class: "btn btn-primary" do %>
+        Отписаться
+    <% end %>
+<% else %>
+    <%= link to: "#", "phx-click": "follower_create", "phx-value": @user.id, class: "btn btn-outline-primary" do %>
+        Подписаться
+    <% end %>
+<% end %>

@@ -1,4 +1,0 @@
-<%= form_for @conn, Routes.follower_path(@conn, :create), fn f -> %>
-    <%= hidden_input f, :follower_id, value: @user.id %>
-    <%= submit "Подписаться", class: "btn btn-outline-primary btn-lg btn-block" %>
-<% end %>
