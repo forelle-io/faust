@@ -8,7 +8,6 @@ defmodule FaustWeb.PageControllerTest do
 
   alias FaustWeb.{PageController, PageView}
 
-
   describe "index" do
     test "главная страница, когда пользователь не авторизован", %{conn: conn} do
       conn = get(conn, Routes.page_path(conn, :index))

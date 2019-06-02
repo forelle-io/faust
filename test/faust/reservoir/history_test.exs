@@ -20,7 +20,6 @@ defmodule Faust.Reservoir.HistoryTest do
     end
   end
 
-
   describe "list_histories/1" do
     test "когда записи истории присутвуют для водоема в количестве 5" do
       current_user = user_fixture()
