@@ -65,10 +65,24 @@ defmodule FaustWeb.UserController do
         %{list_followee_ids: Snoop.list_followee_ids(current_user.id)}
       end
 
+    user = Task.await(user_task)
+
+    # TODO: сделать фоновое обновление через широковещательный запрос
+    count_user_followee_task = Task.async(Snoop, :count_user_followee, [user.id])
+    count_user_followers_task = Task.async(Snoop, :count_user_followers, [user.id])
+
     render(
       conn,
       "show.html",
-      Map.merge(%{current_user: current_user, user: Task.await(user_task)}, args)
+      Map.merge(
+        %{
+          current_user: current_user,
+          user: user,
+          count_user_followee: Task.await(count_user_followee_task),
+          count_user_followers: Task.await(count_user_followers_task)
+        },
+        args
+      )
     )
   end
 

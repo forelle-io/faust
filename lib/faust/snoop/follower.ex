@@ -34,4 +34,14 @@ defmodule Faust.Snoop.Follower do
       select: f.follower_id,
       where: f.user_id == ^user_id
   end
+
+  def count_user_followee_query(user_id) do
+    from f in Follower,
+      where: f.user_id == ^user_id
+  end
+
+  def count_user_followers_query(user_id) do
+    from f in Follower,
+      where: f.follower_id == ^user_id
+  end
 end
