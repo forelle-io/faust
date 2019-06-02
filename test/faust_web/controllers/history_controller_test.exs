@@ -9,6 +9,7 @@ defmodule FaustWeb.HistoryControllerTest do
   alias Ecto.Changeset
   alias FaustWeb.{HistoryController, HistoryView}
 
+
   describe "new" do
     test "редирект на страницу входа, когда пользователь не авторизован", %{conn: conn} do
       conn = get(conn, Routes.water_history_path(conn, :new, 1))
