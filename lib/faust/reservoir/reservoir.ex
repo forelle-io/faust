@@ -52,15 +52,15 @@ defmodule Faust.Reservoir do
 
   # History scructure -----------------------------------------------------------------
 
+  def list_histories do
+    Repo.all(History)
+  end
+
   def list_histories(water_id)
       when is_bitstring(water_id) or is_integer(water_id) do
     water_id
     |> History.list_history_query()
     |> Repo.all()
-  end
-
-  def list_histories do
-    Repo.all(History)
   end
 
   def get_history!(id), do: Repo.get!(History, id)
