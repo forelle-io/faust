@@ -22,8 +22,7 @@ defmodule Faust.Reservoir.HistoryTest do
 
   describe "list_histories/1" do
     test "когда записи истории присутвуют для водоема в количестве 5" do
-      current_user = user_fixture()
-      current_water = water_fixture(current_user)
+      current_water = user_fixture() |> water_fixture()
 
       Enum.each(1..5, fn _ -> history_fixture(current_water) end)
 
@@ -119,9 +118,7 @@ defmodule Faust.Reservoir.HistoryTest do
     test "когда запись history отсутствует" do
       assert %Ecto.Changeset{errors: errors, valid?: false} = Reservoir.change_history(%History{})
 
-      errors
-      |> Enum.filter(fn {k, _v} -> Enum.member?([:type], k) end)
-      |> Enum.each(fn {_k, v} -> assert v == {"can't be blank", [validation: :required]} end)
+      assert errors[:type] == {"can't be blank", [validation: :required]}
     end
   end
 end

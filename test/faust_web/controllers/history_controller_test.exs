@@ -35,7 +35,14 @@ defmodule FaustWeb.HistoryControllerTest do
 
   describe "create" do
     test "редирект на страницу входа, когда пользователь не авторизован", %{conn: conn} do
-      conn = get(conn, Routes.water_history_path(conn, :new, 1))
+      current_user = user_fixture()
+      current_water = water_fixture(current_user)
+
+      conn =
+        conn
+        |> post(Routes.water_history_path(conn, :create, current_water), %{
+          "history" => %{history_attrs(current_water) | "type" => nil}
+        })
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
@@ -62,7 +69,7 @@ defmodule FaustWeb.HistoryControllerTest do
       assert view_template(conn) == "new.html"
     end
 
-    test "страница истории, когда пользователь авторизован и данные валидны", %{conn: conn} do
+    test "страница водоема, когда пользователь авторизован и данные валидны", %{conn: conn} do
       current_user = user_fixture()
       current_water = water_fixture(current_user)
 
@@ -117,4 +124,3 @@ defmodule FaustWeb.HistoryControllerTest do
     end
   end
 end
-

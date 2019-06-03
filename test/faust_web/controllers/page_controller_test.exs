@@ -18,7 +18,7 @@ defmodule FaustWeb.PageControllerTest do
       assert view_template(conn) == "index.html"
     end
 
-    test "страница , когда пользователь авторизован", %{conn: conn} do
+    test "редирект на страницу пользователя, когда пользователь авторизован", %{conn: conn} do
       current_user = user_fixture()
 
       conn =
@@ -31,4 +31,3 @@ defmodule FaustWeb.PageControllerTest do
     end
   end
 end
-

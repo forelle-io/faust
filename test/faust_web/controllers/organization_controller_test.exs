@@ -16,8 +16,8 @@ defmodule FaustWeb.OrhanizationControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "страница списка всех организация, когда пользователь авторизован", %{conn: conn} do
-      _current_organization = organization_fixture()
+    test "страница списка всех организаций, когда пользователь авторизован", %{conn: conn} do
+      organization_fixture()
       current_user = user_fixture()
 
       conn =
@@ -41,14 +41,14 @@ defmodule FaustWeb.OrhanizationControllerTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "страница текущей организации, когда пользователь авторизован", %{conn: conn} do
-      current_organization = organization_fixture()
+    test "страница организации, когда пользователь авторизован", %{conn: conn} do
       current_user = user_fixture()
+      organization = organization_fixture()
 
       conn =
         conn
         |> authorize_conn(current_user)
-        |> get(Routes.organization_path(conn, :show, current_organization))
+        |> get(Routes.organization_path(conn, :show, organization))
 
       assert conn.status == code(:ok)
       assert controller_module(conn) == OrganizationController
@@ -57,4 +57,3 @@ defmodule FaustWeb.OrhanizationControllerTest do
     end
   end
 end
-
