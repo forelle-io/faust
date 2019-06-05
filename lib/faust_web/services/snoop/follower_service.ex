@@ -1,4 +1,4 @@
-defmodule FaustWeb.Snoop.FollowerHelper do
+defmodule FaustWeb.Snoop.FollowerService do
   @moduledoc false
 
   alias Faust.Snoop
@@ -21,6 +21,7 @@ defmodule FaustWeb.Snoop.FollowerHelper do
     with %Follower{} = follower <-
            Snoop.get_follower_by(%{user_id: current_user.id, follower_id: follower_id}),
          :ok <- Bodyguard.permit(Follower, :delete, current_user, follower),
+         true <- Enum.member?(list_followee_ids, follower_id),
          {:ok, _follower} <- Snoop.delete_follower(follower) do
       {:ok, list_followee_ids -- [follower_id]}
     else

@@ -3,7 +3,7 @@ defmodule FaustWeb.FollowerEventsMacros do
 
   defmacro __using__(_) do
     quote do
-      alias FaustWeb.Snoop.FollowerHelper
+      alias FaustWeb.Snoop.FollowerService
 
       def handle_event(
             "follower_create",
@@ -11,7 +11,7 @@ defmodule FaustWeb.FollowerEventsMacros do
             %{assigns: %{current_user: current_user, list_followee_ids: list_followee_ids}} =
               socket
           ) do
-        case FollowerHelper.follower_create(
+        case FollowerService.follower_create(
                current_user,
                list_followee_ids,
                value |> String.to_integer()
@@ -30,7 +30,7 @@ defmodule FaustWeb.FollowerEventsMacros do
             %{assigns: %{current_user: current_user, list_followee_ids: list_followee_ids}} =
               socket
           ) do
-        case FollowerHelper.follower_delete(
+        case FollowerService.follower_delete(
                current_user,
                list_followee_ids,
                value |> String.to_integer()
