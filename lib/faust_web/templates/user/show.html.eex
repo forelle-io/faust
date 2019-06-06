@@ -12,7 +12,7 @@
           <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, @current_user, @user) do %>
             <%= link "Редактировать", to: Routes.user_path(FaustWeb.Endpoint, :edit, @user), class: "btn btn-outline-primary" %>
           <% else %>
-            <%= live_render(@conn, FaustWeb.Accounts.UserFollowerActionLive, session: %{current_user: @current_user, list_followee_ids: @list_followee_ids, user: @user }) %>
+            <%= live_render(@conn, FaustWeb.Accounts.User.FollowActionLive, session: %{current_user: @current_user, list_followee_ids: @list_followee_ids, user: @user }) %>
           <% end %>
         </div>
       </div>
@@ -20,11 +20,19 @@
       <div>
         <div class="row text-center">
           <div class="col-md-6">
-            <div><b><%= @count_user_followee %></b></div>
+            <div>
+              <b>
+                <%= @followee_count %>
+              </b>
+            </div>
             <div style="color: #6C758A;">Подписки</div>
           </div>
           <div class="col-md-6">
-            <div><b><%= @count_user_followers %></b></div>
+            <div>
+              <b>
+                <%= live_render(@conn, FaustWeb.Accounts.User.FollowerCounterLive, session: %{user: @user, follower_count: @follower_count }) %>
+              </b>
+            </div>
             <div style="color: #6C758A;">Подписчики</div>
           </div>
         </div>

@@ -7,7 +7,8 @@ defmodule FaustWeb.UserController do
   alias Faust.Accounts
   alias Faust.Accounts.User
   alias Faust.Snoop
-  alias FaustWeb.Accounts.{UserHelper, UserIndexLive}
+  alias FaustWeb.Accounts.User.IndexLive, as: UserIndexLive
+  alias FaustWeb.Accounts.UserHelper
   alias FaustWeb.AuthenticationHelper
 
   action_fallback FaustWeb.FallbackController
@@ -67,9 +68,8 @@ defmodule FaustWeb.UserController do
 
     user = Task.await(user_task)
 
-    # TODO: сделать фоновое обновление через широковещательный запрос
-    count_user_followee_task = Task.async(Snoop, :count_user_followee, [user.id])
-    count_user_followers_task = Task.async(Snoop, :count_user_followers, [user.id])
+    followee_count_task = Task.async(Snoop, :count_user_followee, [user.id])
+    follower_count_task = Task.async(Snoop, :count_user_followers, [user.id])
 
     render(
       conn,
@@ -78,8 +78,8 @@ defmodule FaustWeb.UserController do
         %{
           current_user: current_user,
           user: user,
-          count_user_followee: Task.await(count_user_followee_task),
-          count_user_followers: Task.await(count_user_followers_task)
+          followee_count: Task.await(followee_count_task),
+          follower_count: Task.await(follower_count_task)
         },
         args
       )
