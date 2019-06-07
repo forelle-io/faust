@@ -26,26 +26,11 @@
       <%= error_tag f, :surname %>
     </div> 
   </div>
-  
-
-    <%= label f, "Пол" %>
-    <div class="row">
-      <div class="col-4 form-group">
-          <%= label f, "муж." %>
-          <%= radio_button f, :sex, "male" %>
-        </div>
-        <div class="col-4 form-group">
-          <%= label f, "жен." %>
-          <%= radio_button f, :sex, "female" %>
-        </div>
-        <div class="col-4 form-group">
-          <%= label f, "не выбран" %>
-            <%= radio_button f, :sex, nil %> 
-        </div>
-      <%= error_tag f, :sex %>
-    </div>
-  
-
+ 
+  <div class="form-group">
+    <%= label f, :sex, "Пол" %>
+    <%= select f, :sex, Faust.Accounts.User.sex(), id: "sex_id", class: "form-control" %> 
+  </div> 
 
   <div class="form-group">
     <%= label f, "День рождения" %>
@@ -132,5 +117,6 @@
     ["year", "month", "day"].forEach(function(item, i, array) {
       $('#user_birthday_' + item).selectpicker({size: 10});
     });
+    $('#sex_id').selectpicker({size: 6, noneSelectedText: "Не выбран"});
   });
 </script>
