@@ -32,6 +32,7 @@ defmodule Faust.Support.Factories do
       name: sequence(:name, ["Алексей", "Кирилл", "Илья"]),
       surname: sequence(:surname, ["Иванов", "Петров", "Сидоров"]),
       birthday: sequence(:surname, [~D[1994-05-03], ~D[1996-06-04], ~D[1984-07-05]]),
+      sex: sequence(:sex, ["male", "male", "male"]),
       credential: build(:accounts_credential)
     }
   end
