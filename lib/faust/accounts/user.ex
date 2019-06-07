@@ -80,13 +80,12 @@ defmodule Faust.Accounts.User do
     |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
     |> validate_format(:name, @regex_name)
     |> validate_inclusion(:sex, @sex)
-    |> update_unknown_sex()
-    |> validate_format(:name, @regex_name)
-    |> Fish.fishes_pipeline()
-    |> Technique.techniques_pipeline()
+    |> sex_modify_changes()
+    |> Fish.fishes_modify_changes()
+    |> Technique.techniques_modify_changes()
   end
 
-  defp update_unknown_sex(%Changeset{changes: changes} = changeset) do
+  defp sex_modify_changes(%Changeset{changes: changes} = changeset) do
     case changes do
       %{sex: "не выбран"} ->
         Changeset.put_change(changeset, :sex, nil)
