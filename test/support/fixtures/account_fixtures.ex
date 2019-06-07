@@ -32,6 +32,7 @@ defmodule Faust.Support.AccountFixtures do
     "name" => "Alexey",
     "surname" => "Solovyev",
     "birthday" => ~D[1994-05-03],
+    "sex" => "мужской",
     "credential" => @credential_user_attrs
   }
 

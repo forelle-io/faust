@@ -41,7 +41,7 @@ defmodule Faust.Fishing.Fish do
 
   # Changeset functions --------------------------------------------------------
 
-  def fishes_pipeline(%Changeset{changes: changes} = changeset) do
+  def fishes_modify_changes(%Changeset{changes: changes} = changeset) do
     case changes do
       %{fishes_ids: nil} ->
         changeset

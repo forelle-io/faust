@@ -78,8 +78,8 @@ defmodule Faust.Reservoir.Water do
     |> validate_inclusion(:bottom_type, @bottom_types)
     |> validate_inclusion(:environment, @environments)
     |> put_assoc(:user, attrs["user"], required: true)
-    |> Fish.fishes_pipeline()
-    |> Technique.techniques_pipeline()
+    |> Fish.fishes_modify_changes()
+    |> Technique.techniques_modify_changes()
   end
 
   def update_changeset(water, attrs) do
@@ -103,8 +103,8 @@ defmodule Faust.Reservoir.Water do
     |> validate_inclusion(:color, @colors)
     |> validate_inclusion(:bottom_type, @bottom_types)
     |> validate_inclusion(:environment, @environments)
-    |> Fish.fishes_pipeline()
-    |> Technique.techniques_pipeline()
+    |> Fish.fishes_modify_changes()
+    |> Technique.techniques_modify_changes()
   end
 
   # SQL запросы ----------------------------------------------------------------

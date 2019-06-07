@@ -24,8 +24,13 @@
       <%= label f, "Фамилия" %>
       <%= text_input f, :surname, class: "form-control" %>
       <%= error_tag f, :surname %>
-    </div>
+    </div> 
   </div>
+ 
+  <div class="form-group">
+    <%= label f, :sex, "Пол" %>
+    <%= select f, :sex, Faust.Accounts.User.sex(), id: "sex_id", class: "form-control" %> 
+  </div> 
 
   <div class="form-group">
     <%= label f, "День рождения" %>
@@ -112,5 +117,6 @@
     ["year", "month", "day"].forEach(function(item, i, array) {
       $('#user_birthday_' + item).selectpicker({size: 10});
     });
+    $('#sex_id').selectpicker({size: 6, noneSelectedText: "Не выбран"});
   });
 </script>

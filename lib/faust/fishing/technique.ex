@@ -41,7 +41,7 @@ defmodule Faust.Fishing.Technique do
 
   # Changeset functions --------------------------------------------------------
 
-  def techniques_pipeline(%Changeset{changes: changes} = changeset) do
+  def techniques_modify_changes(%Changeset{changes: changes} = changeset) do
     case changes do
       %{techniques_ids: nil} ->
         changeset
