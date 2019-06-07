@@ -24,8 +24,28 @@
       <%= label f, "Фамилия" %>
       <%= text_input f, :surname, class: "form-control" %>
       <%= error_tag f, :surname %>
-    </div>
+    </div> 
   </div>
+  
+
+    <%= label f, "Пол" %>
+    <div class="row">
+      <div class="col-4 form-group">
+          <%= label f, "муж." %>
+          <%= radio_button f, :sex, "male" %>
+        </div>
+        <div class="col-4 form-group">
+          <%= label f, "жен." %>
+          <%= radio_button f, :sex, "female" %>
+        </div>
+        <div class="col-4 form-group">
+          <%= label f, "не выбран" %>
+            <%= radio_button f, :sex, nil %> 
+        </div>
+      <%= error_tag f, :sex %>
+    </div>
+  
+
 
   <div class="form-group">
     <%= label f, "День рождения" %>
