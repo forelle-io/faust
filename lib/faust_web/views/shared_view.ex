@@ -1,4 +1,4 @@
-defmodule FaustWeb.PartialView do
+defmodule FaustWeb.SharedView do
   use FaustWeb, :view
 
   import FaustWeb.LayoutView, only: [clickable_logotype: 1]

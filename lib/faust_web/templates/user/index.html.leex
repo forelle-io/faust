@@ -1,22 +1,25 @@
 <div class="row">
     <div class="offset-md-2 col-md-6 content-block">
         <%= for user <- @users do %>
-            <div class="row" style="margin-top: 30px;">
-                <div class="col-md-2 text-center">
-                    <%= Routes.static_path(FaustWeb.Endpoint, user.credential.alchemic_avatar) |> img_tag(width: 46, class: "rounded-circle") %>
-                </div>
-                <div class="col-md-4">
-                    <b><%= link "#{user.name} #{user.surname}", to: Routes.user_path(FaustWeb.Endpoint, :show, user) %></b>
-                </div>
-                <div class="col-md-6 text-right">
-                    <%= if @current_user.id == user.id do %>
-                        <%= link "Аккаунт", to: Routes.user_path(FaustWeb.Endpoint, :show, user), class: "btn btn-outline-primary" %>
-                    <% else %>
-                        <%= render "_follower_action.html", Map.put(assigns, :user, user) %>
-                    <% end %>
-                </div>
-            </div>
-            <hr>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row" style="height: 80px; align-items: center;">
+                        <div class="col-md-2 text-center">
+                            <%= Routes.static_path(FaustWeb.Endpoint, user.credential.alchemic_avatar) |> img_tag(width: 46, class: "rounded-circle") %>
+                        </div>
+                        <div class="col-md-4">
+                            <b><%= link "#{user.name} #{user.surname}", to: Routes.user_path(FaustWeb.Endpoint, :show, user) %></b>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <%= if @current_user.id == user.id do %>
+                                <%= link "Аккаунт", to: Routes.user_path(FaustWeb.Endpoint, :show, user), class: "btn btn-outline-primary" %>
+                            <% else %>
+                                <%= render "follower_action.html", Map.put(assigns, :user, user) %>
+                            <% end %>
+                        </div>
+                    </div>
+                </li>
+            </ul>
         <% end %>
     </div>
     <div class="col-md-4">ФИЛЬТР</div>
