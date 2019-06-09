@@ -55,6 +55,14 @@ defmodule Faust.Accounts do
     |> Repo.preload(preloads)
   end
 
+  def list_users_by_name_surname_like(expression)
+      when is_bitstring(expression) do
+    expression
+    |> User.list_users_by_name_surname_like_query()
+    |> Repo.all()
+    |> Repo.preload(:credential)
+  end
+
   def get_user!(id), do: Repo.get!(User, id)
 
   def get_user(id), do: Repo.get(User, id)

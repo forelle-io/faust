@@ -1,26 +1,33 @@
 <div class="row">
     <div class="offset-md-2 col-md-6 content-block">
-        <%= for user <- @users do %>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <div class="row" style="height: 80px; align-items: center;">
-                        <div class="col-md-2 text-center">
-                            <%= Routes.static_path(FaustWeb.Endpoint, user.credential.alchemic_avatar) |> img_tag(width: 46, class: "rounded-circle") %>
+        <div>
+            <form phx-change="search" phx-submit="search">
+                <input type="text" name="query" class="form-control input-text" style="height: 50px; margin-top: 20px;" placeholder="Search..."/>
+            </form>
+        </div>
+        <div>
+            <%= for user <- @users do %>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row" style="height: 80px; align-items: center;">
+                            <div class="col-md-2 text-center">
+                                <%= Routes.static_path(FaustWeb.Endpoint, user.credential.alchemic_avatar) |> img_tag(width: 46, class: "rounded-circle") %>
+                            </div>
+                            <div class="col-md-4">
+                                <b><%= link "#{user.name} #{user.surname}", to: Routes.user_path(FaustWeb.Endpoint, :show, user) %></b>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <%= if @current_user.id == user.id do %>
+                                    <%= link "Аккаунт", to: Routes.user_path(FaustWeb.Endpoint, :show, user), class: "btn btn-outline-primary" %>
+                                <% else %>
+                                    <%= render "follower_action.html", Map.put(assigns, :user, user) %>
+                                <% end %>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <b><%= link "#{user.name} #{user.surname}", to: Routes.user_path(FaustWeb.Endpoint, :show, user) %></b>
-                        </div>
-                        <div class="col-md-6 text-right">
-                            <%= if @current_user.id == user.id do %>
-                                <%= link "Аккаунт", to: Routes.user_path(FaustWeb.Endpoint, :show, user), class: "btn btn-outline-primary" %>
-                            <% else %>
-                                <%= render "follower_action.html", Map.put(assigns, :user, user) %>
-                            <% end %>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        <% end %>
+                    </li>
+                </ul>
+            <% end %>
+        </div>
     </div>
     <div class="col-md-4">ФИЛЬТР</div>
 </div>

@@ -3,7 +3,7 @@ defmodule Faust.Accounts.User do
 
   use Ecto.Schema
 
-  import Ecto.Changeset
+  import Ecto.{Changeset, Query}
 
   alias __MODULE__
   alias Ecto.Changeset
@@ -93,5 +93,12 @@ defmodule Faust.Accounts.User do
       _ ->
         changeset
     end
+  end
+
+  # SQL запрос -----------------------------------------------------------------
+
+  def list_users_by_name_surname_like_query(expression) do
+    from u in User,
+      where: ilike(u.name, ^"%#{expression}%") or ilike(u.surname, ^"%#{expression}%")
   end
 end
