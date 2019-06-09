@@ -13,7 +13,7 @@ defmodule FaustWeb.Accounts.User.FollowActionLive do
   end
 
   def render(assigns) do
-    UserView.render("_follower_action.html", assigns)
+    UserView.render("follower_action.html", assigns)
   end
 
   def handle_event(
