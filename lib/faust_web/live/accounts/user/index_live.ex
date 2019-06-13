@@ -11,7 +11,7 @@ defmodule FaustWeb.Accounts.User.IndexLive do
   alias Phoenix.LiveView.Socket
 
   def mount(session, socket) do
-    {:ok, assign(socket, Map.merge(session, %{query: nil, loading: false}))}
+    {:ok, assign(socket, Map.merge(session, %{filter: nil, loading: false}))}
   end
 
   def render(assigns) do
@@ -58,29 +58,33 @@ defmodule FaustWeb.Accounts.User.IndexLive do
     end
   end
 
-  def handle_event("search", %{"query" => query}, %{assigns: %{loading: true}} = socket) do
-    {:noreply, assign(socket, query: query)}
+  def handle_event("search", %{"filter" => filter}, %{assigns: %{loading: true}} = socket) do
+    {:noreply, assign(socket, filter: filter)}
   end
 
-  def handle_event("search", %{"query" => query}, %{assigns: %{loading: false}} = socket) do
+  def handle_event("search", %{"filter" => filter}, %{assigns: %{loading: false}} = socket) do
     socket =
-      if query == "" do
-        assign(socket, :users, Accounts.list_users([:credential]))
-      else
-        socket
-        |> assign(:query, query)
-        |> assign(:timer_ref, Process.send_after(self(), :search, 1000))
-        |> assign(:loading, true)
+      case filter do
+        %{"search" => search, "sex" => sex} ->
+          socket
+          |> assign(:filter, filter)
+          |> assign(:timer_ref, Process.send_after(self(), :search, 1000))
+          |> assign(:loading, true)
+
+        _ ->
+          list_users = Accounts.list_users([:credential])
+          assign(socket, :users, list_users)
       end
 
     {:noreply, socket}
   end
 
-  def handle_info(:search, %{assigns: %{query: query}} = socket) do
+  def handle_info(:search, %{assigns: %{filter: filter}} = socket) do
     socket =
       socket
+      |> assign(:filter, filter)
       |> assign(:loading, false)
-      |> assign(:users, Accounts.list_users_by_name_surname_like(query))
+      |> assign(:users, Accounts.list_users_by_filter(filter))
 
     {:noreply, socket}
   end

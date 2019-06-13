@@ -55,10 +55,9 @@ defmodule Faust.Accounts do
     |> Repo.preload(preloads)
   end
 
-  def list_users_by_name_surname_like(expression)
-      when is_bitstring(expression) do
-    expression
-    |> User.list_users_by_name_surname_like_query()
+  def list_users_by_filter(filter) when is_map(filter) do
+    filter
+    |> User.list_users_by_filter_query()
     |> Repo.all()
     |> Repo.preload(:credential)
   end

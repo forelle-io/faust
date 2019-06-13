@@ -1,11 +1,12 @@
 <div class="row">
     <div class="offset-md-2 col-md-6 content-block">
         <div>
-            <form phx-change="search" phx-submit="search">
-                <input type="text" name="query" class="form-control input-text" style="height: 50px; margin-top: 20px;" placeholder="Search..."/>
+            <form phx-change="search">
+                <%= text_input :filter, :search, value: @filter["search"], placeholder: "Поиск...", class: "form-control", style: "height: 50px; margin-top: 20px;" %>
+                <%= hidden_input :filter, :sex, value: @filter["sex"] %>
             </form>
         </div>
-        <div>
+        <div style="margin-top: 20px">
             <%= for user <- @users do %>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
@@ -29,5 +30,17 @@
             <% end %>
         </div>
     </div>
-    <div class="col-md-4">ФИЛЬТР</div>
+    <div class="offset-md-1 col-md-3 content-block" style="height: 250px;">
+        <div style="margin-top: 20px;"><h5><b>Фильтр</b></h5></div>
+        <hr/>
+        <form phx-change="search">
+            <div class="form-group">
+                <%= label :filter, :sex, "Пол" %>
+                <%= select :filter, :sex, Faust.Accounts.User.sex(), class: "form-control", value: @filter["sex"] %>
+            </div>
+            <div class="form-group">
+                <%= hidden_input :filter, :search, value: @filter["search"] %>
+            </div>
+        </form>
+    </div>
 </div>
