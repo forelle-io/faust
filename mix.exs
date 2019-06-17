@@ -51,7 +51,7 @@ defmodule Faust.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:bcrypt_elixir, "~> 1.1"},
+      {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 1.2"},
       {:bodyguard, "~> 2.2.3"},
       {:alchemic_avatar, "~> 0.1.0"},
