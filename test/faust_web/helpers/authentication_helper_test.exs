@@ -2,8 +2,7 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
   @moduledoc false
   use FaustWeb.ConnCase
 
-  import Faust.Support.AccountFixtures
-  import Faust.Support.Factories
+  import Faust.Support.{AccountFixtures, Factories, SessionFixtures}
   import Plug.Conn.Status, only: [code: 1]
 
   alias Faust.Guardian
@@ -16,54 +15,55 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
       assert redirected_to(conn) == assert(Routes.page_path(conn, :index))
     end
 
-    test "редирект на главную страницу, когда credential существует, а ассоциация неправильная",
+    test "редирект на главную страницу, когда credential существует и ассоциация неправильная",
          %{conn: conn} do
       user_fixture()
 
       conn =
-        post(conn, Routes.session_path(conn, :create), credential: session_attrs_bad_association())
+        post(conn, Routes.session_path(conn, :create), credential: %{session_user_attrs() | "association" => "association"})
 
       assert redirected_to(conn) == assert(Routes.page_path(conn, :index))
     end
 
-    test "редирект на страницу пользователя, когда credential существует, и параметры совпадают для user",
+    test "редирект на страницу пользователя, когда credential существует и параметры совпадают для user",
          %{conn: conn} do
-      current_user = user_fixture()
-      conn = post(conn, Routes.session_path(conn, :create), credential: session_attrs_user())
+      user = user_fixture()
+
+      conn = post(conn, Routes.session_path(conn, :create), credential: session_user_attrs())
 
       assert conn.status == code(:found)
-      assert redirected_to(conn) == Routes.user_path(conn, :show, current_user)
+      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
     end
 
-    test "редирект на страницу создания новой сессии, когда credential существует, и параметры не совпадают для user",
+    test "редирект на страницу создания новой сессии, когда credential существует и параметры не совпадают для user",
          %{conn: conn} do
       conn =
         post(conn, Routes.session_path(conn, :create),
-          credential: %{session_attrs_user() | "unique" => "bad_solov9ev"}
+          credential: %{session_user_attrs() | "unique" => "unique"}
         )
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    test "редирект на страницу организации, когда credential существует, и данные валидны для organization",
+    test "редирект на страницу организации, когда credential существует и данные валидны для organization",
          %{conn: conn} do
-      current_organization = organization_fixture()
+      organization = organization_fixture()
 
       conn =
-        post(conn, Routes.session_path(conn, :create), credential: session_attrs_organization())
+        post(conn, Routes.session_path(conn, :create), credential: session_organization_attrs())
 
       assert conn.status == code(:found)
-      assert redirected_to(conn) == Routes.organization_path(conn, :show, current_organization)
+      assert redirected_to(conn) == Routes.organization_path(conn, :show, organization)
     end
 
-    test "редирект на страницу создания новой сессии, когда credential существует, и данные не валидны для organization",
+    test "редирект на страницу создания новой сессии, когда credential существует и данные не валидны для organization",
          %{conn: conn} do
       organization_fixture()
 
       conn =
         post(conn, Routes.session_path(conn, :create),
-          credential: %{session_attrs_organization() | "unique" => "bad_organization"}
+          credential: %{session_organization_attrs() | "unique" => "unique"}
         )
 
       assert conn.status == code(:found)
@@ -73,13 +73,13 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
     # TODO: Написать тест для ассоциации chief "редирект на страницу shief,
     # когда credential существует, и данные валидны для shief"
 
-    test "редирект на страницу создания новой сессии, когда credential существует, и данные не валидны для shief",
+    test "редирект на страницу создания новой сессии, когда credential существует и данные не валидны для chief",
          %{conn: conn} do
       chief_fixture()
 
       conn =
         post(conn, Routes.session_path(conn, :create),
-          credential: %{session_attrs_shief() | "unique" => "bad_shief"}
+          credential: %{session_chief_attrs() | "unique" => "unique"}
         )
 
       assert conn.status == code(:found)
@@ -94,19 +94,21 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
-    test "редирект на главную страницу, когда action user", %{conn: conn} do
+    test "редирект на главную страницу, когда разрушает сессию user", %{conn: conn} do
+      # TODO: Сначала нужно авторизовать в сесии, а только разрушать ее
       conn = AuthenticationHelper.sign_out(conn, "user")
-
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
-    test "редирект на главную страницу, когда action organization", %{conn: conn} do
+    test "редирект на главную страницу, когда разрушает сессию organization", %{conn: conn} do
+      # TODO: Сначала нужно авторизовать в сесии, а только разрушать ее
       conn = AuthenticationHelper.sign_out(conn, "organization")
 
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
-    test "редирект на главную страницу, когда action chief", %{conn: conn} do
+    test "редирект на главную страницу, когда разрушает сессию chief", %{conn: conn} do
+      # TODO: Сначала нужно авторизовать в сесии, а только разрушать ее
       conn = AuthenticationHelper.sign_out(conn, "chief")
 
       assert redirected_to(conn) == Routes.page_path(conn, :index)
@@ -114,11 +116,11 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
   end
 
   describe "current_organization" do
-    test "когда организация в соединении отсутствует", %{conn: conn} do
+    test "когда organization в соединении отсутствует", %{conn: conn} do
       refute AuthenticationHelper.current_organization(conn)
     end
 
-    test "когда организация в соединении присутствует", %{conn: conn} do
+    test "когда organization в соединении присутствует", %{conn: conn} do
       organization = insert(:accounts_organization)
       conn = Guardian.Plug.sign_in(conn, organization, %{}, key: :organization)
 
@@ -126,12 +128,12 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
     end
   end
 
-  describe "current_shief" do
-    test "когда администратор в соединении отсутствует", %{conn: conn} do
+  describe "current_сhief" do
+    test "когда сhief в соединении отсутствует", %{conn: conn} do
       refute AuthenticationHelper.current_chief(conn)
     end
 
-    test "когда администратор в соединении присутствует", %{conn: conn} do
+    test "когда сhief в соединении присутствует", %{conn: conn} do
       chief = insert(:accounts_chief)
       conn = Guardian.Plug.sign_in(conn, chief, %{}, key: :chief)
 
@@ -140,11 +142,11 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
   end
 
   describe "authenticated_organization?" do
-    test "когда организация в соединении отсутствует", %{conn: conn} do
+    test "когда organization в соединении отсутствует", %{conn: conn} do
       refute AuthenticationHelper.authenticated_organization?(conn)
     end
 
-    test "когда организация в соединении присутвует", %{conn: conn} do
+    test "когда organization в соединении присутвует", %{conn: conn} do
       organization = insert(:accounts_organization)
       conn = Guardian.Plug.sign_in(conn, organization, %{}, key: :organization)
 
@@ -163,39 +165,5 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
 
       assert AuthenticationHelper.authenticated_chief?(conn)
     end
-  end
-
-  # Приватные функции ----------------------------------------------------------
-
-  defp session_attrs_user do
-    %{
-      "association" => "user",
-      "password" => "password",
-      "unique" => "solov9ev"
-    }
-  end
-
-  defp session_attrs_organization do
-    %{
-      "association" => "organization",
-      "password" => "password",
-      "unique" => "goldencarp"
-    }
-  end
-
-  defp session_attrs_shief do
-    %{
-      "association" => "shief",
-      "password" => "password",
-      "unique" => "admin"
-    }
-  end
-
-  defp session_attrs_bad_association do
-    %{
-      "association" => "bad_association",
-      "password" => "password",
-      "unique" => "solov9ev"
-    }
   end
 end
