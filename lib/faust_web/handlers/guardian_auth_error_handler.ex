@@ -10,7 +10,8 @@ defmodule FaustWeb.GuardianAuthErrorHandler do
   alias FaustWeb.Router.Helpers, as: Router
   alias Plug.Conn
 
-  def auth_error(%Conn{} = conn, {:unauthenticated, _reason}, _opts) do
+  def auth_error(%Conn{} = conn, {type, _reason}, _opts)
+      when type in [:unauthorized, :unauthenticated, :invalid_token, :no_resource_found] do
     conn
     |> put_flash(:error, "Пожалуйста, авторизуйтесь")
     |> redirect(to: Router.session_path(conn, :new))
