@@ -4,7 +4,7 @@ defmodule Faust.Accounts.UserTest do
   use Faust.DataCase
 
   import Faust.Support.Factories
-  import Faust.Support.AccountFixtures, only: [user_attrs: 0]
+  import Faust.Support.AccountFixtures, only: [user_attrs: 0, user_fixture: 0]
 
   alias Faust.Accounts
   alias Faust.Accounts.{Credential, User}
@@ -42,6 +42,51 @@ defmodule Faust.Accounts.UserTest do
                    false
                end
              end)
+    end
+  end
+
+  describe "list_users_by_filter/1" do
+    test "когда фильтрация валидна, содержит часть фамилии 'ловье' и существует запись user" do
+      {:ok, user} = user_fixture() |> Accounts.update_user(%{surname: "Соловьев"})
+      insert_list(5, :accounts_user)
+
+      users = Accounts.list_users_by_filter(%{"search" => "ловье"})
+
+      assert length(users) == 1
+      assert user.id == List.first(users).id
+    end
+
+    test "когда фильтрация валидна, содержит часть фамилии 'ловье' и существует запись user с мужским полом" do
+      {:ok, user} = user_fixture() |> Accounts.update_user(%{surname: "Соловьев", sex: "мужской"})
+      insert_list(5, :accounts_user)
+
+      users = Accounts.list_users_by_filter(%{"search" => "ловье", "sex" => "мужской"})
+
+      assert length(users) == 1
+      assert user.id == List.first(users).id
+    end
+
+    test "когда фильтрация валидна, содержит мужской пол и существует запись user с мужским полом" do
+      sex = "мужской"
+      {:ok, user} = user_fixture() |> Accounts.update_user(%{sex: sex})
+      users = Accounts.list_users_by_filter(%{"sex" => sex})
+
+      assert length(users) == 1
+      assert user.id == List.first(users).id
+    end
+
+    test "когда фильтрация валидна, содержит мужской пол и существует запись user с женским полом" do
+      {:ok, _user} = user_fixture() |> Accounts.update_user(%{sex: "женский"})
+      users = Accounts.list_users_by_filter(%{"sex" => "мужской"})
+
+      assert Enum.empty?(users)
+    end
+
+    test "когда фильтрация не валидна и существует 2 записи user" do
+      insert_list(2, :accounts_user)
+      users = Accounts.list_users_by_filter(%{"type" => "unknown"})
+
+      assert length(users) == 2
     end
   end
 
