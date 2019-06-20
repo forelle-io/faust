@@ -65,10 +65,10 @@ defmodule FaustWeb.Accounts.User.IndexLive do
   def handle_event("search", %{"filter" => filter}, %{assigns: %{loading: false}} = socket) do
     socket =
       case filter do
-        %{"search" => search, "sex" => sex} ->
+        %{"search" => _search, "sex" => _sex} ->
           socket
           |> assign(:filter, filter)
-          |> assign(:timer_ref, Process.send_after(self(), :search, 1000))
+          |> assign(:timer_ref, Process.send_after(self(), :search, 500))
           |> assign(:loading, true)
 
         _ ->
