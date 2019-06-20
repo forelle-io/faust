@@ -3,7 +3,7 @@ defmodule Faust.Accounts.User do
 
   use Ecto.Schema
 
-  import Ecto.Changeset
+  import Ecto.{Changeset, Query}
 
   alias __MODULE__
   alias Ecto.Changeset
@@ -94,4 +94,30 @@ defmodule Faust.Accounts.User do
         changeset
     end
   end
+
+  # SQL запрос -----------------------------------------------------------------
+
+  def list_users_by_filter_query(filter) do
+    query = from(u in User)
+
+    query
+    |> filter_name_surname_like_query(filter["search"])
+    |> filter_sex_query(filter["sex"])
+  end
+
+  defp filter_name_surname_like_query(query, search) do
+    if is_bitstring(search) and String.length(search) > 0 do
+      query
+      |> where([u], ilike(u.name, ^"%#{search}%"))
+      |> or_where([u], ilike(u.surname, ^"%#{search}%"))
+    else
+      query
+    end
+  end
+
+  defp filter_sex_query(query, sex) when sex in ["мужской", "женский"] do
+    where(query, [u], u.sex == ^sex)
+  end
+
+  defp filter_sex_query(query, _sex), do: query
 end
