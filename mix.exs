@@ -53,6 +53,7 @@ defmodule Faust.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 1.2"},
+      {:basic_auth, "~> 2.2.2"},
       {:bodyguard, "~> 2.2.3"},
       {:alchemic_avatar, "~> 0.1.0"},
       {:excoveralls, "~> 0.10", only: :test},

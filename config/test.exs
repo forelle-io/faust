@@ -16,3 +16,10 @@ config :faust, Faust.Repo,
   database: "faust_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :faust,
+  basic_auth: [
+    username: "sudo",
+    password: "qwerty",
+    realm: "restricted area"
+  ]

@@ -20,4 +20,12 @@ defmodule FaustWeb.ConnCaseHelper do
         conn
     end
   end
+
+  @doc """
+  Использование базовой аутентификации
+  """
+  def using_basic_auth(conn, username, password) do
+    header_content = "Basic " <> Base.encode64("#{username}:#{password}")
+    conn |> Conn.put_req_header("authorization", header_content)
+  end
 end

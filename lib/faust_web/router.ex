@@ -14,6 +14,11 @@ defmodule FaustWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :basic_auth do
+    plug BasicAuth,
+      callback: &FaustWeb.BasicAuthPlug.authenticate/3
+  end
+
   pipeline :maybe_authentication do
     plug FaustWeb.GuardianPipelinePlug
   end
@@ -27,7 +32,8 @@ defmodule FaustWeb.Router do
   end
 
   scope "/", FaustWeb do
-    pipe_through [:browser, :maybe_authentication, :ensure_not_authenticated]
+    env_plugs = if Mix.env() == :prod, do: [:browser, :basic_auth], else: [:browser]
+    pipe_through env_plugs ++ [:maybe_authentication, :ensure_not_authenticated]
 
     get "/", PageController, :index
 

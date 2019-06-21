@@ -8,7 +8,6 @@ defmodule FaustWeb.Accounts.User.IndexLive do
   alias FaustWeb.Endpoint
   alias FaustWeb.Snoop.FollowerService
   alias FaustWeb.UserView
-  alias Phoenix.LiveView.Socket
 
   def mount(session, socket) do
     {:ok, assign(socket, Map.merge(session, %{filter: nil, loading: false}))}
