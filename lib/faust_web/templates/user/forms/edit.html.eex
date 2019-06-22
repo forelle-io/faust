@@ -1,4 +1,4 @@
-<%= form_for @changeset, @action, fn f -> %>
+<%= form_for @changeset, @action, [multipart: true], fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <div class="text-center">
@@ -27,6 +27,21 @@
     </div> 
   </div>
  
+ <div class="form-group">
+     <div class="row">
+        <div class="col-12 form-group">
+          <%= Routes.static_path(@conn, FaustWeb.Accounts.UserHelper.get_user_avatar(@conn, @user)) |> img_tag(width: "128px", height: "128px", class: "rounded-circle", style: "margin-top: 30px;") %>   
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-12 form-group">
+            <%= label f, "Загрузите фото" %>
+            <%= file_input f, :avatar_timestamp%>
+        </div>
+      </div>
+  </div>
+
   <div class="form-group">
     <%= label f, :sex, "Пол" %>
     <%= select f, :sex, Faust.Accounts.User.sex(), id: "sex_id", class: "form-control" %> 
