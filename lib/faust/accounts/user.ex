@@ -21,6 +21,7 @@ defmodule Faust.Accounts.User do
     field :surname, :string
     field :birthday, :date
     field :sex, :string
+    field :avatar_timestamp, :string
 
     field :fishes_ids, :any, virtual: true
     field :techniques_ids, :any, virtual: true
@@ -75,7 +76,15 @@ defmodule Faust.Accounts.User do
 
   def update_changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :surname, :birthday, :sex, :fishes_ids, :techniques_ids])
+    |> cast(attrs, [
+      :name,
+      :surname,
+      :birthday,
+      :sex,
+      :avatar_timestamp,
+      :fishes_ids,
+      :techniques_ids
+    ])
     |> validate_required([:name, :surname])
     |> cast_assoc(:credential, with: &Credential.update_changeset/2, required: true)
     |> validate_format(:name, @regex_name)

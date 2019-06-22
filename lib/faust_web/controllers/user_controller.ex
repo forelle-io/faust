@@ -10,6 +10,7 @@ defmodule FaustWeb.UserController do
   alias FaustWeb.Accounts.User.IndexLive, as: UserIndexLive
   alias FaustWeb.Accounts.UserHelper
   alias FaustWeb.AuthenticationHelper
+  alias FaustWeb.UserPhotoUploader
 
   action_fallback FaustWeb.FallbackController
 
@@ -97,6 +98,8 @@ defmodule FaustWeb.UserController do
   def update(conn, %{"id" => id, "user" => user_params}, %User{} = current_user) do
     with :ok <- Bodyguard.permit(User, :update, current_user, String.to_integer(id)) do
       user = user_preloads(current_user, id)
+      # загрузка аватарки
+      user_params = UserPhotoUploader.unload_user_avatar(user_params, id)
 
       case Accounts.update_user(user, handle_user_params(user, user_params)) do
         {:ok, user} ->
@@ -105,7 +108,11 @@ defmodule FaustWeb.UserController do
           |> redirect(to: Routes.user_path(conn, :edit, user))
 
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "edit.html", user: user, changeset: changeset)
+          render(conn, "edit.html",
+            user: user,
+            changeset: changeset,
+            avatar_timestamp: user_params["avatar_timestamp"]
+          )
       end
     end
   end
