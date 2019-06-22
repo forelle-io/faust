@@ -53,13 +53,4 @@ pre_erlang_clean_compile() {
 
    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD do deps.get, compile
  "
-
- status "Running phoenix.digest"
- __sync_remote "
-   [ -f ~/.profile ] && source ~/.profile
-   set -e #
-   cd '$BUILD_AT'
-
-   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phoenix.digest $SILENCE
- "
 }
