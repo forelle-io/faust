@@ -3,7 +3,7 @@ use Mix.Config
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-# Configure your database
+# Configure database
 config :faust, Faust.Repo,
   username: "postgres",
   password: "postgres",

@@ -43,11 +43,6 @@ config :alchemic_avatar,
   annotate_position: "-0+10",
   app_name: :faust
 
-mix_env = Mix.env()
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{mix_env}.exs"
-
-if File.exists?(Path.expand("config/#{mix_env}.secret.exs")),
-  do: import_config("#{mix_env}.secret.exs")
+import_config "#{Mix.env()}.exs"

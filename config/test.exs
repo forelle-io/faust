@@ -9,17 +9,10 @@ config :faust, FaustWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-# Configure your database
+# Configure database
 config :faust, Faust.Repo,
   username: "faust",
   password: "faust",
   database: "faust_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
-
-config :faust,
-  basic_auth: [
-    username: "sudo",
-    password: "qwerty",
-    realm: "restricted area"
-  ]
