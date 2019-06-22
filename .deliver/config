@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+APP="faust"
+
+# Configuration of where the releases would be built.
+BUILD_HOST="37.46.134.254"
+BUILD_USER="joker"
+BUILD_AT="/home/joker/applications/forelle-io/edeliver_builds"
+
+# The location where built releases are going to be stored.
+RELEASE_STORE=joker@37.46.134.254:/home/joker/applications/forelle-io/edeliver_release_store/
+
+# Host and use of where the app would run.
+PRODUCTION_HOSTS="37.46.134.254"
+PRODUCTION_USER="joker"
+
+DELIVER_TO="/home/joker/applications/forelle-io"
+
+pre_erlang_get_and_update_deps() {
+ # copy it on the build host to the build directory when building
+ local _secret_config_file_on_build_host="/home/joker/applications/forelle-io/prod.secret.exs"
+
+ status "Linking '$_secret_config_file_on_build_host' to build config dir"
+ __sync_remote "
+   ln -sfn '$_secret_config_file_on_build_host' '$BUILD_AT/config/prod.secret.exs'
+ "
+}
+
+pre_erlang_clean_compile() {
+ status "Installing nodejs dependencies"
+ __sync_remote "
+   [ -f ~/.profile ] && source ~/.profile
+   set -e
+   cd '$BUILD_AT'
+
+   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm install
+ "
+
+ status "Building brunch assets"
+ __sync_remote "
+   [ -f ~/.profile ] && source ~/.profile
+   set -e
+   cd '$BUILD_AT'
+
+   mkdir -p priv/static
+   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm run deploy
+ "
+
+ status "Compiling code"
+ __sync_remote "
+   [ -f ~/.profile ] && source ~/.profile
+   set -e #
+   cd '$BUILD_AT'
+
+   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD do deps.get, compile
+ "
+
+ status "Running phoenix.digest"
+ __sync_remote "
+   [ -f ~/.profile ] && source ~/.profile
+   set -e #
+   cd '$BUILD_AT'
+
+   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD phoenix.digest $SILENCE
+ "
+}

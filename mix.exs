@@ -27,7 +27,7 @@ defmodule Faust.MixProject do
   def application do
     [
       mod: {Faust.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :edeliver]
     ]
   end
 
@@ -40,22 +40,32 @@ defmodule Faust.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      # Phoenix зависимости
       {:phoenix, "~> 1.4.3"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:phoenix_html, "~> 2.13.2"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_ecto, "~> 4.0"},
+      # Базы данных и хранилища
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
+      # Локализация
       {:gettext, "~> 0.11"},
+      # Сервера, форматы, протоколы
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+      # Безопасность
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 1.2"},
       {:basic_auth, "~> 2.2.2"},
       {:bodyguard, "~> 2.2.3"},
+      # Мультимедия
       {:alchemic_avatar, "~> 0.1.0"},
+      # Релиз, деплой
+      {:edeliver, ">= 1.6.0"},
+      {:distillery, "~> 2.0", warn_missing: false},
+      # Тестирование, инспекция кода, фикстуры, фабрики
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.3", only: :test}
