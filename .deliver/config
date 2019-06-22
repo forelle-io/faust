@@ -30,16 +30,16 @@ pre_erlang_clean_compile() {
  __sync_remote "
    [ -f ~/.profile ] && source ~/.profile
    set -e
-   cd '$BUILD_AT'
+   cd '$BUILD_AT/assets'
 
-   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm install
+   APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm install --no-optional
  "
 
  status "Building brunch assets"
  __sync_remote "
    [ -f ~/.profile ] && source ~/.profile
    set -e
-   cd '$BUILD_AT'
+   cd '$BUILD_AT/assets'
 
    mkdir -p priv/static
    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm run deploy
