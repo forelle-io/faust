@@ -4,10 +4,10 @@ APP="faust"
 # Configuration of where the releases would be built.
 BUILD_HOST="37.46.134.254"
 BUILD_USER="joker"
-BUILD_AT="/home/joker/applications/forelle-io/edeliver_builds"
+BUILD_AT="/home/joker/applications/forelle-io/faust_builds"
 
 # The location where built releases are going to be stored.
-RELEASE_STORE=joker@37.46.134.254:/home/joker/applications/forelle-io/edeliver_release_store/
+RELEASE_STORE=joker@37.46.134.254:/home/joker/applications/forelle-io/faust_release_store/
 
 # Host and use of where the app would run.
 PRODUCTION_HOSTS="37.46.134.254"
@@ -31,7 +31,6 @@ pre_erlang_clean_compile() {
    [ -f ~/.profile ] && source ~/.profile
    set -e
    cd '$BUILD_AT/assets'
-
    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm install --no-optional
  "
 
@@ -40,7 +39,6 @@ pre_erlang_clean_compile() {
    [ -f ~/.profile ] && source ~/.profile
    set -e
    cd '$BUILD_AT/assets'
-
    mkdir -p priv/static
    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm run deploy
  "
@@ -48,9 +46,8 @@ pre_erlang_clean_compile() {
  status "Compiling code"
  __sync_remote "
    [ -f ~/.profile ] && source ~/.profile
-   set -e #
+   set -e
    cd '$BUILD_AT'
-
    APP='$APP' MIX_ENV='$TARGET_MIX_ENV' $MIX_CMD do deps.get, compile
  "
 }
