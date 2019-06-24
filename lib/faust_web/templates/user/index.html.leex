@@ -12,7 +12,7 @@
                     <li class="list-group-item">
                         <div class="row" style="height: 80px; align-items: center;">
                             <div class="col-md-2 text-center">
-                                <%= Routes.static_path(FaustWeb.Endpoint, user.credential.alchemic_avatar) |> img_tag(width: 46, class: "rounded-circle") %>
+                                <%= Routes.static_path(FaustWeb.Endpoint, FaustWeb.Accounts.UserHelper.user_avatar_path(user)) |> img_tag(width: 46, height: 46, class: "rounded-circle") %>
                             </div>
                             <div class="col-md-4">
                                 <b><%= link "#{user.name} #{user.surname}", to: Routes.user_path(FaustWeb.Endpoint, :show, user) %></b>

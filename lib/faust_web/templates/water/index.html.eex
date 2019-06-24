@@ -11,7 +11,7 @@
     <%= for water <- @waters do %>
       <div class="row" style="margin-top: 20;">
         <div class="col-md-1">
-          <%= Routes.static_path(@conn, water.user.credential.alchemic_avatar) |> img_tag(width: 48, class: "rounded") %>
+          <%= Routes.static_path(@conn, FaustWeb.Accounts.UserHelper.user_avatar_path(water.user)) |> img_tag(width: 48, height: 48, class: "rounded-circle") %>
         </div>
         <div class="col-md-11">
           <div>

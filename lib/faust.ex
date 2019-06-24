@@ -18,4 +18,6 @@ defmodule Faust do
         table_name
     end
   end
+
+  def media_location, do: "#{System.user_home()}/media"
 end

@@ -2,7 +2,7 @@ defmodule FaustWeb.Accounts.UserHelper do
   @moduledoc false
 
   alias Faust.Accounts
-  alias Faust.Accounts.User
+  alias Faust.Crypto
   alias Faust.Repo
   alias FaustWeb.FishHelper
   alias FaustWeb.TechniqueHelper
@@ -18,32 +18,32 @@ defmodule FaustWeb.Accounts.UserHelper do
   end
 
   def handle_user_params(user, user_params) do
-    user_params
-    |> FishHelper.fetch_fishes_params(user.fishes)
-    |> TechniqueHelper.fetch_techniques_params(user.techniques)
-  end
+    case user_params do
+      %{"avatar" => avatar} ->
+        avatar_name =
+          "user_#{user.id}_" <> Crypto.generate_unique_string(12) <> Path.extname(avatar.filename)
 
-  # функция, для получения пути к картинки аватара
-  def get_user_avatar(conn, %User{} = user) do
-    if is_nil(user.avatar_timestamp) do
-      user.credential.alchemic_avatar
-    else
-      file_extension = get_file_extension(user)
-      "/images/users/#{user.id}/#{user.avatar_timestamp}/origin.#{file_extension}"
+        Task.start(fn ->
+          File.cp(avatar.path, "#{Faust.media_location()}/users/avatars/#{avatar_name}")
+        end)
+
+        %{user_params | "avatar" => avatar_name}
+
+      _ ->
+        user_params
+        |> FishHelper.fetch_fishes_params(user.fishes)
+        |> TechniqueHelper.fetch_techniques_params(user.techniques)
     end
   end
 
-  # функция, для определения расширения
-  defp get_file_extension(user) do
-    cond do
-      File.exists?("assets/static/images/users/#{user.id}/#{user.avatar_timestamp}/origin.png") ->
-        value = "png"
+  def user_avatar_path(user) do
+    postfix =
+      if is_bitstring(user.avatar) and user.avatar != "" do
+        "avatars/#{user.avatar}"
+      else
+        "alchemic_avatar/#{user.credential.alchemic_avatar}"
+      end
 
-      File.exists?("assets/static/images/users/#{user.id}/#{user.avatar_timestamp}/origin.jpg") ->
-        value = "jpg"
-
-      File.exists?("assets/static/images/users/#{user.id}/#{user.avatar_timestamp}/origin.gif") ->
-        value = "gif"
-    end
+    "/media/users/#{postfix}"
   end
 end

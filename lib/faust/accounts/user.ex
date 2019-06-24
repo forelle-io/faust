@@ -21,7 +21,7 @@ defmodule Faust.Accounts.User do
     field :surname, :string
     field :birthday, :date
     field :sex, :string
-    field :avatar_timestamp, :string
+    field :avatar, :string
 
     field :fishes_ids, :any, virtual: true
     field :techniques_ids, :any, virtual: true
@@ -81,7 +81,7 @@ defmodule Faust.Accounts.User do
       :surname,
       :birthday,
       :sex,
-      :avatar_timestamp,
+      :avatar,
       :fishes_ids,
       :techniques_ids
     ])
