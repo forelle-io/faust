@@ -37,13 +37,10 @@ defmodule FaustWeb.Accounts.UserHelper do
   end
 
   def user_avatar_path(user) do
-    postfix =
-      if is_bitstring(user.avatar) and user.avatar != "" do
-        "avatars/#{user.avatar}"
-      else
-        "alchemic_avatar/#{user.credential.alchemic_avatar}"
-      end
-
-    "/media/users/#{postfix}"
+    if is_bitstring(user.avatar) and user.avatar != "" do
+      "/media/users/avatars/#{user.avatar}"
+    else
+      "/alchemic_avatar/#{user.credential.alchemic_avatar}"
+    end
   end
 end
