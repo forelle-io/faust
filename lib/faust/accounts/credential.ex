@@ -91,7 +91,7 @@ defmodule Faust.Accounts.Credential do
           |> Enum.take(-3)
           |> Enum.join("/")
 
-        Changeset.put_change(changeset, :alchemic_avatar, "/#{file_path}")
+        Changeset.put_change(changeset, :alchemic_avatar, file_path)
 
       _ ->
         changeset

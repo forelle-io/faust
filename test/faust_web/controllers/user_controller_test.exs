@@ -62,10 +62,6 @@ defmodule FaustWeb.UserControllerTest do
       conn = post(conn, Routes.user_path(conn, :create), user: user_attrs)
 
       assert conn.status == code(:found)
-
-      assert conn.private[:phoenix_flash]["info"] ==
-               "Добро пожаловать, #{Map.get(user_attrs, "name")} #{Map.get(user_attrs, "surname")}"
-
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
