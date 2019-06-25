@@ -2,7 +2,7 @@ defmodule FaustWeb.SessionControllerTest do
   @moduledoc false
   use FaustWeb.ConnCase
 
-  import Faust.Support.AccountFixtures
+  import Faust.Support.{AccountFixtures, SessionFixtures}
   import Phoenix.Controller, only: [controller_module: 1, view_template: 1, view_module: 1]
   import Plug.Conn.Status, only: [code: 1]
 
@@ -44,7 +44,7 @@ defmodule FaustWeb.SessionControllerTest do
       conn =
         conn
         |> authorize_conn(current_user)
-        |> post(Routes.session_path(conn, :create), credential: session_attrs())
+        |> post(Routes.session_path(conn, :create), credential: session_user_attrs())
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.user_path(conn, :show, current_user)
@@ -54,7 +54,7 @@ defmodule FaustWeb.SessionControllerTest do
          %{conn: conn} do
       conn =
         post(conn, Routes.session_path(conn, :create),
-          credential: %{session_attrs() | "unique" => "bad_solov9ev"}
+          credential: %{session_user_attrs() | "unique" => "unique"}
         )
 
       assert conn.status == code(:found)
@@ -65,7 +65,7 @@ defmodule FaustWeb.SessionControllerTest do
          %{conn: conn} do
       conn =
         post(conn, Routes.session_path(conn, :create),
-          credential: %{session_attrs() | "password" => "bad_password"}
+          credential: %{session_user_attrs() | "password" => "_password"}
         )
 
       assert conn.status == code(:found)
@@ -76,7 +76,7 @@ defmodule FaustWeb.SessionControllerTest do
          %{conn: conn} do
       conn =
         post(conn, Routes.session_path(conn, :create),
-          credential: %{session_attrs() | "association" => "bad_user"}
+          credential: %{session_user_attrs() | "association" => "association"}
         )
 
       assert conn.status == code(:found)
@@ -85,7 +85,7 @@ defmodule FaustWeb.SessionControllerTest do
 
     test "страница создания новой сессии, когда пользователь не авторизован и данные валидны",
          %{conn: conn, current_user: current_user} do
-      conn = post(conn, Routes.session_path(conn, :create), credential: session_attrs())
+      conn = post(conn, Routes.session_path(conn, :create), credential: session_user_attrs())
 
       assert conn.status == code(:found)
       assert redirected_to(conn) == Routes.user_path(conn, :show, current_user)
@@ -124,15 +124,5 @@ defmodule FaustWeb.SessionControllerTest do
       assert redirected_to(conn) == Routes.page_path(conn, :index)
       refute conn.private.guardian_user_token
     end
-  end
-
-  # Приватные функции ----------------------------------------------------------
-
-  defp session_attrs do
-    %{
-      "association" => "user",
-      "password" => "password",
-      "unique" => "solov9ev"
-    }
   end
 end
