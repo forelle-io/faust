@@ -32,12 +32,4 @@ defmodule Faust.Support.SessionFixtures do
     |> credential_attrs()
     |> Map.merge(@session_chief_attrs)
   end
-
-  # defp session_attrs_bad_association do
-  #   %{
-  #     "association" => "bad_association",
-  #     "password" => "password",
-  #     "unique" => "solov9ev"
-  #   }
-  # end
 end

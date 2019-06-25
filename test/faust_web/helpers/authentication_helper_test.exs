@@ -20,7 +20,9 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
       user_fixture()
 
       conn =
-        post(conn, Routes.session_path(conn, :create), credential: %{session_user_attrs() | "association" => "association"})
+        post(conn, Routes.session_path(conn, :create),
+          credential: %{session_user_attrs() | "association" => "association"}
+        )
 
       assert redirected_to(conn) == assert(Routes.page_path(conn, :index))
     end
@@ -70,8 +72,8 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
       assert redirected_to(conn) == Routes.session_path(conn, :new)
     end
 
-    # TODO: Написать тест для ассоциации chief "редирект на страницу shief,
-    # когда credential существует, и данные валидны для shief"
+    # TODO: Написать тест для ассоциации chief "редирект на страницу chief,
+    # когда credential существует, и данные валидны для chief"
 
     test "редирект на страницу создания новой сессии, когда credential существует и данные не валидны для chief",
          %{conn: conn} do
@@ -95,21 +97,28 @@ defmodule Faust.Accounts.AuthenticationHelperTest do
     end
 
     test "редирект на главную страницу, когда разрушает сессию user", %{conn: conn} do
-      # TODO: Сначала нужно авторизовать в сесии, а только разрушать ее
-      conn = AuthenticationHelper.sign_out(conn, "user")
+      conn =
+        conn
+        |> Guardian.Plug.sign_in(user_fixture(), %{}, key: :user)
+        |> AuthenticationHelper.sign_out("user")
+
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
     test "редирект на главную страницу, когда разрушает сессию organization", %{conn: conn} do
-      # TODO: Сначала нужно авторизовать в сесии, а только разрушать ее
-      conn = AuthenticationHelper.sign_out(conn, "organization")
+      conn =
+        conn
+        |> Guardian.Plug.sign_in(organization_fixture(), %{}, key: :organization)
+        |> AuthenticationHelper.sign_out("organization")
 
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
 
     test "редирект на главную страницу, когда разрушает сессию chief", %{conn: conn} do
-      # TODO: Сначала нужно авторизовать в сесии, а только разрушать ее
-      conn = AuthenticationHelper.sign_out(conn, "chief")
+      conn =
+        conn
+        |> Guardian.Plug.sign_in(chief_fixture(), %{}, key: :chief)
+        |> AuthenticationHelper.sign_out("chief")
 
       assert redirected_to(conn) == Routes.page_path(conn, :index)
     end
