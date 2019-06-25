@@ -14,8 +14,14 @@ defmodule FaustWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :faust,
-    gzip: false,
+    gzip: true,
     only: ~w(css fonts alchemic_avatar images js favicon.ico robots.txt)
+
+  # TODO: Внедрение распределенного файлового хранилища файлов (leofs, ceph)
+  plug Plug.Static,
+    at: "/media",
+    from: Faust.media_location(),
+    gzip: true
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

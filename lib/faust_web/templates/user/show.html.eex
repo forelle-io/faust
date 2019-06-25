@@ -3,7 +3,7 @@
     <div class="content-block">
       <div class="text-center">
         <div>
-          <%= Routes.static_path(@conn, @user.credential.alchemic_avatar) |> img_tag(width: "128px", height: "128px", class: "rounded-circle", style: "margin-top: 30px;") %>
+          <%= Routes.static_path(@conn, FaustWeb.Accounts.UserHelper.user_avatar_path(@user)) |> img_tag(width: "128px", height: "128px", class: "rounded-circle", style: "margin-top: 30px;") %>
         </div>
         <div style="margin-top: 20px;">
           <b><%= "#{@user.name} #{@user.surname}" %></b>

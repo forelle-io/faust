@@ -46,10 +46,8 @@ defmodule FaustWeb.UserController do
 
   def create(conn, %{"user" => user_params}) do
     case Accounts.create_user(user_params) do
-      {:ok, user} ->
-        conn
-        |> put_flash(:info, "Добро пожаловать, #{user.name} #{user.surname}")
-        |> redirect(to: Routes.session_path(conn, :new))
+      {:ok, _user} ->
+        redirect(conn, to: Routes.session_path(conn, :new))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
@@ -95,9 +93,8 @@ defmodule FaustWeb.UserController do
   end
 
   def update(conn, %{"id" => id, "user" => user_params}, %User{} = current_user) do
-    with :ok <- Bodyguard.permit(User, :update, current_user, String.to_integer(id)) do
-      user = user_preloads(current_user, id)
-
+    with :ok <- Bodyguard.permit(User, :update, current_user, String.to_integer(id)),
+         user <- user_preloads(current_user, id) do
       case Accounts.update_user(user, handle_user_params(user, user_params)) do
         {:ok, user} ->
           conn
@@ -105,9 +102,16 @@ defmodule FaustWeb.UserController do
           |> redirect(to: Routes.user_path(conn, :edit, user))
 
         {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "edit.html", user: user, changeset: changeset)
+          render(conn, "edit.html",
+            user: user,
+            changeset: changeset
+          )
       end
     end
+  end
+
+  def update(conn, _params, %User{} = current_user) do
+    redirect(conn, to: Routes.user_path(conn, :edit, current_user))
   end
 
   def delete(conn, %{"id" => id}, %User{} = current_user) do

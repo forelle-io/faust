@@ -88,10 +88,10 @@ defmodule Faust.Accounts.Credential do
           |> String.upcase()
           |> AlchemicAvatar.generate(240)
           |> String.split("/")
-          |> Enum.take(-4)
+          |> Enum.take(-3)
           |> Enum.join("/")
 
-        Changeset.put_change(changeset, :alchemic_avatar, "/#{file_path}")
+        Changeset.put_change(changeset, :alchemic_avatar, file_path)
 
       _ ->
         changeset
