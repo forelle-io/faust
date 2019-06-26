@@ -10,17 +10,16 @@ import css from "../css/app.scss"
 // Import dependencies
 //
 import "phoenix_html"
-
-// Import local files
-//
-// Local files can be imported directly using relative paths, for example:
-// import socket from "./socket"
-
 import "jquery/dist/jquery";
 import "popper.js";
 import "bootstrap/dist/js/bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
 import LiveSocket from "phoenix_live_view";
+
+// Import local files
+//
+// Local files can be imported directly using relative paths, for example:
+// import socket from "./socket"
 
 let liveSocket = new LiveSocket("/live");
 liveSocket.connect();
