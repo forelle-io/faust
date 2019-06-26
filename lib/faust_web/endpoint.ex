@@ -14,7 +14,7 @@ defmodule FaustWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :faust,
-    gzip: true,
+    gzip: false,
     only: ~w(css fonts alchemic_avatar images js favicon.ico robots.txt)
 
   # TODO: Внедрение распределенного файлового хранилища файлов (leofs, ceph)

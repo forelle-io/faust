@@ -21,6 +21,16 @@ body {
     border-radius: 16px;
 }
 
+/* Пользователь онлайн */
+.user-online {
+    width: 12px;
+    height: 12px;
+    background: #38D21F;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    position: absolute;
+}
+
 /* Поле формы input */
 .input-text {
     border: 1px solid #C8CCD4;
