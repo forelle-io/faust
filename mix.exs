@@ -64,7 +64,7 @@ defmodule Faust.MixProject do
       {:alchemic_avatar, "~> 0.1.0"},
       # Релиз, деплой
       {:edeliver, ">= 1.6.0"},
-      {:distillery, "~> 2.0", warn_missing: false},
+      {:distillery, "~> 2.0.14", warn_missing: false},
       # Тестирование, инспекция кода, фикстуры, фабрики
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
