@@ -4,6 +4,7 @@ defmodule FaustWeb.WebsocketTokenPlug do
   import Plug.Conn
 
   alias Faust.Accounts.User
+  alias Faust.Crypto
   alias FaustWeb.AuthenticationHelper
   alias Phoenix.Token
 
@@ -14,12 +15,7 @@ defmodule FaustWeb.WebsocketTokenPlug do
   def call(%Plug.Conn{} = conn, default) do
     with [key: :user] <- default,
          %User{id: user_id} <- AuthenticationHelper.current_user(conn) do
-      secret_key_base =
-        :faust
-        |> Application.get_env(FaustWeb.Endpoint)
-        |> Keyword.fetch!(:secret_key_base)
-
-      websocket_token = Token.sign(conn, secret_key_base, "user_id:#{user_id}")
+      websocket_token = Token.sign(conn, Crypto.secret_key_base(), "user_id:#{user_id}")
       assign(conn, :websocket_token, websocket_token)
     else
       _ ->
