@@ -28,7 +28,7 @@
         <%= date_select f, :birthday, builder: fn b -> %>
           <%= b.(:day, [class: "col-md-3"]) %>
           <%= b.(:month, [class: "col-md-5"]) %>
-          <%= b.(:year, [class: "col-md-4"]) %>
+          <%= b.(:year, [class: "col-md-4", options: 1950..DateTime.utc_now.year]) %>
         <% end %>
       </div>
       <%= error_tag f, :birthday %>
@@ -84,22 +84,22 @@
     </div>
   </div>
 
-  <div class="col-md-12 content-block" style="margin-top: 20px; padding: 30px;">
-    <div class="offset-md-3 col-md-6">
-      <%= submit "Сохранить", class: "btn btn-outline-success btn-lg btn-block" %>
-    </div>
+  <div class="offset-md-9 col-md-3" style="margin-top: 20px;">
+    <%= submit "Сохранить", class: "btn btn-primary btn-lg btn-block" %>
   </div>
 <% end %>
+
+<div style="height: 20px;"></div>
 
 <script type="text/javascript">
   $(document).ready(function(){
     // Использование bootstrap-select для "Виды рыб"
-    $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true,liveSearchStyle: "contains"});
+    $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано", liveSearch: true, liveSearchStyle: "contains"});
     // Использование bootstrap-select для техники ловли
     $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
     // Использование bootstrap-select для "День рождения"
     ["year", "month", "day"].forEach(function(item, i, array) {
-      $('#user_birthday_' + item).selectpicker({size: 10});
+      $('#user_birthday_' + item).selectpicker({size: 10, liveSearch: true});
     });
     $('#sex_id').selectpicker({size: 6, noneSelectedText: "Не выбран"});
   });
