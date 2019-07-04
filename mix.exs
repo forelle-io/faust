@@ -43,7 +43,6 @@ defmodule Faust.MixProject do
       # Phoenix зависимости
       {:phoenix, "~> 1.4.3"},
       {:phoenix_pubsub, "~> 1.1"},
-      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
       {:phoenix_html, "~> 2.13.2"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_ecto, "~> 4.0"},

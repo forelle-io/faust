@@ -52,7 +52,6 @@ config :faust, FaustWeb.Endpoint,
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
       ~r{lib/faust_web/views/.*(ex)$},
-      ~r{lib/faust_web/live/.*(ex)$},
       ~r{lib/faust_web/templates/.*(eex)$}
     ]
   ]

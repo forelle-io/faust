@@ -102,17 +102,11 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
-    // Использование bootstrap-select для "Виды рыб"
-    $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true,liveSearchStyle: "contains"});
-    // Использование bootstrap-select для техники ловли
-    $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
-    // Использование bootstrap-select для типа 
-    $('#type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"});
-    // Использование bootstrap-select для типа дна
-    $('#bottom_type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"});
-    // Использование bootstrap-select для окружения
-    $('#environment_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
-    // Использование bootstrap-select для цвета воды
-    $('#select_color_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true, liveSearchStyle: "contains"})
+    $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
+    $('#type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"})
+    $('#bottom_type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"})
+    $('#environment_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
+    $('#select_color_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
   });
 </script>

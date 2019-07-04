@@ -9,7 +9,7 @@ defmodule Faust.Fishing.TechniqueUser do
   @primary_key false
 
   schema "fishing.techniques_users" do
-    belongs_to(:techniques, Technique)
-    belongs_to(:users, User)
+    belongs_to(:techniques, Technique, foreign_key: :technique_id)
+    belongs_to(:users, User, foreign_key: :user_id)
   end
 end

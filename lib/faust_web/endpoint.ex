@@ -1,9 +1,7 @@
 defmodule FaustWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :faust
 
-  socket "/live", Phoenix.LiveView.Socket
-
-  socket "/socket", FaustWeb.UserSocket,
+  socket "/socket", FaustWeb.EndpointSocket,
     websocket: true,
     longpoll: false
 
