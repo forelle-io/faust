@@ -83,15 +83,17 @@
     <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), selected: Enum.map(@water.techniques, &(&1.id)), id: "techniques_ids", class: "form-control" %>
   </div>
   
-  <div>
-    <h4>История</h4>
-  </div>
+  <%= if Bodyguard.permit?(Faust.Reservoir.History, :new, current_user(@conn), @water) do %>
+    <div>
+      <h4>История</h4>
+    </div>
 
-  <hr>
+    <hr>
 
-  <div class="form-group">
-    <%= link "Добавить", to: Routes.water_history_path(@conn, :new, @water), class: "btn btn-light btn-lg btn-block" %>
-  </div>
+    <div class="form-group">
+      <%= link "Добавить", to: Routes.water_history_path(@conn, :new, @water), class: "btn btn-light btn-lg btn-block" %>
+    </div>
+  <% end %>
 
   <div class="row">
     <div class="col-md-12 form-group">

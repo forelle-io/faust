@@ -13,13 +13,13 @@ defmodule FaustWeb.Policies.Reservoir.HistoryPolicyTest do
   end
 
   describe "new" do
-    test "разрешение, когда ресурсом является структура water, пренадлежащая текущей структуре user",
+    test "запрет, когда ресурсом является структура water, пренадлежащая текущей структуре user",
          %{
            current_user: current_user
          } do
       water = water_fixture(current_user)
 
-      assert HistoryPolicy.authorize(:new, current_user, water)
+      refute HistoryPolicy.authorize(:new, current_user, water)
     end
 
     test "запрет, когда ресурсом является структура water, принадлежащая другой структуре user",
@@ -36,13 +36,13 @@ defmodule FaustWeb.Policies.Reservoir.HistoryPolicyTest do
   end
 
   describe "create" do
-    test "разрешение, когда ресурсом является структура water, пренадлежащая текущей структуре user",
+    test "запрет, когда ресурсом является структура water, пренадлежащая текущей структуре user",
          %{
            current_user: current_user
          } do
       water = water_fixture(current_user)
 
-      assert HistoryPolicy.authorize(:create, current_user, water)
+      refute HistoryPolicy.authorize(:create, current_user, water)
     end
 
     test "запрет, когда ресурсом является структура water, принадлежащая другой структуре user",
@@ -59,13 +59,13 @@ defmodule FaustWeb.Policies.Reservoir.HistoryPolicyTest do
   end
 
   describe "delete" do
-    test "разрешение, когда ресурсом является структура water, пренадлежащая текущей структуре user",
+    test "запрет, когда ресурсом является структура water, пренадлежащая текущей структуре user",
          %{
            current_user: current_user
          } do
       water = water_fixture(current_user)
 
-      assert HistoryPolicy.authorize(:delete, current_user, water)
+      refute HistoryPolicy.authorize(:delete, current_user, water)
     end
 
     test "запрет, когда ресурсом является структура water, принадлежащая другой структуре user",
