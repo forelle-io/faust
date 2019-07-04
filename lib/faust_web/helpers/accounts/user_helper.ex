@@ -46,4 +46,8 @@ defmodule FaustWeb.Accounts.UserHelper do
 
     "/media/users" <> avatar_path
   end
+
+  def offset_rank_years(range \\ 100) when is_integer(range) do
+    (DateTime.utc_now().year - range)..DateTime.utc_now().year
+  end
 end
