@@ -4,20 +4,16 @@ defmodule FaustWeb.BasicAuthPlug do
   import Plug.Conn, only: [halt: 1]
 
   def authenticate(conn, username, password) do
-    cond do
-      Enum.member?([:dev, :test], Mix.env()) ->
-        conn
-
-      fetch_basic_auth_config(:username) == username and
-          fetch_basic_auth_config(:password) == password ->
-        conn
-
-      true ->
-        halt(conn)
-    end
+    if is_valid?(username, password), do: conn, else: halt(conn)
   end
 
-  defp fetch_basic_auth_config(key) when is_atom(key) do
+  def is_valid?(username, password) do
+    Enum.all?([{:username, username}, {:password, password}], fn {k, v} ->
+      basic_auth_config(k) == v
+    end)
+  end
+
+  defp basic_auth_config(key) when is_atom(key) do
     Application.get_env(:faust, :basic_auth)[key]
   end
 end
