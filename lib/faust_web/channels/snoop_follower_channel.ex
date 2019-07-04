@@ -4,8 +4,8 @@ defmodule FaustWeb.SnoopFollowerChannel do
   use FaustWeb, :channel
 
   alias Faust.Snoop
-  alias FaustWeb.Snoop.FollowerService
   alias FaustWeb.Endpoint
+  alias FaustWeb.Snoop.FollowerService
 
   @actions_topic "snoop:follower:actions_user:"
 

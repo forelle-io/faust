@@ -57,7 +57,10 @@ defmodule Faust.Accounts.UserTest do
     end
 
     test "когда фильтрация валидна, содержит часть фамилии 'ловьева' и существует запись user с женским полом" do
-      {:ok, user} = user_fixture() |> Accounts.update_user(%{name: "Полина", surname: "Соловьева", sex: "женский"})
+      {:ok, user} =
+        user_fixture()
+        |> Accounts.update_user(%{name: "Полина", surname: "Соловьева", sex: "женский"})
+
       insert_list(5, :accounts_user)
 
       users = Accounts.list_users_by_filter(%{"string" => "ловьева", "sex" => "женский"})

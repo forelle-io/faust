@@ -12,7 +12,6 @@ defmodule FaustWeb.Snoop.FollowerServiceTest do
   end
 
   describe "follower_create" do
-
     test "когда подписант существует, контроль ресурсов пройден",
          %{current_user: current_user} do
       other_user = insert(:accounts_user)
