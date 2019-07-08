@@ -6,7 +6,7 @@
 //
 // Pass the token on params as below. Or remove it
 // from the params if you are not using authentication.
-import {Socket} from "phoenix"
+import {Socket, Presence} from "phoenix"
 
 let socket = window.websocketToken ?
     new Socket("/socket", {params: {token: window.websocketToken}}) : null
@@ -53,8 +53,6 @@ let socket = window.websocketToken ?
 //     end
 //
 // Finally, connect to the socket:
-if (socket) {
-    socket.connect()
-}
+if (socket) { socket.connect() }
 
-export default socket
+export {socket, Presence}

@@ -9,20 +9,20 @@ defmodule FaustWeb.SearchContentChannel do
   alias Faust.Snoop
   alias FaustWeb.UserView
 
-  @search_topic "search:content:"
+  @search_content_topic "search:content:"
 
-  def join(@search_topic, _message, socket) do
+  def join(@search_content_topic, _payload, socket) do
     {:ok, assign(socket, :search, %{params: nil, loading: false})}
   end
 
-  def handle_in("search", message, %{assigns: %{search: %{loading: true} = search}} = socket) do
-    search = %{search | params: message}
+  def handle_in("search", payload, %{assigns: %{search: %{loading: true} = search}} = socket) do
+    search = %{search | params: payload}
 
     {:noreply, assign(socket, :search, search)}
   end
 
-  def handle_in("search", message, %{assigns: %{search: %{loading: false} = search}} = socket) do
-    search = %{search | params: message, loading: true}
+  def handle_in("search", payload, %{assigns: %{search: %{loading: false} = search}} = socket) do
+    search = %{search | params: payload, loading: true}
 
     socket =
       socket
@@ -34,7 +34,7 @@ defmodule FaustWeb.SearchContentChannel do
 
   def handle_info(
         "delayed_search",
-        %{assigns: %{search: %{params: params} = message, current_user: current_user}} = socket
+        %{assigns: %{search: %{params: params} = payload, current_user: current_user}} = socket
       ) do
     users_task = Task.async(Accounts, :list_users_by_filter, [params])
     list_followee_ids = Snoop.list_followee_ids(current_user.id)
@@ -49,6 +49,6 @@ defmodule FaustWeb.SearchContentChannel do
 
     push(socket, "delayed_search", %{content: content})
 
-    {:noreply, assign(socket, :search, %{message | loading: false})}
+    {:noreply, assign(socket, :search, %{payload | loading: false})}
   end
 end

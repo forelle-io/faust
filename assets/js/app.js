@@ -18,6 +18,7 @@ import "bootstrap-select/dist/js/bootstrap-select";
 // Import local files
 //
 // Local files can be imported directly using relative paths, for example:
-import socket from "./socket"
+import {socket, Presence} from "./socket"
 
 window.socket = socket
+window.Presence = Presence

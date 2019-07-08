@@ -20,11 +20,20 @@ body {
     border-radius: 16px;
 }
 
-/* Пользователь онлайн */
+/* Пользователь онлайн / оффлайн */
 .user-online {
     width: 12px;
     height: 12px;
     background: #38D21F;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.user-offline {
+    width: 12px;
+    height: 12px;
+    background: #CACACA;
     border: 2px solid #FFFFFF;
     border-radius: 50%;
     position: absolute;

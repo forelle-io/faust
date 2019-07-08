@@ -7,19 +7,20 @@ defmodule FaustWeb.SnoopFollowerChannel do
   alias FaustWeb.Endpoint
   alias FaustWeb.Snoop.FollowerService
 
-  @actions_topic "snoop:follower:actions_user:"
+  @snoop_follower_topic "snoop:follower:actions_user:"
 
-  def join(@actions_topic <> _user_id, _message, socket) do
+  def join(@snoop_follower_topic <> _user_id, _payload, socket) do
     {:ok, socket}
   end
 
   def handle_in(
         "create",
-        message,
-        %{topic: @actions_topic <> user_id, assigns: %{current_user: current_user}} = socket
+        payload,
+        %{topic: @snoop_follower_topic <> user_id, assigns: %{current_user: current_user}} =
+          socket
       ) do
     user_id =
-      case message do
+      case payload do
         %{"user_id" => user_id} ->
           user_id
 
@@ -31,11 +32,11 @@ defmodule FaustWeb.SnoopFollowerChannel do
       :ok ->
         push(socket, "create", %{user_id: user_id})
 
-        Endpoint.broadcast("#{@actions_topic}#{user_id}", "followers_count", %{
+        Endpoint.broadcast("#{@snoop_follower_topic}#{user_id}", "followers_count", %{
           followers_count: Snoop.count_user_followers(user_id)
         })
 
-        Endpoint.broadcast("#{@actions_topic}#{current_user.id}", "followee_count", %{
+        Endpoint.broadcast("#{@snoop_follower_topic}#{current_user.id}", "followee_count", %{
           followee_count: Snoop.count_user_followee(current_user.id)
         })
 
@@ -48,11 +49,12 @@ defmodule FaustWeb.SnoopFollowerChannel do
 
   def handle_in(
         "delete",
-        message,
-        %{topic: @actions_topic <> user_id, assigns: %{current_user: current_user}} = socket
+        payload,
+        %{topic: @snoop_follower_topic <> user_id, assigns: %{current_user: current_user}} =
+          socket
       ) do
     user_id =
-      case message do
+      case payload do
         %{"user_id" => user_id} ->
           user_id
 
@@ -64,11 +66,11 @@ defmodule FaustWeb.SnoopFollowerChannel do
       :ok ->
         push(socket, "delete", %{user_id: user_id})
 
-        Endpoint.broadcast("#{@actions_topic}#{user_id}", "followers_count", %{
+        Endpoint.broadcast("#{@snoop_follower_topic}#{user_id}", "followers_count", %{
           followers_count: Snoop.count_user_followers(user_id)
         })
 
-        Endpoint.broadcast("#{@actions_topic}#{current_user.id}", "followee_count", %{
+        Endpoint.broadcast("#{@snoop_follower_topic}#{current_user.id}", "followee_count", %{
           followee_count: Snoop.count_user_followee(current_user.id)
         })
 

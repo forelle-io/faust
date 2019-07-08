@@ -39,6 +39,7 @@
       .receive("error", resp => { console.log("Unable to join " + searchContentChannelName, resp) })
     searchContentChannel.on("delayed_search", payload => {
         $("#users_list").empty().html(payload.content);
+        changeUserPresense(presences)
     })
     snoopFollowerActionsChannel.on("create", payload => {
         changeButtonWhenFollowerCreated(payload.user_id)

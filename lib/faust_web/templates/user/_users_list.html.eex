@@ -4,6 +4,7 @@
             <div class="row" style="height: 80px; align-items: center;">
                 <div class="col-md-2 text-center">
                     <%= Routes.static_path(FaustWeb.Endpoint, FaustWeb.Accounts.UserHelper.user_avatar_path(user)) |> img_tag(width: 46, height: 46, class: "rounded-circle") %>
+                    <span class="user-presence user-offline" data-user_id="<%= user.id %>" style="margin-left: -15px;"></span>
                 </div>
                 <div class="col-md-4">
                     <b><%= link "#{user.name} #{user.surname}", to: Routes.user_path(FaustWeb.Endpoint, :show, user) %></b>

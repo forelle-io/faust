@@ -17,5 +17,28 @@
       <%= render FaustWeb.SharedView, "flash.html", conn: @conn %>
       <%= render @view_module, @view_template, assigns %>
     </main>
+    <%= if authenticated_user?(@conn) do %>
+      <script type="text/javascript">
+        let presences = {}
+        $(document).ready(function() {
+          if (socket) {
+            let currentUserChannelName = "current_user:"
+            let currentUserChannel = socket.channel(currentUserChannelName, {})
+            currentUserChannel.join()
+              .receive("ok", resp => { console.log("Joined to " + currentUserChannelName, resp) })
+              .receive("error", resp => { console.log("Unable to join " + currentUserChannelName, resp) })
+            
+            currentUserChannel.on("presence_state", state => {
+              presences = Presence.syncState(presences, state)
+              changeUserPresense(presences)
+            })
+            currentUserChannel.on("presence_diff", diff => {
+              presences = Presence.syncDiff(presences, diff)
+              changeUserPresense(presences)
+            })
+          }
+        });
+      </script>
+    <% end %>
   </body>
 </html>

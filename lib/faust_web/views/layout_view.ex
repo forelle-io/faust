@@ -1,6 +1,8 @@
 defmodule FaustWeb.LayoutView do
   use FaustWeb, :view
 
+  import FaustWeb.AuthenticationHelper, only: [authenticated_user?: 1, current_user: 1]
+
   alias Plug.Conn
 
   def clickable_logotype(%Conn{} = conn) do

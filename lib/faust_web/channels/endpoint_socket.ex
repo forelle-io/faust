@@ -5,6 +5,7 @@ defmodule FaustWeb.EndpointSocket do
   alias Faust.Crypto
 
   ## Channels
+  channel "current_user:*", FaustWeb.CurrentUserChannel
   channel "snoop:follower:*", FaustWeb.SnoopFollowerChannel
   channel "search:content:*", FaustWeb.SearchContentChannel
 
@@ -42,6 +43,6 @@ defmodule FaustWeb.EndpointSocket do
   #
   # Returning `nil` makes this socket anonymous.
   def id(%{assigns: %{current_user: current_user}}) do
-    "endpoint:#{current_user.id}"
+    "endpoint_socket:#{current_user.id}"
   end
 end

@@ -34,6 +34,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <%= Routes.static_path(@conn, FaustWeb.Accounts.UserHelper.user_avatar_path(current_user(@conn))) |> img_tag(width: 36, height: 36, class: "rounded-circle") %>
+                            <span class="user-online" style="margin-left: -15px;"></span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <%= link "Мой аккаунт", to: Routes.user_path(@conn, :show, current_user(@conn)), class: "dropdown-item" %>
