@@ -5,7 +5,7 @@ defmodule Faust.MixProject do
     [
       app: :faust,
       version: "0.1.4",
-      elixir: "~> 1.5",
+      elixir: ">= 1.9.0",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -60,10 +60,11 @@ defmodule Faust.MixProject do
       {:basic_auth, "~> 2.2.2"},
       {:bodyguard, "~> 2.2.3"},
       # Мультимедия
-      {:alchemic_avatar, "~> 0.1.0"},
+      {:alchemic_avatar,
+       git: "https://github.com/solov9ev/alchemic_avatar", branch: "support-global-path"},
       # Релиз, деплой
       {:edeliver, ">= 1.7.0"},
-      {:distillery, "~> 2.1.1", warn_missing: false},
+      {:distillery, ">= 2.1.1", warn_missing: false},
       # Тестирование, инспекция кода, фикстуры, фабрики
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},

@@ -31,10 +31,11 @@ config :phoenix, :json_library, Jason
 
 # Creating letter avatar from user's name
 config :alchemic_avatar,
-  cache_base_path: "static",
+  cache_base_path: System.user_home() <> "/media/users",
   colors_palette: :iwanthue,
   weight: 500,
   annotate_position: "-0+10",
+  global_path?: true,
   app_name: :faust
 
 # Import environment specific config. This must remain at the bottom
