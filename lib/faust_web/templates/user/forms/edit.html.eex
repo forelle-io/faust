@@ -27,7 +27,20 @@
       <div class="row">
         <%= date_select f, :birthday, builder: fn b -> %>
           <%= b.(:day, [class: "col-md-3"]) %>
-          <%= b.(:month, [class: "col-md-5"]) %>
+          <%= b.(:month, [class: "col-md-5", options: [
+            {"Январь", "1"},
+            {"Февраль", "2"},
+            {"Март", "3"},
+            {"Апрель", "4"},
+            {"Май", "5"},
+            {"Июнь", "6"},
+            {"Июль", "7"},
+            {"Август", "8"},
+            {"Сентябрь", "9"},
+            {"Октябрь", "10"},
+            {"Ноябрь", "11"},
+            {"Декабрь", "12"},
+          ]]) %>
           <%= b.(:year, [class: "col-md-4", options: 1950..DateTime.utc_now.year]) %>
         <% end %>
       </div>

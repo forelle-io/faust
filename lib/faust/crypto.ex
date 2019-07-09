@@ -17,4 +17,10 @@ defmodule Faust.Crypto do
     |> Enum.reduce([], fn _, acc -> [Enum.random(alphabets_list) | acc] end)
     |> Enum.join("")
   end
+
+  def secret_key_base do
+    :faust
+    |> Application.get_env(FaustWeb.Endpoint)
+    |> Keyword.fetch!(:secret_key_base)
+  end
 end

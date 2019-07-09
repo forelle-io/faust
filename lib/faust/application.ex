@@ -11,9 +11,9 @@ defmodule Faust.Application do
       # Start the Ecto repository
       Faust.Repo,
       # Start the endpoint when the application starts
-      FaustWeb.Endpoint
-      # Starts a worker by calling: Faust.Worker.start_link(arg)
-      # {Faust.Worker, arg},
+      FaustWeb.Endpoint,
+      # Provides Presence tracking to processes and channels
+      FaustWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

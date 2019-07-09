@@ -110,17 +110,73 @@ defmodule Faust.Accounts.User do
     query = from(u in User)
 
     query
-    |> filter_name_surname_like_query(filter["search"])
+    |> filter_name_surname_like_query(filter["string"])
     |> filter_sex_query(filter["sex"])
+    |> filter_fishes_ids_query(filter["fishes_ids"])
+    |> filter_techniques_ids_query(filter["techniques_ids"])
   end
 
-  defp filter_name_surname_like_query(query, search) do
-    if is_bitstring(search) and String.length(search) > 0 do
+  defp filter_name_surname_like_query(query, string) do
+    if is_bitstring(string) and String.length(string) > 0 do
       query
-      |> where([u], ilike(u.name, ^"%#{search}%"))
-      |> or_where([u], ilike(u.surname, ^"%#{search}%"))
+      |> where([u], ilike(u.name, ^"%#{string}%"))
+      |> or_where([u], ilike(u.surname, ^"%#{string}%"))
     else
       query
+    end
+  end
+
+  # credo:disable-for-lines:138 Credo.Check.Refactor.PipeChainStart
+  def filter_fishes_ids_query(query, fishes_ids) do
+    case fishes_ids do
+      nil ->
+        query
+
+      [] ->
+        query
+
+      _ ->
+        join(
+          query,
+          :inner,
+          [u],
+          subquery in ^subquery(
+            from(u in User)
+            |> join(:inner, [u], fu in FishUser,
+              on: u.id == fu.user_id and fu.fish_id in ^fishes_ids
+            )
+            |> group_by([u], u.id)
+            |> select([u], u.id)
+          ),
+          on: u.id == subquery.id
+        )
+    end
+  end
+
+  # credo:disable-for-lines:156 Credo.Check.Refactor.PipeChainStart
+  def filter_techniques_ids_query(query, techniques_ids) do
+    case techniques_ids do
+      nil ->
+        query
+
+      [] ->
+        query
+
+      _ ->
+        join(
+          query,
+          :inner,
+          [u],
+          subquery in ^subquery(
+            from(u in User)
+            |> join(:inner, [u], tu in TechniqueUser,
+              on: u.id == tu.user_id and tu.technique_id in ^techniques_ids
+            )
+            |> group_by([u], u.id)
+            |> select([u], u.id)
+          ),
+          on: u.id == subquery.id
+        )
     end
   end
 

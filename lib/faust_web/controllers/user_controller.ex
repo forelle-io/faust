@@ -2,12 +2,10 @@ defmodule FaustWeb.UserController do
   use FaustWeb, :controller
 
   import FaustWeb.Accounts.UserHelper
-  import Phoenix.LiveView.Controller
 
   alias Faust.Accounts
   alias Faust.Accounts.User
   alias Faust.Snoop
-  alias FaustWeb.Accounts.User.IndexLive, as: UserIndexLive
   alias FaustWeb.Accounts.UserHelper
   alias FaustWeb.AuthenticationHelper
 
@@ -30,12 +28,10 @@ defmodule FaustWeb.UserController do
     list_followee_ids_task = Task.async(Snoop, :list_followee_ids, [current_user.id])
     users_task = Task.async(Accounts, :list_users, [[:credential]])
 
-    live_render(conn, UserIndexLive,
-      session: %{
-        current_user: current_user,
-        list_followee_ids: Task.await(list_followee_ids_task),
-        users: Task.await(users_task)
-      }
+    render(conn, "index.html",
+      current_user: current_user,
+      list_followee_ids: Task.await(list_followee_ids_task),
+      users: Task.await(users_task)
     )
   end
 
@@ -55,7 +51,10 @@ defmodule FaustWeb.UserController do
   end
 
   def show(conn, %{"id" => id}, %User{} = current_user) do
-    user_task = Task.async(UserHelper, :user_preloads, [current_user, id])
+    followee_count_task = Task.async(Snoop, :count_user_followee, [id])
+    followers_count_task = Task.async(Snoop, :count_user_followers, [id])
+
+    user = UserHelper.user_preloads(current_user, id)
 
     args =
       if current_user.id == String.to_integer(id) do
@@ -63,11 +62,6 @@ defmodule FaustWeb.UserController do
       else
         %{list_followee_ids: Snoop.list_followee_ids(current_user.id)}
       end
-
-    user = Task.await(user_task)
-
-    followee_count_task = Task.async(Snoop, :count_user_followee, [user.id])
-    follower_count_task = Task.async(Snoop, :count_user_followers, [user.id])
 
     render(
       conn,
@@ -77,7 +71,7 @@ defmodule FaustWeb.UserController do
           current_user: current_user,
           user: user,
           followee_count: Task.await(followee_count_task),
-          follower_count: Task.await(follower_count_task)
+          followers_count: Task.await(followers_count_task)
         },
         args
       )
