@@ -41,7 +41,7 @@ defmodule Faust.MixProject do
   defp deps do
     [
       # Phoenix зависимости
-      {:phoenix, "~> 1.4.3"},
+      {:phoenix, "~> 1.4.9"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_html, "~> 2.13.2"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
@@ -62,8 +62,8 @@ defmodule Faust.MixProject do
       # Мультимедия
       {:alchemic_avatar, "~> 0.1.0"},
       # Релиз, деплой
-      {:edeliver, ">= 1.6.0"},
-      {:distillery, "~> 2.0.14", warn_missing: false},
+      {:edeliver, ">= 1.7.0"},
+      {:distillery, "~> 2.1.1", warn_missing: false},
       # Тестирование, инспекция кода, фикстуры, фабрики
       {:excoveralls, "~> 0.10", only: :test},
       {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
