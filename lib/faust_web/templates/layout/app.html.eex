@@ -11,10 +11,10 @@
   </head>
   <body>
     <header>
-        <%= render FaustWeb.SharedView, "navigation.html", conn: @conn %>
+        <%= render FaustWeb.LayoutView, "_navigation.html", conn: @conn %>
     </header>
     <main role="main" class="container">
-      <%= render FaustWeb.SharedView, "flash.html", conn: @conn %>
+      <%= render FaustWeb.LayoutView, "_flash.html", conn: @conn %>
       <%= render @view_module, @view_template, assigns %>
     </main>
     <%= if authenticated_user?(@conn) do %>
