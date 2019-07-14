@@ -5,6 +5,22 @@ defmodule FaustWeb.LayoutView do
 
   alias Plug.Conn
 
+  def active_href_navigation_class(%Conn{} = conn, current_path) do
+    if current_path == Phoenix.Controller.current_path(conn) do
+      "active-href-navigation-class"
+    else
+      ""
+    end
+  end
+
+  def active_href_dropdown_class(%Conn{} = conn, current_path) do
+    if current_path == Phoenix.Controller.current_path(conn) do
+      "active"
+    else
+      ""
+    end
+  end
+
   def clickable_logotype(%Conn{} = conn) do
     conn
     |> Routes.static_path("/images/logotype.png")

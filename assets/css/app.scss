@@ -85,6 +85,13 @@ body {
     display: block;
 }
 
+.active-href-navigation-class {
+    color: #0077FF !important;
+    background: #ECF5FF;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
 /* Media */
 @media only screen and (max-width : 600px) {
     /* Спрятать блок на маленьких экранах */
