@@ -27,7 +27,7 @@ defmodule FaustWeb.Accounts.UserHelper do
           File.cp(avatar.path, "#{Faust.media_location()}/users/avatars/#{avatar_name}")
         end)
 
-        %{user_params | "avatar" => avatar_name}
+        %{"avatar" => avatar_name}
 
       _ ->
         user_params
