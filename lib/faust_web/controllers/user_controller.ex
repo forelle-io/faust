@@ -15,10 +15,15 @@ defmodule FaustWeb.UserController do
     action_name = action_name(conn)
 
     args =
-      if action_name in [:new, :create] do
-        [conn, conn.params]
-      else
-        [conn, conn.params, current_user(conn)]
+      cond do
+        action_name in [:new, :create] ->
+          [conn, conn.params]
+
+        "XMLHttpRequest" in get_req_header(conn, "x-requested-with") ->
+          [conn, conn.params, AuthenticationHelper.current_user(conn)]
+
+        true ->
+          [conn, conn.params, current_user(conn)]
       end
 
     apply(__MODULE__, action_name, args)
@@ -83,6 +88,26 @@ defmodule FaustWeb.UserController do
       user = user_preloads(current_user, id)
       changeset = Accounts.change_user(user)
       render(conn, "edit.html", user: user, changeset: changeset)
+    end
+  end
+
+  def update(
+        conn,
+        %{"id" => id, "user" => %{"avatar" => %Plug.Upload{}} = user_params},
+        %User{} = current_user
+      ) do
+    with :ok <- Bodyguard.permit(User, :update, current_user, String.to_integer(id)),
+         user <- user_preloads(current_user, id) do
+      case Accounts.update_user(user, handle_user_params(user, user_params)) do
+        {:ok, _user} ->
+          text(conn, "ok")
+
+        {:error, %Ecto.Changeset{}} ->
+          text(conn, "error")
+      end
+    else
+      _ ->
+        text(conn, "error")
     end
   end
 

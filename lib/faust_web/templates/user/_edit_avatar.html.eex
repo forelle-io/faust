@@ -1,0 +1,105 @@
+<div class="text-center">
+  <div>
+    <%= Routes.static_path(@conn, FaustWeb.Accounts.UserHelper.user_avatar_path(@user)) |> img_tag(width: "128px", height: "128px", class: "rounded-circle", style: "margin-top: 30px;") %>
+  </div>
+  <div style="margin-top: 20px;">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#avatarModal">
+      Новое изображение
+    </button>
+  </div>
+  <div class="modal fade" id="avatarModal" tabindex="-1" role="dialog" aria-labelledby="avatarModalLabel" aria-hidden="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="avatarModalLabel">Загрузка нового изображения</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="fileImageBlock" class="text-center">
+            <label for="fileImage" style="border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer;">Выбрать изображение</label>
+            <input type="file" id="fileImage" name="image" onchange="readDataAsURL(this);" style="display: none;" />
+          </div>
+          <div id="avatarBlock" style="width: 256px; margin: auto;">
+            <img id="avatar" src="#" style="width: 256px; padding-top: 20px; display: none;">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div id="buttonUploadAvatarFormSubmit" class="btn btn-success">Принять</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  let base64CroppedImage = null
+
+  initializeCropping = () => {
+    let croppr = new Croppr("#avatar", {
+      aspectRatio: 1,
+      startSize: [256, 256, "px"],
+      maxSize: [256, 256, "px"],
+      minSize: [128, 128, "px"],
+      onInitialize: function(instance) {
+        $("#fileImageBlock").hide()
+      },
+      onCropEnd: function(value) {
+        $("#avatar").css("display: block;")
+
+        let canvas = document.createElement("canvas")
+        let context = canvas.getContext("2d")
+        let image = new Image();
+
+        canvas.width = value.width
+        canvas.height = value.height
+
+        let loadedImage = document.getElementsByClassName("croppr-imageClipped")[0]
+        image.src = loadedImage.src
+        context.drawImage(image, value.x, value.y, value.width, value.height, 0, 0, canvas.width, canvas.height)
+
+        base64CroppedImage = canvas.toDataURL("image/jpeg")
+      }
+    });
+  }
+
+  readDataAsURL = (input) => {
+    if (input.files && input.files[0]) {
+      let fileReader = new FileReader()
+
+      fileReader.onload = function (event) {
+          $("#avatar").attr("src", event.target.result)
+      }
+
+      fileReader.readAsDataURL(input.files[0])
+      setTimeout(initializeCropping, 500)
+    }
+  }
+
+  $(document).ready(function() {
+    $("#buttonUploadAvatarFormSubmit").on("click", function(){
+      if (!base64CroppedImage) { return }
+
+      let block = base64CroppedImage.split(";")
+      let contentType = block[0].split(":")[1]
+
+      let formData = new FormData()
+      formData.append("id", "<%= @user.id %>")
+      formData.append("user[avatar]", base64toBlob(block[1].split(",")[1], contentType))
+
+      $.ajax({	
+        type: "PUT",	
+        url: "<%= Routes.user_path(@conn, :update, @user) %>",
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: formData,
+        headers: {	
+          "X-CSRF-TOKEN": "<%= Plug.CSRFProtection.get_csrf_token() %>"
+        },	
+        success: function (data) { window.location.reload(); }	
+      });
+    })
+  })
+</script>

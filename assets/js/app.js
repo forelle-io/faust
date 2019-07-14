@@ -14,6 +14,7 @@ import "jquery/dist/jquery";
 import "popper.js";
 import "bootstrap/dist/js/bootstrap";
 import "bootstrap-select/dist/js/bootstrap-select";
+import Croppr from "croppr/dist/croppr";
 
 // Import local files
 //
@@ -22,3 +23,4 @@ import {socket, Presence} from "./socket"
 
 window.socket = socket
 window.Presence = Presence
+window.Croppr = Croppr
