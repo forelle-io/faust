@@ -10,7 +10,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <%= link "Пользователи", to: Routes.user_path(@conn, :index), class: "nav-link" %>
+            <%= link "Пользователи", to: Routes.user_path(@conn, :index), class: "nav-link #{FaustWeb.ViewHelper.active_href_class(@conn, "/users")}"%>
           </li>
           <li class="nav-item">
             <a link href="#" class="nav-link">Отчеты</a>
@@ -19,7 +19,7 @@
             <a link href="#" class="nav-link">Выезды</a>
           </li>
           <li class="nav-item">
-            <%= link "Водоемы", to: Routes.water_path(@conn, :index), class: "nav-link" %>
+            <%= link "Водоемы", to: Routes.water_path(@conn, :index), class: "nav-link #{FaustWeb.ViewHelper.active_href_class(@conn, "/waters")}" %>
           </li>
         </ul>
       </div>
