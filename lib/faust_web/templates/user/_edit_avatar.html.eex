@@ -1,6 +1,7 @@
 <div class="text-center">
   <div>
     <%= Routes.static_path(@conn, FaustWeb.Accounts.UserHelper.user_avatar_path(@user)) |> img_tag(width: "128px", height: "128px", class: "rounded-circle", style: "margin-top: 30px;") %>
+    <span class='user-presence user-online' style="margin-left: -28px; margin-top: 40px;"></span>
   </div>
   <div style="margin-top: 20px;">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#avatarModal">
