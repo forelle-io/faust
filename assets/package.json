@@ -16,8 +16,8 @@
     "popper.js": "^1.15.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
     "babel-loader": "^8.0.6",
     "copy-webpack-plugin": "^4.5.0",
     "croppr": "2.3.1",
