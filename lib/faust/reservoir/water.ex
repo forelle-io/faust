@@ -113,4 +113,42 @@ defmodule Faust.Reservoir.Water do
     from w in Water,
       where: w.user_id == ^user_id
   end
+
+  def list_waters_by_filter_query(filter) do
+    query = from(w in Water)
+
+    query
+    |> filter_type_query(filter["type"])
+    |> filter_bottom_type_query(filter["bottom_type"])
+    |> filter_color_query(filter["color"])
+    |> filter_environment_query(filter["environment"])
+  end
+
+  # фильтры по типу водоема
+  defp filter_type_query(query, type) when type in @types do
+    where(query, [w], w.type == ^type)
+  end
+
+  defp filter_type_query(query, _type), do: query
+
+  # фильтры по типу дна
+  defp filter_bottom_type_query(query, bottom_type) when bottom_type in @bottom_types do
+    where(query, [w], w.bottom_type == ^bottom_type)
+  end
+
+  defp filter_bottom_type_query(query, _bottom_type), do: query
+
+  # фильтры по цвету воды
+  defp filter_color_query(query, color) when color in @colors do
+    where(query, [w], w.color == ^color)
+  end
+
+  defp filter_color_query(query, _color), do: query
+
+  # фильтры по окружению
+  defp filter_environment_query(query, environment) when environment in @environments do
+    where(query, [w], w.environment == ^environment)
+  end
+
+  defp filter_environment_query(query, _environment), do: query
 end
