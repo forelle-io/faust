@@ -25,14 +25,14 @@
       <ul class="navbar-nav ml-auto">
         <%= if authenticated_user?(@conn) do %>
           <li class="nav-item" style="align-items: center; display: flex;">
-            <%= render FaustWeb.LayoutView, "_modal_action.html", conn: @conn %>
+            <%= render FaustWeb.LayoutView, "_dropdown_actions.html", assigns %>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <%= Routes.static_path(@conn, FaustWeb.Accounts.UserHelper.user_avatar_path(current_user(@conn))) |> img_tag(width: 36, height: 36, class: "rounded-circle") %>
-              <span class="user-online" style="margin-left: -15px;"></span>
+              <span class='user-presence user-offline' data-user_id="<%= current_user(@conn).id %>" style="margin-left: -15px;"></span>
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu" aria-labelledby="accountDropdown">
               <%= link "Мой аккаунт", to: Routes.user_path(@conn, :show, current_user(@conn)), class: "dropdown-item #{active_href_dropdown_class(@conn, Routes.user_path(@conn, :show, current_user(@conn)))}" %>
               <a href="#" class="dropdown-item">Мои путешествия</a>
               <%= link "Мои водоемы", to: Routes.user_water_path(@conn, :index, current_user(@conn)), class: "dropdown-item #{active_href_dropdown_class(@conn, Routes.user_water_path(@conn, :index, current_user(@conn)))}" %>
