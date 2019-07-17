@@ -58,7 +58,7 @@ defmodule Faust.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 1.2"},
       {:basic_auth, "~> 2.2.2"},
-      {:bodyguard, "~> 2.2.3"},
+      {:bodyguard, "~> 2.2.4"},
       # Мультимедия
       {:alchemic_avatar,
        git: "https://github.com/solov9ev/alchemic_avatar", branch: "support-global-path"},
@@ -67,7 +67,7 @@ defmodule Faust.MixProject do
       {:distillery, "~> 2.0.14", warn_missing: false},
       # Тестирование, инспекция кода, фикстуры, фабрики
       {:excoveralls, "~> 0.10", only: :test},
-      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.1.1", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.3", only: :test}
     ]
   end
