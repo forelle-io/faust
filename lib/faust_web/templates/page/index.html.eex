@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <link href="<%= Routes.static_path(@conn, "/static/favicon.ico") %>  rel="icon" type="image/x-icon"/>
   </head>
-  <body>
+  <body style="background-color: #FFF;">
     <main role="main" class="container">
       <div class="row vertical-center">
         <div class="col-md-8 media-hide-block">

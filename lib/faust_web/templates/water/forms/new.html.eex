@@ -22,10 +22,10 @@
 
   <div class="row">
     <div class="col-6 form-group">
-      <%= hidden_input f, :latitude %>
+      <%= hidden_input f, :latitude, id: resolve_select_id(assigns[:from], "latitude") %>
     </div>
     <div class="col-6 form-group">
-      <%= hidden_input f, :longitude %>
+      <%= hidden_input f, :longitude, id: resolve_select_id(assigns[:from], "longitude") %>
     </div>
   </div>
   

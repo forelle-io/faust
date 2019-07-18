@@ -12,14 +12,15 @@
   <div class="modal-dialog modal-lg" role="document" style="width: 600px;">
     <div class="modal-content float-left">
       <div class="modal-body" style="text-align: left;">
-          <div class="row">
-            <div class="offset-md-1 col-md-10 offset-md-1">
-              <b>Создать водоем</b>
-              <div style="margin-top: 30px;">
-                <%= render FaustWeb.WaterView, "forms/new.html", Map.merge(assigns, %{changeset: @conn.assigns.changeset_water, from: "modal"}) %>
-              </div>
-            </div>
+        <div class="row">
+          <div class="offset-md-1 col-md-10 offset-md-1">
+            <b>Создать водоем</b>
           </div>
+          <div id="modalMap" style="width: 640px; height: 280px; margin-top: 20px;"></div>
+          <div class="offset-md-1 col-md-10 offset-md-1" style="margin-top: 20px;">
+            <%= render FaustWeb.WaterView, "forms/new.html", Map.merge(assigns, %{changeset: @conn.assigns.changeset_water, from: "modal"}) %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
