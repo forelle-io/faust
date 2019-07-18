@@ -21,7 +21,7 @@ defmodule Faust.Reservoir.Water do
   schema "reservoir.waters" do
     field :name, :string
     field :description, :string
-    field :is_frozen, :boolean
+    field :is_frozen, :boolean, default: false
     field :latitude, :float, default: 55.7458
     field :longitude, :float, default: 37.6227
     field :type, :string
@@ -71,7 +71,7 @@ defmodule Faust.Reservoir.Water do
       :color,
       :environment
     ])
-    |> validate_required([:name, :description, :is_frozen])
+    |> validate_required([:name, :description])
     |> validate_format(:name, @regex_name)
     |> validate_inclusion(:type, @types)
     |> validate_inclusion(:color, @colors)
@@ -97,7 +97,7 @@ defmodule Faust.Reservoir.Water do
       :color,
       :environment
     ])
-    |> validate_required([:name, :description, :is_frozen])
+    |> validate_required([:name, :description])
     |> validate_format(:name, @regex_name)
     |> validate_inclusion(:type, @types)
     |> validate_inclusion(:color, @colors)

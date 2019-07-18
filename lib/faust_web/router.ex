@@ -29,6 +29,7 @@ defmodule FaustWeb.Router do
   pipeline :ensure_authentication do
     plug Guardian.Plug.EnsureAuthenticated, key: :user
     plug FaustWeb.WebsocketTokenPlug, key: :user
+    plug FaustWeb.RequiredChangesetsPlug
   end
 
   scope "/", FaustWeb do

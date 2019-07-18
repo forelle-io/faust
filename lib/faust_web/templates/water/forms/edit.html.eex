@@ -8,12 +8,6 @@
     </div>
   <% end %>
 
-  <div>
-    <h4>Водоем</h4>
-  </div>
-
-  <hr>
-
   <div class="form-group">
     <%= label f, "Название" %>
     <%= text_input f, :name, class: "form-control" %>
@@ -41,72 +35,46 @@
     </div>
   </div>
 
-  <div>
-    <h4>Подробнее</h4>
-  </div>
-  <hr>
-
   <div class="row">
     <div class="col-md-6 form-group">
       <%= label f, :type, "Тип водоема" %>
-      <%= select f, :type, Faust.Reservoir.Water.types(), id: "type_id", class: "form-control" %> 
+      <%= select f, :type, Faust.Reservoir.Water.types(), id: "edit_water_type_id", class: "form-control" %> 
     </div>
     <div class="col-md-6 form-group">
       <%= label f, :environment, "Окружение" %>
-      <%= select f, :environment, Faust.Reservoir.Water.environments(), id: "environment_id", class: "form-control" %> 
+      <%= select f, :environment, Faust.Reservoir.Water.environments(), id: "edit_water_environment_id", class: "form-control" %> 
     </div>
   </div>
   
   <div class="row">
     <div class="col-md-6 form-group">
       <%= label f, :bottom_type, "Тип дна" %>
-      <%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types(), id: "bottom_type_id", class: "form-control" %> 
+      <%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types(), id: "edit_water_bottom_type_id", class: "form-control" %> 
     </div>
     <div class="col-md-6 form-group">
       <%= label f, :color, "Цвет воды" %> 
-      <%= select f, :color, Faust.Reservoir.Water.colors(), id: "select_color_id", class: "form-control" %> 
+      <%= select f, :color, Faust.Reservoir.Water.colors(), id: "edit_water_select_color_id", class: "form-control" %> 
     </div>
   </div>
 
-  <div>
-    <h4>Специализация</h4>
-  </div>
-  <hr>
-
   <div class="form-group">
     <%= label f, :fishes_ids, "Виды рыб" %>
-    <%= multiple_select f, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), selected: Enum.map(@water.fishes, &(&1.id)), id: "fishes_ids", class: "form-control" %>
-  </div>
-
-  <div class="form-group">
-    <%= label f, :techniques_ids, "Техника ловли" %>
-    <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), selected: Enum.map(@water.techniques, &(&1.id)), id: "techniques_ids", class: "form-control" %>
-  </div>
-  
-  <div>
-    <h4>История</h4>
-  </div>
-
-  <hr>
-
-  <div class="form-group">
-    <%= link "Добавить", to: Routes.water_history_path(@conn, :new, @water), class: "btn btn-light btn-lg btn-block" %>
+    <%= multiple_select f, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), selected: Enum.map(@water.fishes, &(&1.id)), id: "edit_water_fishes_ids", class: "form-control" %>
   </div>
 
   <div class="row">
-    <div class="col-md-12 form-group">
-      <%= submit "Обновить", class: "btn btn-outline-success btn-lg btn-block" %>
+    <div class="offset-md-6 col-md-6 form-group">
+      <%= submit "Обновить", class: "btn btn-primary btn-block" %>
     </div>
   </div>
 <% end %>
 
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true, liveSearchStyle: "contains"})
-    $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
-    $('#type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"})
-    $('#bottom_type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"})
-    $('#environment_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
-    $('#select_color_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
+    $('#edit_water_fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true, liveSearchStyle: "contains"})
+    $('#edit_water_type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"})
+    $('#edit_water_bottom_type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"})
+    $('#edit_water_environment_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
+    $('#edit_water_select_color_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
   });
 </script>

@@ -30,9 +30,8 @@ defmodule FaustWeb.WaterController do
     render(conn, "index.html", waters: waters)
   end
 
-  def new(conn, _params) do
-    changeset = Reservoir.change_water(%Water{})
-    render(conn, "new.html", changeset: changeset)
+  def new(%Plug.Conn{assigns: %{changeset_water: changeset_water}} = conn, _params) do
+    render(conn, "new.html", changeset: changeset_water)
   end
 
   def create(conn, %{"water" => water_params}) do

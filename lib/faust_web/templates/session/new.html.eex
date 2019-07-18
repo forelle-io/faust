@@ -1,11 +1,13 @@
+<style> body { background-color: #FFF; } </style>
+
 <div class="row">
-    <div class="col-md-4 mx-auto text-center">
-        <h3 class="text-secondary"><b>Авторизация</b></h3>
-        <%= render "forms/new.html", Map.put(assigns, :action, Routes.session_path(@conn, :create)) %>
-    </div>
+  <div class="col-md-4 mx-auto text-center">
+      <h3 class="text-secondary"><b>Авторизация</b></h3>
+      <%= render "forms/new.html", Map.put(assigns, :action, Routes.session_path(@conn, :create)) %>
+  </div>
 </div>
 <div class="row">
-    <small class="col-md-4 mx-auto text-muted">
-       Забыли пароль?
-    </small>
+  <small class="col-md-4 mx-auto text-muted">
+      Забыли пароль?
+  </small>
 </div>
