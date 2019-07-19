@@ -9,7 +9,7 @@ defmodule Faust.Fishing.FishWater do
   @primary_key false
 
   schema "fishing.fishes_waters" do
-    belongs_to(:fishes, Fish)
-    belongs_to(:waters, Water)
+    belongs_to(:fishes, Fish, foreign_key: :fish_id)
+    belongs_to(:waters, Water, foreign_key: :water_id)
   end
 end

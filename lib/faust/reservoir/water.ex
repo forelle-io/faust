@@ -118,37 +118,70 @@ defmodule Faust.Reservoir.Water do
     query = from(w in Water)
 
     query
+    |> filter_name_like_query(filter["string"])
     |> filter_type_query(filter["type"])
     |> filter_bottom_type_query(filter["bottom_type"])
     |> filter_color_query(filter["color"])
     |> filter_environment_query(filter["environment"])
+    |> filter_fishes_ids_query(filter["fishes_ids"])
   end
 
-  # фильтры по типу водоема
+  defp filter_name_like_query(query, string) do
+    if is_bitstring(string) and String.length(string) > 0 do
+      where(query, [w], ilike(w.name, ^"%#{string}%"))
+    else
+      query
+    end
+  end
+
   defp filter_type_query(query, type) when type in @types do
     where(query, [w], w.type == ^type)
   end
 
   defp filter_type_query(query, _type), do: query
 
-  # фильтры по типу дна
   defp filter_bottom_type_query(query, bottom_type) when bottom_type in @bottom_types do
     where(query, [w], w.bottom_type == ^bottom_type)
   end
 
   defp filter_bottom_type_query(query, _bottom_type), do: query
 
-  # фильтры по цвету воды
   defp filter_color_query(query, color) when color in @colors do
     where(query, [w], w.color == ^color)
   end
 
   defp filter_color_query(query, _color), do: query
 
-  # фильтры по окружению
   defp filter_environment_query(query, environment) when environment in @environments do
     where(query, [w], w.environment == ^environment)
   end
 
   defp filter_environment_query(query, _environment), do: query
+
+  # credo:disable-for-lines:176 Credo.Check.Refactor.PipeChainStart
+  def filter_fishes_ids_query(query, fishes_ids) do
+    case fishes_ids do
+      nil ->
+        query
+
+      [] ->
+        query
+
+      _ ->
+        join(
+          query,
+          :inner,
+          [w],
+          subquery in ^subquery(
+            from(w in Water)
+            |> join(:inner, [w], fw in FishWater,
+              on: w.id == fw.water_id and fw.fish_id in ^fishes_ids
+            )
+            |> group_by([w], w.id)
+            |> select([w], w.id)
+          ),
+          on: w.id == subquery.id
+        )
+    end
+  end
 end
