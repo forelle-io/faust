@@ -53,10 +53,6 @@ defmodule FaustWeb.Router do
 
     resources "/organizations", OrganizationController, only: [:index, :show]
 
-    resources "/waters", WaterController do
-      resources "/histories", HistoryController, only: [:create, :new]
-    end
-
-    resources "/histories", HistoryController, only: [:delete]
+    resources "/waters", WaterController
   end
 end

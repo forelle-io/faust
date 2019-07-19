@@ -77,33 +77,6 @@
       <%= Routes.static_path(@conn, FaustWeb.Accounts.UserHelper.user_avatar_path(@water.user)) |> img_tag(width: 48, height: 48, class: "rounded-circle") %>
       <b><%= link "#{@water.user.name} #{@water.user.surname}", to: Routes.user_path(@conn, :show, @water.user) %></b>
     </div>
-
-    <%= if Enum.any?(@water.histories) do %>
-      <div style="margin-top: 30px;">
-        <h4>ИСТОРИЯ ВОДОЕМА</h4>
-      </div>
-      <%= for history <- @water.histories do %>
-        <div class="row" style="margin-top: 30px;">
-          <div class="col-md-6">
-            Тип истории: <%= history.type %>
-          </div>
-          <div class="col-md-6">
-            <%= history.inserted_at %>
-          </div>
-          <%= if history.description do %>
-            <div class="col-md-12 small text-muted">
-              <%= history.description %>
-            </div>
-          <% end %>
-          <%= if Bodyguard.permit?(Faust.Reservoir.History, :delete, current_user(@conn), @water) do %>
-            <div class="col-md-12 text-right">
-              <%= link "Удалить", to: Routes.history_path(@conn, :delete, history), method: :delete, data: [confirm: "Вы уверены, что хотите удалить историю?"], class: "btn btn-outline-danger" %>
-            </div>
-          <% end %>
-        </div>
-        <hr/>
-      <% end %>
-    <% end %>
   </div>
 </div>
 <script>
