@@ -50,17 +50,20 @@ defmodule Faust.Accounts.UserTest do
       {:ok, user} = user_fixture() |> Accounts.update_user(%{surname: "Соловьев"})
       insert_list(5, :accounts_user)
 
-      users = Accounts.list_users_by_filter(%{"search" => "ловье"})
+      users = Accounts.list_users_by_filter(%{"string" => "ловье"})
 
       assert length(users) == 1
       assert user.id == List.first(users).id
     end
 
-    test "когда фильтрация валидна, содержит часть фамилии 'ловье' и существует запись user с мужским полом" do
-      {:ok, user} = user_fixture() |> Accounts.update_user(%{surname: "Соловьев", sex: "мужской"})
+    test "когда фильтрация валидна, содержит часть фамилии 'ловьева' и существует запись user с женским полом" do
+      {:ok, user} =
+        user_fixture()
+        |> Accounts.update_user(%{name: "Полина", surname: "Соловьева", sex: "женский"})
+
       insert_list(5, :accounts_user)
 
-      users = Accounts.list_users_by_filter(%{"search" => "ловье", "sex" => "мужской"})
+      users = Accounts.list_users_by_filter(%{"string" => "ловьева", "sex" => "женский"})
 
       assert length(users) == 1
       assert user.id == List.first(users).id

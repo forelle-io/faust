@@ -1,0 +1,30 @@
+<%= for user <- @users do %>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="row" style="height: 80px; align-items: center;">
+                <div class="col-md-2 text-center">
+                    <%= Routes.static_path(FaustWeb.Endpoint, FaustWeb.Accounts.UserHelper.user_avatar_path(user)) |> img_tag(width: 46, height: 46, class: "rounded-circle") %>
+                    <span class="user-presence user-offline" data-user_id="<%= user.id %>" style="margin-left: -15px;"></span>
+                </div>
+                <div class="col-md-4">
+                    <b><%= link "#{user.name} #{user.surname}", to: Routes.user_path(FaustWeb.Endpoint, :show, user) %></b>
+                </div>
+                <div class="col-md-6 text-right">
+                    <%= if @current_user.id == user.id do %>
+                        <%= link "Аккаунт", to: Routes.user_path(FaustWeb.Endpoint, :show, user), class: "btn btn-outline-primary" %>
+                    <% else %>
+                        <%= if Enum.member?(@list_followee_ids, user.id) do %>
+                            <div id="follower_<%= user.id %>" class="btn btn-primary" onclick="deleteFollower(<%= user.id %>);">
+                                Отписаться
+                            </div>
+                        <% else %>
+                            <div id="follower_<%= user.id %>" class="btn btn-outline-primary" onclick="createFollower(<%= user.id %>);">
+                                Подписаться
+                            </div>
+                        <% end %>
+                    <% end %>
+                </div>
+            </div>
+        </li>
+    </ul>
+<% end %>

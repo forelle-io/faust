@@ -1,9 +1,7 @@
 defmodule FaustWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :faust
 
-  socket "/live", Phoenix.LiveView.Socket
-
-  socket "/socket", FaustWeb.UserSocket,
+  socket "/socket", FaustWeb.EndpointSocket,
     websocket: true,
     longpoll: false
 
@@ -14,7 +12,7 @@ defmodule FaustWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :faust,
-    gzip: true,
+    gzip: false,
     only: ~w(css fonts alchemic_avatar images js favicon.ico robots.txt)
 
   # TODO: Внедрение распределенного файлового хранилища файлов (leofs, ceph)

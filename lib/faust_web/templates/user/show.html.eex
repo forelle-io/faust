@@ -4,6 +4,7 @@
       <div class="text-center">
         <div>
           <%= Routes.static_path(@conn, FaustWeb.Accounts.UserHelper.user_avatar_path(@user)) |> img_tag(width: "128px", height: "128px", class: "rounded-circle", style: "margin-top: 30px;") %>
+          <span class='user-presence user-<%= if current_user(@conn), do: "online", else: "offline" %>' data-user_id="<%= @user.id %>" style="margin-left: -28px; margin-top: 40px;"></span>
         </div>
         <div style="margin-top: 20px;">
           <b><%= "#{@user.name} #{@user.surname}" %></b>
@@ -12,7 +13,15 @@
           <%= if Bodyguard.permit?(Faust.Accounts.User, :edit, @current_user, @user) do %>
             <%= link "Редактировать", to: Routes.user_path(FaustWeb.Endpoint, :edit, @user), class: "btn btn-outline-primary" %>
           <% else %>
-            <%= live_render(@conn, FaustWeb.Accounts.User.FollowActionLive, session: %{current_user: @current_user, list_followee_ids: @list_followee_ids, user: @user }) %>
+            <%= if Enum.member?(@list_followee_ids, @user.id) do %>
+                <div id="follower_<%= @user.id %>" class="btn btn-primary" onclick="deleteFollower(<%= @user.id %>);">
+                    Отписаться
+                </div>
+            <% else %>
+                <div id="follower_<%= @user.id %>" class="btn btn-outline-primary" onclick="createFollower(<%= @user.id %>);">
+                    Подписаться
+                </div>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -20,18 +29,14 @@
       <div>
         <div class="row text-center">
           <div class="col-md-6">
-            <div>
-              <b>
-                <%= @followee_count %>
-              </b>
+            <div id="followee_count">
+              <b><%= @followee_count %></b>
             </div>
             <div style="color: #6C758A;">Подписки</div>
           </div>
           <div class="col-md-6">
-            <div>
-              <b>
-                <%= live_render(@conn, FaustWeb.Accounts.User.FollowerCounterLive, session: %{user: @user, follower_count: @follower_count }) %>
-              </b>
+            <div id="followers_count">
+              <b><%= @followers_count %></b>
             </div>
             <div style="color: #6C758A;">Подписчики</div>
           </div>
@@ -59,5 +64,50 @@
       <div style="height: 20px;"></div>
     </div>
   </div>
-  <div class="col-md-8">КОНТЕНТ</div>
+  <div class="col-md-8">
+    <div class="content-block d-flex align-items-center text-center" style="height: 200px;">
+      <div class="container">
+        <div>
+          <%= Routes.static_path(@conn, "/images/logotype.png") |> img_tag(height: 72) %>
+        </div>
+        <div class="text-muted" style="padding-top: 20px;">
+          данный раздел находится в разработке
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    let snoopFollowerActionsChannelName = "snoop:follower:actions_user:<%= @user.id %>"
+    let snoopFollowerActionsChannel = socket.channel(snoopFollowerActionsChannelName, {})
+    snoopFollowerActionsChannel.join()
+        .receive("ok", resp => { console.log("Joined to " + snoopFollowerActionsChannelName, resp) })
+        .receive("error", resp => { console.log("Unable to join " + snoopFollowerActionsChannelName, resp) })
+    snoopFollowerActionsChannel.on("followers_count", payload => {
+      $("#followers_count")
+        .children()
+        .text(payload.followers_count)
+    })
+    snoopFollowerActionsChannel.on("followee_count", payload => {
+      $("#followee_count")
+        .children()
+        .text(payload.followee_count)
+    })
+    <%= unless current_user(@conn).id == @user.id do %>
+      snoopFollowerActionsChannel.on("create", payload => {
+        changeButtonWhenFollowerCreated(payload.user_id);
+      })
+      snoopFollowerActionsChannel.on("delete", payload => {
+        changeButtonWhenFollowerDeleted(payload.user_id);
+      })
+      window.createFollower = function (userId) {
+        snoopFollowerActionsChannel.push("create", {})
+      }
+      window.deleteFollower = function (userId) {
+        snoopFollowerActionsChannel.push("delete", {})
+      }
+    <% end %>
+  });
+</script>

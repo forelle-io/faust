@@ -10,8 +10,9 @@
 
 <script>
 	$(document).ready(function(){
-		var map = L.map('mapid').setView([<%= @water.latitude %>, <%= @water.longitude %>], 13);
-        var titles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+		let map = L.map('mapid').setView([<%= @water.latitude %>, <%= @water.longitude %>], 13);
+        let popup = L.popup()
+        let titles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 18,
             id: 'mapbox.streets',
@@ -20,26 +21,20 @@
         marker = L
             .marker([<%= @water.latitude %>, <%= @water.longitude %>])
             .addTo(map)
-            .openPopup();
+            .openPopup()
 
-        titles.addTo(map);	
-        
-        var popup = L.popup();
+        titles.addTo(map)
 
-        function onMapClick(e) {
-            marker.remove();
+        onMapClick = (e) => {
+            marker.remove()
             marker = L
                 .marker([e.latlng.lat, e.latlng.lng])
-                .addTo(map);
+                .addTo(map)
 
-            set_water_coordinates(e.latlng.lat, e.latlng.lng);
+            $("#water_latitude").val(e.latlng.lat)
+            $("#water_longitude").val(e.latlng.lng)
         }
 
-        map.on('click', onMapClick);
-
-        function set_water_coordinates(latitude, longitude){
-            $("#water_latitude").val(latitude);
-            $("#water_longitude").val(longitude);
-        }
+        map.on('click', onMapClick)
   })
 </script>

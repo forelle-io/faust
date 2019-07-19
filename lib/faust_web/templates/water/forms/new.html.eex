@@ -1,4 +1,4 @@
-<%= form_for @changeset, @action, fn f -> %>
+<%= form_for @changeset, Routes.water_path(@conn, :create), fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <div class="text-center">
@@ -7,102 +7,69 @@
       <div>Пожалуйста, проверьте правильность данных.</div>
     </div>
   <% end %>
-
-  <div>
-    <h4>Основная информация</h4>
-  </div>
-  <hr>
   
   <div class="form-group">
-    <%= label f, "Название" %>
+    <%= label f, "Название", style: "color: #6C758A;" %>
     <%= text_input f, :name, class: "form-control" %>
     <%= error_tag f, :name %>
   </div>
 
   <div class="form-group">
-    <%= label f, "Описание" %>
+    <%= label f, "Описание", style: "color: #6C758A;" %>
     <%= textarea f, :description, class: "form-control" %>
     <%= error_tag f, :description %>
   </div>
 
+  <div class="row">
+    <div class="col-6 form-group">
+      <%= hidden_input f, :latitude, id: resolve_select_id(assigns[:from], "latitude") %>
+    </div>
+    <div class="col-6 form-group">
+      <%= hidden_input f, :longitude, id: resolve_select_id(assigns[:from], "longitude") %>
+    </div>
+  </div>
+  
   <div class="form-group">
-    <%= label f, "Наличие льда на воде" %>
-    <%= checkbox f, :is_frozen %>
-    <%= error_tag f, :is_frozen %>
+      <div><%= label f, :fishes_ids, "Виды рыб", style: "color: #6C758A;" %></div>
+      <div><%= multiple_select f, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), id: resolve_select_id(assigns[:from], "fishes_ids"), class: "form-control" %></div>
   </div>
 
   <div class="row">
-    <div class="col-6 form-group">
-      <%= hidden_input f, :latitude %>
-    </div>
-    <div class="col-6 form-group">
-      <%= hidden_input f, :longitude %>
-    </div>
-  </div>
-
-  <div>
-    <h4>Подробнее</h4>
-  </div>
-  <hr>
-
-  <div class="row">
-    <div class="col-md-6 form-group">
-      <%= label f, :type, "Тип водоема" %>
-      <%= select f, :type, Faust.Reservoir.Water.types(), id: "type_id", class: "form-control" %> 
+    <div class="col-md-6">
+      <div><%= label f, :type, "Тип водоема", style: "color: #6C758A;" %></div>
+      <div><%= select f, :type, Faust.Reservoir.Water.types(), id: resolve_select_id(assigns[:from], "type_id"), class: "form-control" %></div>
     </div>
     <div class="col-md-6 form-group">
-      <%= label f, :environment, "Окружение" %>
-      <%= select f, :environment, Faust.Reservoir.Water.environments(), id: "environment_id", class: "form-control" %> 
+      <div><%= label f, :environment, "Окружение", style: "color: #6C758A;" %></div>
+      <div><%= select f, :environment, Faust.Reservoir.Water.environments(), id: resolve_select_id(assigns[:from], "environment_id"), class: "form-control" %></div>
     </div>
   </div>
   
   <div class="row">
     <div class="col-md-6 form-group">
-      <%= label f, :bottom_type, "Тип дна" %>
-      <%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types(), id: "bottom_type_id", class: "form-control" %> 
+      <div><%= label f, :bottom_type, "Тип дна", style: "color: #6C758A;" %></div>
+      <div><%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types(), id: resolve_select_id(assigns[:from], "bottom_type_id"), class: "form-control" %></div>
     </div>
     <div class="col-md-6 form-group">
-      <%= label f, :color, "Цвет воды" %> 
-      <%= select f, :color, Faust.Reservoir.Water.colors(), id: "select_color_id", class: "form-control" %> 
+      <div><%= label f, :color, "Цвет воды", style: "color: #6C758A;" %></div>
+      <div><%= select f, :color, Faust.Reservoir.Water.colors(), id: resolve_select_id(assigns[:from], "select_color_id"), class: "form-control" %></div>
     </div>
   </div>
 
-  <div>
-    <h4>Специализация</h4>
-  </div>
-  <hr>
-
-  <div class="form-group">
-      <%= label f, :fishes_ids, "Виды рыб" %>
-      <%= multiple_select f, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), id: "fishes_ids", class: "form-control" %>
-  </div>
-
-  <div class="form-group">
-      <%= label f, :techniques_ids, "Техника ловли" %>
-      <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), id: "techniques_ids", class: "form-control" %>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12 form-group">
-      <%= submit "Создать", class: "btn btn-outline-success btn-lg btn-block" %>
+  <div class="row" style="margin-top: 20px;">
+    <div class="offset-md-6 col-md-6 form-group">
+      <%= submit "Создать", class: "btn btn-primary btn-block" %>
     </div>
   </div>
 <% end %>
 
 <script type="text/javascript">
   $(document).ready(function(){
-    // Использование bootstrap-select для "Виды рыб"
-    $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true,liveSearchStyle: "contains"});
-    // Использование bootstrap-select для техники ловли
-    $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
-    // Использование bootstrap-select для типа 
-    $('#type_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
-    // Использование bootstrap-select для типа дна
-    $('#bottom_type_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
-    // Использование bootstrap-select для окружения
-    $('#environment_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
-    // Использование bootstrap-select для цвета
-    $('#select_color_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    $('#<%= resolve_select_id(assigns[:from], "fishes_ids") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано", liveSearch: true, liveSearchStyle: "contains"});
+    $('#<%= resolve_select_id(assigns[:from], "type_id") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    $('#<%= resolve_select_id(assigns[:from], "environment_id") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    $('#<%= resolve_select_id(assigns[:from], "bottom_type_id") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    $('#<%= resolve_select_id(assigns[:from], "select_color_id") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
   });
 
 </script>

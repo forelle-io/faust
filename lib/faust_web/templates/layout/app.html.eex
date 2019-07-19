@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Forelle · Faust Platform</title>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    
-    <title>Forelle · Faust Platform</title>
-    
     <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/app.css") %>' />
-
-    <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/app.js") %>'></script>
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
       integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
       crossorigin=""/>
@@ -18,15 +13,71 @@
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
       integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
       crossorigin="">
-    </script>  
+    </script>
+    <script>window.websocketToken = "<%= assigns[:websocket_token] %>";</script>
+    <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/app.js") %>'></script>
   </head>
   <body>
     <header>
-        <%= render FaustWeb.SharedView, "navigation.html", conn: @conn %>
+        <%= render FaustWeb.LayoutView, "_navigation.html", conn: @conn %>
     </header>
     <main role="main" class="container">
-      <%= render FaustWeb.SharedView, "flash.html", conn: @conn %>
+      <%= render FaustWeb.LayoutView, "_flash.html", conn: @conn %>
       <%= render @view_module, @view_template, assigns %>
     </main>
+    <%= if authenticated_user?(@conn) do %>
+      <script type="text/javascript">
+        let presences = {}
+        $(document).ready(function() {
+          if (socket) {
+            let currentUserChannelName = "current_user:"
+            let currentUserChannel = socket.channel(currentUserChannelName, {})
+            currentUserChannel.join()
+              .receive("ok", resp => { console.log("Joined to " + currentUserChannelName, resp) })
+              .receive("error", resp => { console.log("Unable to join " + currentUserChannelName, resp) })
+            
+            currentUserChannel.on("presence_state", state => {
+              presences = Presence.syncState(presences, state)
+              changeUserPresense(presences)
+            })
+            currentUserChannel.on("presence_diff", diff => {
+              presences = Presence.syncDiff(presences, diff)
+              changeUserPresense(presences)
+            })
+          }
+
+          let map = null
+
+          $('#modalNewWaterAction').on('shown.bs.modal', function () {
+            map = L.map('modalMap').setView(["55.75222", "37.61557"], 13);
+            let popup = L.popup();
+            let titles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox.streets',
+                accessToken: 'pk.eyJ1IjoieWFkeWdpbmlkIiwiYSI6ImNqdXRnam54NDA3Nm00M29hMDZwcWNlb20ifQ.wJfRr7FzfSjmVNju1wMTHg'
+            })
+            marker = L.marker(["55.75222", "37.61557"]).addTo(map).openPopup()
+            titles.addTo(map);
+
+            setMarkerInMap = (e) => {
+              marker.remove()
+              marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+
+              $("#latitude").val(e.latlng.lat);
+              $("#longitude").val(e.latlng.lng);
+            }
+
+            map.on('click', setMarkerInMap);
+          });
+
+          $('#modalNewWaterAction').on('hidden.bs.modal', function () {
+            map.off().remove()
+            map = null
+            $("#modalMap").empty()
+          });
+        });
+      </script>
+    <% end %>
   </body>
 </html>

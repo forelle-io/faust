@@ -1,0 +1,27 @@
+<div class="dropdown" style="margin-right: 50px;">
+    <div class="btn btn-outline-primary" id="actionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
+      + Создать
+    </div>
+    <div class="dropdown-menu" aria-labelledby="actionDropdown">
+    <div class="dropdown-item" data-toggle="modal" data-target="#modalNewWaterAction" style="cursor: pointer;">Водоем</div>
+    <div class="dropdown-item" style="cursor: pointer;">Путешествие</div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalNewWaterAction" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document" style="width: 600px;">
+    <div class="modal-content float-left">
+      <div class="modal-body" style="text-align: left;">
+        <div class="row">
+          <div class="offset-md-1 col-md-10 offset-md-1">
+            <b>Создать водоем</b>
+          </div>
+          <div id="modalMap" style="width: 640px; height: 280px; margin-top: 20px;"></div>
+          <div class="offset-md-1 col-md-10 offset-md-1" style="margin-top: 20px;">
+            <%= render FaustWeb.WaterView, "forms/new.html", Map.merge(assigns, %{changeset: @conn.assigns.changeset_water, from: "modal"}) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

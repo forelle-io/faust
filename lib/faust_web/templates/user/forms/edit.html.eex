@@ -27,7 +27,20 @@
       <div class="row">
         <%= date_select f, :birthday, builder: fn b -> %>
           <%= b.(:day, [class: "col-md-3"]) %>
-          <%= b.(:month, [class: "col-md-5"]) %>
+          <%= b.(:month, [class: "col-md-5", options: [
+            {"Январь", "1"},
+            {"Февраль", "2"},
+            {"Март", "3"},
+            {"Апрель", "4"},
+            {"Май", "5"},
+            {"Июнь", "6"},
+            {"Июль", "7"},
+            {"Август", "8"},
+            {"Сентябрь", "9"},
+            {"Октябрь", "10"},
+            {"Ноябрь", "11"},
+            {"Декабрь", "12"},
+          ]]) %>
           <%= b.(:year, [class: "col-md-4", options: 1950..DateTime.utc_now.year]) %>
         <% end %>
       </div>
@@ -76,16 +89,16 @@
     </div>
     <div class="form-group">
         <%= label f, :fishes_ids, "Виды рыб", style: "color: #6C758A;" %>
-        <%= multiple_select f, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), id: "fishes_ids", class: "form-control" %>
+        <%= multiple_select f, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), selected: Enum.map(@user.fishes, &(&1.id)), id: "user_fishes_ids", class: "form-control" %>
     </div>
     <div class="form-group">
       <%= label f, :techniques_ids, "Техника ловли", style: "color: #6C758A;" %>
-      <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), selected: Enum.map(@user.techniques, &(&1.id)), id: "techniques_ids", class: "form-control" %>
+      <%= multiple_select f, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), selected: Enum.map(@user.techniques, &(&1.id)), id: "user_techniques_ids", class: "form-control" %>
     </div>
   </div>
 
-  <div class="offset-md-9 col-md-3" style="margin-top: 20px;">
-    <%= submit "Сохранить", class: "btn btn-primary btn-lg btn-block" %>
+  <div class="offset-md-9 col-md-3" style="margin-top: 20px; padding-right: 0px;">
+    <%= submit "Сохранить", class: "btn btn-primary btn-block" %>
   </div>
 <% end %>
 
@@ -94,9 +107,9 @@
 <script type="text/javascript">
   $(document).ready(function(){
     // Использование bootstrap-select для "Виды рыб"
-    $('#fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано", liveSearch: true, liveSearchStyle: "contains"});
+    $('#user_fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано", liveSearch: true, liveSearchStyle: "contains"});
     // Использование bootstrap-select для техники ловли
-    $('#techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    $('#user_techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
     // Использование bootstrap-select для "День рождения"
     ["year", "month", "day"].forEach(function(item, i, array) {
       $('#user_birthday_' + item).selectpicker({size: 10, liveSearch: true});

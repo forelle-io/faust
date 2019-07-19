@@ -27,7 +27,7 @@ defmodule FaustWeb.Accounts.UserHelper do
           File.cp(avatar.path, "#{Faust.media_location()}/users/avatars/#{avatar_name}")
         end)
 
-        %{user_params | "avatar" => avatar_name}
+        %{"avatar" => avatar_name}
 
       _ ->
         user_params
@@ -37,10 +37,13 @@ defmodule FaustWeb.Accounts.UserHelper do
   end
 
   def user_avatar_path(user) do
-    if is_bitstring(user.avatar) and user.avatar != "" do
-      "/media/users/avatars/#{user.avatar}"
-    else
-      "/alchemic_avatar/#{user.credential.alchemic_avatar}"
-    end
+    avatar_path =
+      if is_bitstring(user.avatar) and user.avatar != "" do
+        "/avatars/#{user.avatar}"
+      else
+        "/alchemic_avatar/#{user.credential.alchemic_avatar}"
+      end
+
+    "/media/users" <> avatar_path
   end
 end
