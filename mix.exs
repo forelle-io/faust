@@ -48,7 +48,7 @@ defmodule Faust.MixProject do
       {:phoenix_ecto, "~> 4.0"},
       # Базы данных и хранилища
       {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"},
+      {:postgrex, ">= 0.15.0"},
       # Локализация
       {:gettext, "~> 0.11"},
       # Сервера, форматы, протоколы
