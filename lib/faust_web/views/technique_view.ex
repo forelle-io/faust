@@ -4,7 +4,8 @@ defmodule FaustWeb.TechniquesView do
   alias Faust.Fishing
 
   def techniques_for_multiple_select do
-    Enum.map(Fishing.list_techniques(), &{&1.name, &1.id})
+    {_, list_techniques} = :ets.lookup(:hot_tables, "fishing.techniques") |> List.first()
+    list_techniques
   end
 
   def techniques_tags(_conn, []), do: ""
