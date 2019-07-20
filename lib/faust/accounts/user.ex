@@ -106,6 +106,12 @@ defmodule Faust.Accounts.User do
 
   # SQL запрос -----------------------------------------------------------------
 
+  def list_users_query do
+    query = from(u in User)
+
+    order_by(query, [u], asc: [u.name, u.surname])
+  end
+
   def list_users_by_filter_query(filter) do
     query = from(u in User)
 

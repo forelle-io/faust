@@ -46,13 +46,11 @@ defmodule Faust.Accounts do
   alias Faust.Accounts.User
 
   def list_users do
-    Repo.all(User)
+    User.list_users_query() |> Repo.all()
   end
 
   def list_users(preloads) when is_list(preloads) do
-    User
-    |> Repo.all()
-    |> Repo.preload(preloads)
+    list_users() |> Repo.preload(preloads)
   end
 
   def list_users_by_filter(filter) when is_map(filter) do
