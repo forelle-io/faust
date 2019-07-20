@@ -1,7 +1,7 @@
 defmodule FaustWeb.FishView do
   use FaustWeb, :view
 
-  alias Faust.Fishing
+  alias Faust.{Fishing, VirtualTableGenServer}
 
   def fishes_for_multiple_select do
     {_, list_fishes} = :ets.lookup(:hot_tables, "fishing.fishes") |> List.first()
