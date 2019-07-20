@@ -10,6 +10,8 @@ defmodule Faust.Application do
     children = [
       # Start the Ecto repository
       Faust.Repo,
+      # Запуск GenServer процесса, загружающего измененную структуру определенных таблиц в :ets
+      Faust.HotTablesTablesGenServer,
       # Start the endpoint when the application starts
       FaustWeb.Endpoint,
       # Provides Presence tracking to processes and channels

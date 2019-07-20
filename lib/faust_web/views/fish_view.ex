@@ -4,7 +4,8 @@ defmodule FaustWeb.FishView do
   alias Faust.Fishing
 
   def fishes_for_multiple_select do
-    Enum.map(Fishing.list_fishes(), &{&1.name, &1.id})
+    {_, list_fishes} = :ets.lookup(:hot_tables, "fishing.fishes") |> List.first()
+    list_fishes
   end
 
   def fishes_tags(_conn, []), do: ""
