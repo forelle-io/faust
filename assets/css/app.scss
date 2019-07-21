@@ -133,3 +133,14 @@ header nav ul {
 header nav a {
     display: block;
 }
+
+.filter-list-test a, .filter-list-test a:link, .filter-list-test a:hover, .filter-list-test a:active, .filter-list-test a:visited{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+
+    /* Main Text */
+    color: #1B263D;
+}
