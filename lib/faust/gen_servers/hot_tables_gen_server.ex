@@ -20,7 +20,7 @@ defmodule Faust.HotTablesTablesGenServer do
       :ets.insert(
         :hot_tables,
         {"fishing.#{item}",
-         apply(Fishing, String.to_atom("list_#{item}"), []) |> Enum.map(&{&1.name, &1.id})}
+         Fishing |> apply(String.to_atom("list_#{item}"), []) |> Enum.map(&{&1.name, &1.id})}
       )
     end)
 
