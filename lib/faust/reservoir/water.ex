@@ -11,10 +11,18 @@ defmodule Faust.Reservoir.Water do
   alias Faust.Reservoir.History
   alias FaustWeb.Reservoir.WaterPolicy
 
-  @colors ["коричневый", "зеленый", "синий", "прозрачный"]
-  @types ["море", "озеро", "пруд", "река", "водохранилище", "карьер"]
-  @bottom_types ["илистое", "песчаное", "каменистое", "вязкое", "скалистое", "подводные леса"]
-  @environments ["лес", "степь", "луг", "поле", "сад"]
+  @colors ["не выбрано", "коричневый", "зеленый", "синий", "прозрачный"]
+  @types ["не выбрано", "море", "озеро", "пруд", "река", "водохранилище", "карьер"]
+  @bottom_types [
+    "не выбрано",
+    "илистое",
+    "песчаное",
+    "каменистое",
+    "вязкое",
+    "скалистое",
+    "подводные леса"
+  ]
+  @environments ["не выбрано", "лес", "степь", "луг", "поле", "сад"]
 
   @regex_name ~r/\A[a-zA-Zа-яА-Я ]+\z/u
 
@@ -135,25 +143,49 @@ defmodule Faust.Reservoir.Water do
   end
 
   defp filter_type_query(query, type) when type in @types do
-    where(query, [w], w.type == ^type)
+    case type do
+      "не выбрано" ->
+        query
+
+      _ ->
+        where(query, [w], w.type == ^type)
+    end
   end
 
   defp filter_type_query(query, _type), do: query
 
   defp filter_bottom_type_query(query, bottom_type) when bottom_type in @bottom_types do
-    where(query, [w], w.bottom_type == ^bottom_type)
+    case bottom_type do
+      "не выбрано" ->
+        query
+
+      _ ->
+        where(query, [w], w.bottom_type == ^bottom_type)
+    end
   end
 
   defp filter_bottom_type_query(query, _bottom_type), do: query
 
   defp filter_color_query(query, color) when color in @colors do
-    where(query, [w], w.color == ^color)
+    case color do
+      "не выбрано" ->
+        query
+
+      _ ->
+        where(query, [w], w.color == ^color)
+    end
   end
 
   defp filter_color_query(query, _color), do: query
 
   defp filter_environment_query(query, environment) when environment in @environments do
-    where(query, [w], w.environment == ^environment)
+    case environment do
+      "не выбрано" ->
+        query
+
+      _ ->
+        where(query, [w], w.environment == ^environment)
+    end
   end
 
   defp filter_environment_query(query, _environment), do: query
