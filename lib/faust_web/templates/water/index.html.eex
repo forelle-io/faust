@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="offset-md-1 col-md-3 content-block" style="height: 100%;">
-        <div style="margin-top: 20px;"><h5><b>Фильтр</b></h5></div>
+        <div style="margin-top: 20px;"><h5><b>Фильтр</b><a id="refresh"><span class="icon-rotate-ccw icon-refresh"></span></a></h5></div>
         <hr/>
         <div class="form-group">
             <%= label :search, :type, "Тип", style: "color: #6C758A;" %>
@@ -32,10 +32,22 @@
         </div>
     </div>
 </div>
+
 <script>
-    $('#search_type').selectpicker({size: 3, noneSelectedText: "Не выбран"})
-    $('#search_color').selectpicker({size: 3, noneSelectedText: "Не выбран"})
-    $('#search_bottom_type').selectpicker({size: 3, noneSelectedText: "Не выбран"})
-    $('#search_environment').selectpicker({size: 3, noneSelectedText: "Не выбран"})
-    $('#search_fishes_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
+    $('#search_type').selectpicker({size: 3, noneSelectedText: "не выбрано"})
+    $('#search_color').selectpicker({size: 3, noneSelectedText: "не выбрано"})
+    $('#search_bottom_type').selectpicker({size: 3, noneSelectedText: "не выбрано"})
+    $('#search_environment').selectpicker({size: 3, noneSelectedText: "не выбрано"})
+    $('#search_fishes_ids').selectpicker({size: 5, noneSelectedText: "не выбрано"})
+
+    $(document).ready(function(){
+       $("#refresh").click(function(){
+        $('#search_string').val("")
+        $('#search_type').selectpicker("val", "не выбрано")
+        $('#search_color').selectpicker("val", "не выбрано")
+        $('#search_bottom_type').selectpicker("val", "не выбрано")
+        $('#search_environment').selectpicker("val", "не выбрано")
+        $('#search_fishes_ids').selectpicker("val", "")
+        });
+    });   
 </script>
