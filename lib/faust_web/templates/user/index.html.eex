@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="offset-md-1 col-md-3 content-block" style="height: 100%;">
-        <div style="margin-top: 20px;"><h5><b>Фильтр</b></h5></div>
+        <div style="margin-top: 20px;"><h5><b>Фильтр</b><a id="refresh"><span class="icon-rotate-ccw icon-refresh"></span></a></h5></div>
         <hr/>
         <div class="form-group">
             <%= label :search, :sex, "Пол", style: "color: #6C758A;" %>
@@ -66,5 +66,14 @@
     $('#search_fishes_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано", liveSearch: true})
     $('#search_techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано", liveSearch: true})
     $('#search_sex').selectpicker({size: 3, noneSelectedText: "Не выбрано"})
+
+     $("#refresh").click(function(){
+        $('#search_string').val("")
+        $('#search_sex').selectpicker("val", "не выбрано")
+        $('#search_techniques_ids').selectpicker("val", "")
+        $('#search_fishes_ids').selectpicker("val", "")
+        
+        pushToSearchChannel()
+        });
   })
 </script>
