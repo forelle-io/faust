@@ -117,15 +117,19 @@ defmodule Faust.Reservoir.Water do
 
   # SQL запросы ----------------------------------------------------------------
 
-  def list_water_query(user_id) do
-    from w in Water,
-      where: w.user_id == ^user_id
+  def list_waters_query do
+    query = from(w in Water)
+
+    order_by(query, [w], asc: [w.name])
+  end
+
+  def list_waters_query(user_id) do
+    list_waters_query()
+    |> where([w], w.user_id == ^user_id)
   end
 
   def list_waters_by_filter_query(filter) do
-    query = from(w in Water)
-
-    query
+    list_waters_query()
     |> filter_name_like_query(filter["string"])
     |> filter_type_query(filter["type"])
     |> filter_bottom_type_query(filter["bottom_type"])

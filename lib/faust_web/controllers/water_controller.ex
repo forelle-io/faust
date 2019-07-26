@@ -18,14 +18,14 @@ defmodule FaustWeb.WaterController do
              params
              | "user_id" => user_id
            }) do
-      waters = Reservoir.list_waters(user_id, [[user: :credential], :fishes, :techniques])
+      waters = Reservoir.list_waters(user_id, [:fishes])
 
       render(conn, "index.html", waters: waters)
     end
   end
 
   def index(conn, _params) do
-    waters = Reservoir.list_waters([[user: :credential], :fishes, :techniques])
+    waters = Reservoir.list_waters([:fishes])
 
     render(conn, "index.html", waters: waters)
   end
