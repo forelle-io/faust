@@ -11,7 +11,7 @@ defmodule Faust.Application do
       # Start the Ecto repository
       Faust.Repo,
       # Запуск GenServer процесса, загружающего измененную структуру определенных таблиц в :ets
-      Faust.HotTablesTablesGenServer,
+      Faust.HotTablesGenServer,
       # Start the endpoint when the application starts
       FaustWeb.Endpoint,
       # Provides Presence tracking to processes and channels

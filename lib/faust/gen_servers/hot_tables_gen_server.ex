@@ -1,4 +1,4 @@
-defmodule Faust.HotTablesTablesGenServer do
+defmodule Faust.HotTablesGenServer do
   @moduledoc false
 
   use GenServer
