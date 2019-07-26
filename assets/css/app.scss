@@ -357,22 +357,27 @@ header nav a {
     display: block;
 }
 
-.filter-list-test a, .filter-list-test a:link, .filter-list-test a:hover, .filter-list-test a:active, .filter-list-test a:visited{
+.filter-element-title a, .filter-element-title a:link, .filter-element-title a:hover, .filter-element-title a:active, .filter-element-title a:visited{
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
     font-size: 16px;
     line-height: 19px;
-
-    /* Main Text */
+    text-decoration: none;
     color: #1B263D;
 }
 
-.clear-filter{
-background: #0077FF;
-transform: matrix(-1, 0, 0, 1, 0, 0);
+.clear-filter {
+  background: #0077FF;
+  transform: matrix(-1, 0, 0, 1, 0, 0);
 }
 
-.icon-refresh{
+.icon-refresh {
   float: right;
+
+  &:hover{
+    color: #0077FF;
+    cursor: pointer;
+  }
 }
+

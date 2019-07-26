@@ -186,8 +186,14 @@ defmodule Faust.Accounts.User do
     end
   end
 
-  defp filter_sex_query(query, sex) when sex in ["мужской", "женский"] do
-    where(query, [u], u.sex == ^sex)
+  defp filter_sex_query(query, sex) when sex in @sex do
+    case sex do
+      "не выбран" ->
+        where(query, [u], is_nil(u.sex))
+
+      _ ->
+        where(query, [u], u.sex == ^sex)
+    end
   end
 
   defp filter_sex_query(query, _sex), do: query

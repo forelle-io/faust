@@ -1,16 +1,19 @@
 <%= for water <- @waters do %>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-            <div class="row" style="height: 80px; align-items: center;">              
-                <div class="col-md-6 filter-list-test">
-                   <%= link water.name, to: Routes.water_path(@conn, :show, water) %>
-                </div>
-                <div class="col-md-6 text-right">   
-                    <div class="btn btn-outline-primary">     
-                       Подписаться
-                    </div>
-                </div>                     
-            </div>
-        </li>
-    </ul>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <div class="row" style="height: 80px; align-items: center;">              
+        <div class="col-md-6 filter-element-title">
+          <%= link water.name, to: Routes.water_path(@conn, :show, water) %>
+          <div style="margin-top: 20px;">
+            <%= raw FaustWeb.FishView.fishes_tags(@conn, water.fishes) %>
+          </div>
+        </div>
+        <div class="col-md-6 text-right">   
+          <div class="btn btn-outline-primary">     
+            Подписаться
+          </div>
+        </div>                     
+      </div>
+    </li>
+  </ul>
 <% end %>

@@ -1,8 +1,6 @@
 defmodule FaustWeb.TechniquesView do
   use FaustWeb, :view
 
-  alias Faust.Fishing
-
   def techniques_for_multiple_select do
     {_, list_techniques} = :ets.lookup(:hot_tables, "fishing.techniques") |> List.first()
     list_techniques

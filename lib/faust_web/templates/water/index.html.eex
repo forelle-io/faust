@@ -8,7 +8,12 @@
         </div>
     </div>
     <div class="offset-md-1 col-md-3 content-block" style="height: 100%;">
-        <div style="margin-top: 20px;"><h5><b>Фильтр</b><a id="refresh"><span class="icon-rotate-ccw icon-refresh"></span></a></h5></div>
+        <div class="d-flex justify-content-between" style="margin-top: 20px;">
+            <h5><b>Фильтр</b></h5>
+            <a id="filter_refresh">
+                <span class="icon-rotate-ccw icon-refresh"></span>
+            </a>
+        </div>
         <hr/>
         <div class="form-group">
             <%= label :search, :type, "Тип", style: "color: #6C758A;" %>
@@ -34,20 +39,30 @@
 </div>
 
 <script>
-    $('#search_type').selectpicker({size: 3, noneSelectedText: "не выбрано"})
-    $('#search_color').selectpicker({size: 3, noneSelectedText: "не выбрано"})
-    $('#search_bottom_type').selectpicker({size: 3, noneSelectedText: "не выбрано"})
-    $('#search_environment').selectpicker({size: 3, noneSelectedText: "не выбрано"})
-    $('#search_fishes_ids').selectpicker({size: 5, noneSelectedText: "не выбрано"})
-
     $(document).ready(function(){
-       $("#refresh").click(function(){
-        $('#search_string').val("")
-        $('#search_type').selectpicker("val", "не выбрано")
-        $('#search_color').selectpicker("val", "не выбрано")
-        $('#search_bottom_type').selectpicker("val", "не выбрано")
-        $('#search_environment').selectpicker("val", "не выбрано")
-        $('#search_fishes_ids').selectpicker("val", "")
-        });
+			$('#search_type').selectpicker({size: 5, noneSelectedText: "не выбрано"})
+			$('#search_color').selectpicker({size: 5, noneSelectedText: "не выбрано"})
+			$('#search_bottom_type').selectpicker({size: 5, noneSelectedText: "не выбрано"})
+			$('#search_environment').selectpicker({size: 5, noneSelectedText: "не выбрано"})
+			$('#search_fishes_ids').selectpicker({size: 5, noneSelectedText: "не выбрано"})
+
+       $("#filter_refresh").click(function() {
+				if (
+					$('#search_string').val() != "" ||
+					$('#search_type') != "не выбрано" ||
+					$('#search_color') != "не выбрано" ||
+					$('#search_bottom_type') != "не выбрано" ||
+					$('#search_environment') != "не выбрано" ||
+					$('#search_fishes_ids').val().length != 0
+				) {
+					$('#search_string').val("")
+        	$('#search_type').selectpicker("val", "не выбрано")
+        	$('#search_color').selectpicker("val", "не выбрано")
+        	$('#search_bottom_type').selectpicker("val", "не выбрано")
+        	$('#search_environment').selectpicker("val", "не выбрано")
+        	$('#search_fishes_ids').selectpicker("val", "")
+				}
+        	
+			});
     });   
 </script>

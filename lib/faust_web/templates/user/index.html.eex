@@ -8,11 +8,16 @@
         </div>
     </div>
     <div class="offset-md-1 col-md-3 content-block" style="height: 100%;">
-        <div style="margin-top: 20px;"><h5><b>Фильтр</b><a id="refresh"><span class="icon-rotate-ccw icon-refresh"></span></a></h5></div>
+        <div class="d-flex justify-content-between" style="margin-top: 20px;">
+            <h5><b>Фильтр</b></h5>
+            <a id="filter_refresh">
+                <span class="icon-rotate-ccw icon-refresh"></span>
+            </a>
+        </div>
         <hr/>
         <div class="form-group">
             <%= label :search, :sex, "Пол", style: "color: #6C758A;" %>
-            <%= select :search, :sex, Faust.Accounts.User.sex(), class: "form-control search_observer" %>
+            <%= select :search, :sex, ["Не выбрано"] ++ Faust.Accounts.User.sex(), class: "form-control search_observer" %>
         </div>
         <div class="form-group">
             <%= label :search, :fishes_ids, "Виды рыб", style: "color: #6C758A;" %>
@@ -29,30 +34,39 @@
   $(document).ready(function() {
     let snoopFollowerActionsChannelName = "snoop:follower:actions_user:"
     let snoopFollowerActionsChannel = socket.channel(snoopFollowerActionsChannelName, {})
+    
     snoopFollowerActionsChannel.join()
       .receive("ok", resp => { console.log("Joined to " + snoopFollowerActionsChannelName, resp) })
       .receive("error", resp => { console.log("Unable to join " + snoopFollowerActionsChannelName, resp) })
+    
     let searchContentChannelName = "search:content:"
     let searchContentChannel = socket.channel(searchContentChannelName, {})
+    
     searchContentChannel.join()
       .receive("ok", resp => { console.log("Joined to " + searchContentChannelName, resp) })
       .receive("error", resp => { console.log("Unable to join " + searchContentChannelName, resp) })
+    
     searchContentChannel.on("delayed_search", payload => {
         $("#users_list").empty().html(payload.content);
         changeUserPresense(presences)
     })
+
     snoopFollowerActionsChannel.on("create", payload => {
         changeButtonWhenFollowerCreated(payload.user_id)
     })
+
     snoopFollowerActionsChannel.on("delete", payload => {
         changeButtonWhenFollowerDeleted(payload.user_id)
     })
+
     window.createFollower = function (userId) {
         snoopFollowerActionsChannel.push("create", {user_id: userId})
     }
+
     window.deleteFollower = function (userId) {
         snoopFollowerActionsChannel.push("delete", {user_id: userId})
     }
+
     function pushToSearchChannel() {
       searchContentChannel.push("search", {
         string: $("#search_string").val(),
@@ -61,19 +75,28 @@
         sex: $("#search_sex").val()
       })
     }
-    $("#search_string").on("input", function() { pushToSearchChannel() })
+
     $(".search_observer").change(function() { pushToSearchChannel() })
+
+    $("#search_string").on("input", function() { pushToSearchChannel() })
     $('#search_fishes_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано", liveSearch: true})
     $('#search_techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано", liveSearch: true})
     $('#search_sex').selectpicker({size: 3, noneSelectedText: "Не выбрано"})
 
-     $("#refresh").click(function(){
-        $('#search_string').val("")
-        $('#search_sex').selectpicker("val", "не выбрано")
-        $('#search_techniques_ids').selectpicker("val", "")
-        $('#search_fishes_ids').selectpicker("val", "")
+     $("#filter_refresh").click(function() {
+        if (
+          $('#search_string').val() != "" || 
+          $('#search_sex') != "Не выбрано" || 
+          $('#search_fishes_ids').val().length != 0 || 
+          $('#search_techniques_ids').val().length != 0
+        ) {
+          $('#search_string').val("")
+          $('#search_sex').selectpicker("val", "Не выбрано")
+          $('#search_techniques_ids').selectpicker("val", "")
+          $('#search_fishes_ids').selectpicker("val", "")
         
-        pushToSearchChannel()
-        });
+          pushToSearchChannel()
+        }
+    });
   })
 </script>
