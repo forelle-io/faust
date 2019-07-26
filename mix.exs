@@ -67,7 +67,7 @@ defmodule Faust.MixProject do
       {:distillery, "~> 2.0.14", warn_missing: false},
       # Тестирование, инспекция кода, фикстуры, фабрики
       {:excoveralls, "~> 0.10", only: :test},
-      {:credo, "~> 1.1.1", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.1.2", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.3", only: :test}
     ]
   end
