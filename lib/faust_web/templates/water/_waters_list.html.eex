@@ -1,4 +1,4 @@
-<%= for water <- @waters do %>
+<%= for water <- @list_waters_page.entries do %>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
       <div class="row" style="height: 80px; align-items: center;">              

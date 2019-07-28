@@ -7,7 +7,6 @@ defmodule FaustWeb.EndpointSocket do
   ## Channels
   channel "current_user:*", FaustWeb.CurrentUserChannel
   channel "snoop:follower:*", FaustWeb.SnoopFollowerChannel
-  channel "search:content:*", FaustWeb.SearchContentChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

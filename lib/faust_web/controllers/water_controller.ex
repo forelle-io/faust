@@ -18,16 +18,22 @@ defmodule FaustWeb.WaterController do
              params
              | "user_id" => user_id
            }) do
-      waters = Reservoir.list_waters(user_id, [:fishes])
+      list_waters_page = Reservoir.list_waters_by_params(params, [:fishes])
 
-      render(conn, "index.html", waters: waters)
+      render(conn, "index.html",
+        params: params,
+        list_waters_page: list_waters_page
+      )
     end
   end
 
-  def index(conn, _params) do
-    waters = Reservoir.list_waters([:fishes])
+  def index(conn, params) do
+    list_waters_page = Reservoir.list_waters_by_params(params, [:fishes])
 
-    render(conn, "index.html", waters: waters)
+    render(conn, "index.html",
+      params: params,
+      list_waters_page: list_waters_page
+    )
   end
 
   def new(%Plug.Conn{assigns: %{changeset_water: changeset_water}} = conn, _params) do

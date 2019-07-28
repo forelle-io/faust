@@ -1,33 +1,45 @@
 <div class="row">
-    <div class="offset-md-2 col-md-6 content-block" style="height: 100%;">
-        <div>
-            <%= text_input :search, :string, placeholder: "Поиск...", class: "form-control", style: "height: 50px; margin-top: 20px;" %>
+  <div class="offset-md-2 col-md-6 content-block" style="height: 100%; margin-bottom: 50px;">
+    <div>
+      <div class="input-group mb-3" style="height: 50px; margin-top: 20px;">
+        <%= text_input :search, :string, placeholder: "Поиск...", value: @params["string"],  class: "form-control", style: "height: 50px;" %>
+        <div class="input-group-append">
+          <button class="btn btn-outline-primary" type="button" id="button_search">Искать</button>
         </div>
-        <div id="users_list" style="margin-top: 20px">
-            <%= render "_users_list.html", assigns %>
-        </div>
+      </div>
     </div>
-    <div class="offset-md-1 col-md-3 content-block" style="height: 100%;">
-        <div class="d-flex justify-content-between" style="margin-top: 20px;">
-            <h5><b>Фильтр</b></h5>
-            <a id="filter_refresh">
-                <span class="icon-rotate-ccw icon-refresh"></span>
-            </a>
-        </div>
-        <hr/>
-        <div class="form-group">
-            <%= label :search, :sex, "Пол", style: "color: #6C758A;" %>
-            <%= select :search, :sex, ["Не выбрано"] ++ Faust.Accounts.User.sex(), class: "form-control search_observer" %>
-        </div>
-        <div class="form-group">
-            <%= label :search, :fishes_ids, "Виды рыб", style: "color: #6C758A;" %>
-            <%= multiple_select :search, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), class: "form-control search_observer" %>
-        </div>
-        <div class="form-group">
-            <%= label :search, :techniques_ids, "Техника ловли", style: "color: #6C758A;" %>
-            <%= multiple_select :search, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), class: "form-control search_observer" %>
-        </div>
+    <div style="margin-top: 20px">
+      <%= render "_users_list.html", assigns %>
     </div>
+    <%= if @list_users_page.total_pages > 1 do %>
+      <div class="row" style="margin-top: 20px;">
+        <div class="offset-md-5 col-md-2">
+          <%= pagination_links @conn, @list_users_page, [], distance: 5, previous: "<", next: ">", first: true, last: true %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="offset-md-1 col-md-3 content-block" style="height: 100%;">
+    <div class="d-flex justify-content-between" style="margin-top: 20px;">
+      <h5><b>Фильтр</b></h5>
+      <a id="filter_refresh">
+        <span class="icon-rotate-ccw icon-refresh"></span>
+      </a>
+    </div>
+    <hr/>
+    <div class="form-group">
+      <%= label :search, :sex, "Пол", style: "color: #6C758A;" %>
+      <%= select :search, :sex, ["Не выбрано"] ++ Faust.Accounts.User.sex(), class: "form-control", value: @params["sex"] %>
+    </div>
+    <div class="form-group">
+      <%= label :search, :fishes_ids, "Виды рыб", style: "color: #6C758A;" %>
+      <%= multiple_select :search, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), class: "form-control", value: @params["fishes_ids"] %>
+    </div>
+    <div class="form-group">
+      <%= label :search, :techniques_ids, "Техника ловли", style: "color: #6C758A;" %>
+      <%= multiple_select :search, :techniques_ids, FaustWeb.TechniquesView.techniques_for_multiple_select(), class: "form-control", value: @params["techniques_ids"] %>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">
@@ -38,18 +50,6 @@
     snoopFollowerActionsChannel.join()
       .receive("ok", resp => { console.log("Joined to " + snoopFollowerActionsChannelName, resp) })
       .receive("error", resp => { console.log("Unable to join " + snoopFollowerActionsChannelName, resp) })
-    
-    let searchContentChannelName = "search:content:"
-    let searchContentChannel = socket.channel(searchContentChannelName, {})
-    
-    searchContentChannel.join()
-      .receive("ok", resp => { console.log("Joined to " + searchContentChannelName, resp) })
-      .receive("error", resp => { console.log("Unable to join " + searchContentChannelName, resp) })
-    
-    searchContentChannel.on("delayed_search", payload => {
-        $("#users_list").empty().html(payload.content);
-        changeUserPresense(presences)
-    })
 
     snoopFollowerActionsChannel.on("create", payload => {
         changeButtonWhenFollowerCreated(payload.user_id)
@@ -67,36 +67,48 @@
         snoopFollowerActionsChannel.push("delete", {user_id: userId})
     }
 
-    function pushToSearchChannel() {
-      searchContentChannel.push("search", {
-        string: $("#search_string").val(),
-        fishes_ids: $("#search_fishes_ids").val(),
-        techniques_ids: $("#search_techniques_ids").val(),
-        sex: $("#search_sex").val()
-      })
+    searchUsers = function () {
+      let query = {}
+      
+      let string = $("#search_string").val()
+      if (string != "") { query.string = string }
+      
+      let sex = $('#search_sex').val()
+      if (sex != "Не выбрано") { query.sex = sex }
+
+      let fishes_ids = $("#search_fishes_ids").val()
+      if (fishes_ids.length != 0) { query.fishes_ids = fishes_ids }
+
+      let techniques_ids = $("#search_techniques_ids").val()
+      if (techniques_ids.length != 0) { query.techniques_ids = fishes_ids }
+
+
+      if (jQuery.isEmptyObject(query)) {
+        document.location.href = "/users"
+      } else {
+        document.location.href = "/users?" + $.param(query)
+      }
     }
 
-    $(".search_observer").change(function() { pushToSearchChannel() })
+    permitSearchUsers = function () {
+      return $('#search_string').val() != "" || $('#search_sex').val() != "Не выбрано" || $('#search_fishes_ids').val().length != 0 || $('#search_techniques_ids').val().length != 0
+    }
 
-    $("#search_string").on("input", function() { pushToSearchChannel() })
+    clearSearchUsers = function () {
+      $('#search_string').val("")
+      $('#search_sex').selectpicker("val", "Не выбрано")
+      $('#search_techniques_ids').selectpicker("val", "")
+      $('#search_fishes_ids').selectpicker("val", "")
+    }
+
+    $("#button_search").on("click", function() { searchUsers() })
+    
     $('#search_fishes_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано", liveSearch: true})
     $('#search_techniques_ids').selectpicker({size: 5, noneSelectedText: "Не выбрано", liveSearch: true})
-    $('#search_sex').selectpicker({size: 3, noneSelectedText: "Не выбрано"})
+    $('#search_sex').selectpicker({size: 4, noneSelectedText: "Не выбрано"})
 
-     $("#filter_refresh").click(function() {
-        if (
-          $('#search_string').val() != "" || 
-          $('#search_sex') != "Не выбрано" || 
-          $('#search_fishes_ids').val().length != 0 || 
-          $('#search_techniques_ids').val().length != 0
-        ) {
-          $('#search_string').val("")
-          $('#search_sex').selectpicker("val", "Не выбрано")
-          $('#search_techniques_ids').selectpicker("val", "")
-          $('#search_fishes_ids').selectpicker("val", "")
-        
-          pushToSearchChannel()
-        }
-    });
+    $("#filter_refresh").click(function() {
+      if (permitSearchUsers()) { clearSearchUsers(); searchUsers(); }
+    })
   })
 </script>

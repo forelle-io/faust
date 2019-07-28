@@ -27,7 +27,7 @@ defmodule Faust.MixProject do
   def application do
     [
       mod: {Faust.Application, []},
-      extra_applications: [:logger, :runtime_tools, :edeliver]
+      extra_applications: [:logger, :runtime_tools, :edeliver, :scrivener_ecto, :scrivener_html]
     ]
   end
 
@@ -49,6 +49,9 @@ defmodule Faust.MixProject do
       # Базы данных и хранилища
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.15.0"},
+      # Пагинация
+      {:scrivener_ecto, "~> 2.2.0"},
+      {:scrivener_html, "~> 1.8.1"},
       # Локализация
       {:gettext, "~> 0.11"},
       # Сервера, форматы, протоколы

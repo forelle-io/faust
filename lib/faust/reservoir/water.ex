@@ -129,7 +129,16 @@ defmodule Faust.Reservoir.Water do
   end
 
   def list_waters_by_filter_query(filter) do
-    list_waters_query()
+    query =
+      case filter do
+        %{"user_id" => user_id} ->
+          list_waters_query(user_id)
+
+        _ ->
+          list_waters_query()
+      end
+
+    query
     |> filter_name_like_query(filter["string"])
     |> filter_type_query(filter["type"])
     |> filter_bottom_type_query(filter["bottom_type"])

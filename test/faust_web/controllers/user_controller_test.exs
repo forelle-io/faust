@@ -26,7 +26,6 @@ defmodule FaustWeb.UserControllerTest do
         |> authorize_conn(current_user)
         |> get(Routes.user_path(conn, :index))
 
-      # TODO: Написать тестирование для LiveView
       assert conn.status == code(:ok)
     end
   end
