@@ -58,7 +58,7 @@ defmodule Faust.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:guardian, "~> 1.2"},
       {:basic_auth, "~> 2.2.2"},
-      {:bodyguard, "~> 2.2.4"},
+      {:bodyguard, "~> 2.3.0"},
       # Мультимедия
       {:alchemic_avatar,
        git: "https://github.com/solov9ev/alchemic_avatar", branch: "support-global-path"},
