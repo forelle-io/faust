@@ -36,6 +36,8 @@ defmodule Faust.Reservoir do
 
   def get_water!(id), do: Repo.get!(Water, id)
 
+  def get_water(id), do: Repo.get(Water, id)
+
   def create_water(attrs \\ %{}) do
     %Water{}
     |> Water.create_changeset(attrs)

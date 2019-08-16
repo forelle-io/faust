@@ -14,11 +14,11 @@
               <%= link "Аккаунт", to: Routes.user_path(FaustWeb.Endpoint, :show, user), class: "btn btn-outline-primary" %>
           <% else %>
             <%= if Enum.member?(@list_followee_ids, user.id) do %>
-              <div id="follower_<%= user.id %>" class="btn btn-primary" onclick="deleteFollower(<%= user.id %>);">
+              <div id="follow_<%= user.id %>" class="btn btn-primary" onclick="unfollow(<%= user.id %>);">
                 Отписаться
               </div>
             <% else %>
-              <div id="follower_<%= user.id %>" class="btn btn-outline-primary" onclick="createFollower(<%= user.id %>);">
+              <div id="follow_<%= user.id %>" class="btn btn-outline-primary" onclick="follow(<%= user.id %>);">
                 Подписаться
               </div>
             <% end %>

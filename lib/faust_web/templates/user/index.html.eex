@@ -44,27 +44,27 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    let snoopFollowerActionsChannelName = "snoop:follower:actions_user:"
-    let snoopFollowerActionsChannel = socket.channel(snoopFollowerActionsChannelName, {})
+    let snoopFollowChannelName = "<%= FaustWeb.SnoopFollowChannel.topic_user() %>"
+    let snoopFollowChannel = socket.channel(snoopFollowChannelName, {})
     
-    snoopFollowerActionsChannel.join()
-      .receive("ok", resp => { console.log("Joined to " + snoopFollowerActionsChannelName, resp) })
-      .receive("error", resp => { console.log("Unable to join " + snoopFollowerActionsChannelName, resp) })
+    snoopFollowChannel.join()
+      .receive("ok", resp => { console.log("Joined to " + snoopFollowChannelName, resp) })
+      .receive("error", resp => { console.log("Unable to join " + snoopFollowChannelName, resp) })
 
-    snoopFollowerActionsChannel.on("create", payload => {
-        changeButtonWhenFollowerCreated(payload.user_id)
+    snoopFollowChannel.on("follow", payload => {
+      onClickButtonFollow(payload.follower_id)
     })
 
-    snoopFollowerActionsChannel.on("delete", payload => {
-        changeButtonWhenFollowerDeleted(payload.user_id)
+    snoopFollowChannel.on("unfollow", payload => {
+      onClickButtonUnfollow(payload.follower_id)
     })
 
-    window.createFollower = function (userId) {
-        snoopFollowerActionsChannel.push("create", {user_id: userId})
+    window.follow = function (userId) {
+      snoopFollowChannel.push("follow", {id: userId})
     }
 
-    window.deleteFollower = function (userId) {
-        snoopFollowerActionsChannel.push("delete", {user_id: userId})
+    window.unfollow = function (userId) {
+      snoopFollowChannel.push("unfollow", {id: userId})
     }
 
     searchUsers = function () {

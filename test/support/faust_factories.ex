@@ -7,7 +7,7 @@ defmodule Faust.Support.Factories do
   alias Faust.Crypto
   alias Faust.Fishing.{Fish, Technique}
   alias Faust.Reservoir.{History, Water}
-  alias Faust.Snoop.Follower
+  alias Faust.Snoop.FollowerUser
 
   # Account context ------------------------------------------------------------
 
@@ -123,7 +123,7 @@ defmodule Faust.Support.Factories do
   # Snoop context --------------------------------------------------------------
 
   def snoop_follower_factory do
-    %Follower{
+    %FollowerUser{
       users: build(:accounts_user),
       followers: build(:accounts_user)
     }

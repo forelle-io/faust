@@ -14,11 +14,11 @@
             <%= link "Редактировать", to: Routes.user_path(FaustWeb.Endpoint, :edit, @user), class: "btn btn-outline-primary" %>
           <% else %>
             <%= if Enum.member?(@list_followee_ids, @user.id) do %>
-                <div id="follower_<%= @user.id %>" class="btn btn-primary" onclick="deleteFollower(<%= @user.id %>);">
+                <div id="follow_<%= @user.id %>" class="btn btn-primary" onclick="unfollow(<%= @user.id %>);">
                     Отписаться
                 </div>
             <% else %>
-                <div id="follower_<%= @user.id %>" class="btn btn-outline-primary" onclick="createFollower(<%= @user.id %>);">
+                <div id="follow_<%= @user.id %>" class="btn btn-outline-primary" onclick="follow(<%= @user.id %>);">
                     Подписаться
                 </div>
             <% end %>
@@ -80,34 +80,34 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    let snoopFollowerActionsChannelName = "snoop:follower:actions_user:<%= @user.id %>"
-    let snoopFollowerActionsChannel = socket.channel(snoopFollowerActionsChannelName, {})
-    snoopFollowerActionsChannel.join()
-        .receive("ok", resp => { console.log("Joined to " + snoopFollowerActionsChannelName, resp) })
-        .receive("error", resp => { console.log("Unable to join " + snoopFollowerActionsChannelName, resp) })
-    snoopFollowerActionsChannel.on("followers_count", payload => {
-      $("#followers_count")
-        .children()
-        .text(payload.followers_count)
+    let snoopFollowChannelName = "<%= FaustWeb.SnoopFollowChannel.topic_user() <> Integer.to_string(@user.id) %>"
+    let snoopFollowChannel = socket.channel(snoopFollowChannelName, {})
+
+    snoopFollowChannel.join()
+      .receive("ok", resp => { console.log("Joined to " + snoopFollowChannelName, resp) })
+      .receive("error", resp => { console.log("Unable to join " + snoopFollowChannelName, resp) })
+    
+    snoopFollowChannel.on("new_followers_count", payload => {
+      $("#followers_count").children().text(payload.followers_count)
     })
-    snoopFollowerActionsChannel.on("followee_count", payload => {
-      $("#followee_count")
-        .children()
-        .text(payload.followee_count)
+    snoopFollowChannel.on("new_followee_count", payload => {
+      $("#followee_count").children().text(payload.followee_count)
     })
+
     <%= unless current_user(@conn).id == @user.id do %>
-      snoopFollowerActionsChannel.on("create", payload => {
-        changeButtonWhenFollowerCreated(payload.user_id);
-      })
-      snoopFollowerActionsChannel.on("delete", payload => {
-        changeButtonWhenFollowerDeleted(payload.user_id);
-      })
-      window.createFollower = function (userId) {
-        snoopFollowerActionsChannel.push("create", {})
+      window.follow = function (userId) {
+        snoopFollowChannel.push("follow", {id: userId})
       }
-      window.deleteFollower = function (userId) {
-        snoopFollowerActionsChannel.push("delete", {})
+      window.unfollow = function (userId) {
+        snoopFollowChannel.push("unfollow", {id: userId})
       }
+
+      snoopFollowChannel.on("follow", payload => {
+        onClickButtonFollow(payload.follower_id);
+      })
+      snoopFollowChannel.on("unfollow", payload => {
+        onClickButtonUnfollow(payload.follower_id);
+      })
     <% end %>
   });
 </script>

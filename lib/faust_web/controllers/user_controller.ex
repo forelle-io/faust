@@ -30,7 +30,7 @@ defmodule FaustWeb.UserController do
   end
 
   def index(conn, params, %User{} = current_user) do
-    list_followee_ids_task = Task.async(Snoop, :list_followee_ids, [current_user.id])
+    list_followee_ids_task = Task.async(Snoop, :list_user_followee_ids, [current_user.id])
     list_users_page = Accounts.list_users_by_params(params, [:credential])
 
     render(conn, "index.html",
@@ -66,7 +66,7 @@ defmodule FaustWeb.UserController do
       if current_user.id == String.to_integer(id) do
         %{}
       else
-        %{list_followee_ids: Snoop.list_followee_ids(current_user.id)}
+        %{list_followee_ids: Snoop.list_user_followee_ids(current_user.id)}
       end
 
     render(

@@ -52,6 +52,29 @@
 
 <script>
     $(document).ready(function(){
+      let snoopFollowChannelName = "<%= FaustWeb.SnoopFollowChannel.topic_water() %>"
+      let snoopFollowChannel = socket.channel(snoopFollowChannelName, {})
+
+      snoopFollowChannel.join()
+        .receive("ok", resp => { console.log("Joined to " + snoopFollowChannelName, resp) })
+        .receive("error", resp => { console.log("Unable to join " + snoopFollowChannelName, resp) })
+
+      snoopFollowChannel.on("follow", payload => {
+        onClickButtonFollow(payload.follower_id)
+      })
+
+      snoopFollowChannel.on("unfollow", payload => {
+        onClickButtonUnfollow(payload.follower_id)
+      })
+
+      window.follow = function (waterId) {
+        snoopFollowChannel.push("follow", {id: waterId})
+      }
+
+      window.unfollow = function (waterId) {
+        snoopFollowChannel.push("unfollow", {id: waterId})
+      }
+
       searchWaters = function () {
         let query = {}
 
