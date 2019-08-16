@@ -7,7 +7,7 @@ defmodule Faust.Reservoir.Water do
 
   alias __MODULE__
   alias Faust.Accounts.User
-  alias Faust.Fishing.{Fish, FishWater, Technique, TechniqueWater}
+  alias Faust.Fishing.{Fish, FishWater, Technique}
   alias Faust.Reservoir.History
   alias FaustWeb.Reservoir.WaterPolicy
 
@@ -45,11 +45,11 @@ defmodule Faust.Reservoir.Water do
     has_many :histories, History
 
     many_to_many :fishes, Fish,
-      join_through: Faust.fetch_table_name(%FishWater{}, "string"),
+      join_through: "fishing.fishes_waters",
       on_replace: :delete
 
     many_to_many :techniques, Technique,
-      join_through: Faust.fetch_table_name(%TechniqueWater{}, "string"),
+      join_through: "fishing.techniques_waters",
       on_replace: :delete
 
     belongs_to :user, User
@@ -129,7 +129,16 @@ defmodule Faust.Reservoir.Water do
   end
 
   def list_waters_by_filter_query(filter) do
-    list_waters_query()
+    query =
+      case filter do
+        %{"user_id" => user_id} ->
+          list_waters_query(user_id)
+
+        _ ->
+          list_waters_query()
+      end
+
+    query
     |> filter_name_like_query(filter["string"])
     |> filter_type_query(filter["type"])
     |> filter_bottom_type_query(filter["bottom_type"])

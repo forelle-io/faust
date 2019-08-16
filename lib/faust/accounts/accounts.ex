@@ -45,19 +45,12 @@ defmodule Faust.Accounts do
 
   alias Faust.Accounts.User
 
-  def list_users do
-    User.list_users_query() |> Repo.all()
-  end
-
-  def list_users(preloads) when is_list(preloads) do
-    list_users() |> Repo.preload(preloads)
-  end
-
-  def list_users_by_filter(filter) when is_map(filter) do
-    filter
-    |> User.list_users_by_filter_query()
-    |> Repo.all()
-    |> Repo.preload(:credential)
+  def list_users_by_params(params, preloads)
+      when is_map(params) and is_list(preloads) do
+    params
+    |> User.list_users_by_params_query()
+    |> preload(^preloads)
+    |> Repo.paginate(params)
   end
 
   def get_user!(id), do: Repo.get!(User, id)

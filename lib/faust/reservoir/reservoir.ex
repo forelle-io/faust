@@ -26,7 +26,17 @@ defmodule Faust.Reservoir do
     |> Repo.preload(preloads)
   end
 
+  def list_waters_by_params(params, preloads)
+      when is_map(params) and is_list(preloads) do
+    params
+    |> Water.list_waters_by_filter_query()
+    |> preload(^preloads)
+    |> Repo.paginate(params)
+  end
+
   def get_water!(id), do: Repo.get!(Water, id)
+
+  def get_water(id), do: Repo.get(Water, id)
 
   def create_water(attrs \\ %{}) do
     %Water{}

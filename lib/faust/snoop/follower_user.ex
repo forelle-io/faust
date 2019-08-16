@@ -1,22 +1,20 @@
-defmodule Faust.Snoop.Follower do
+defmodule Faust.Snoop.FollowerUser do
   @moduledoc false
 
-  use Ecto.Schema
-
-  import Ecto.{Changeset, Query}
+  use Faust.Snoop.MutualOptionals, module_name: __MODULE__
 
   alias __MODULE__
   alias Faust.Accounts.User
-  alias FaustWeb.Snoop.FollowerPolicy
+  alias FaustWeb.Snoop.FollowerUserPolicy
 
   @primary_key false
 
-  schema "snoop.followers" do
+  schema "snoop.follower_users" do
     belongs_to :users, User, foreign_key: :user_id, primary_key: true
     belongs_to :followers, User, foreign_key: :follower_id, primary_key: true
   end
 
-  defdelegate authorize(action, current_user, resource), to: FollowerPolicy
+  defdelegate authorize(action, current_user, resource), to: FollowerUserPolicy
 
   # Changesets -----------------------------------------------------------------
 
@@ -29,25 +27,8 @@ defmodule Faust.Snoop.Follower do
 
   # SQL запросы ----------------------------------------------------------------
 
-  def list_followee_ids_query(user_id) do
-    from f in Follower,
-      select: f.follower_id,
-      where: f.user_id == ^user_id
-  end
-
-  def list_follower_ids_query(user_id) do
-    from f in Follower,
-      select: f.follower_id,
-      where: f.follower_id == ^user_id
-  end
-
   def count_user_followee_query(user_id) do
-    from f in Follower,
+    from f in FollowerUser,
       where: f.user_id == ^user_id
-  end
-
-  def count_user_followers_query(user_id) do
-    from f in Follower,
-      where: f.follower_id == ^user_id
   end
 end

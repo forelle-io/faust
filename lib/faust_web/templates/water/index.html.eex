@@ -1,68 +1,131 @@
 <div class="row">
-    <div class="offset-md-2 col-md-6 content-block" style="height: 100%;">
-        <div>
-            <%= text_input :search, :string, placeholder: "Поиск водоемов", class: "form-control", style: "height: 50px; margin-top: 20px;" %>
+  <div class="offset-md-2 col-md-6 content-block" style="height: 100%;">
+    <div>
+      <div class="input-group mb-3" style="height: 50px; margin-top: 20px;">
+        <%= text_input :search, :string, placeholder: "Поиск...", value: @params["string"],  class: "form-control", style: "height: 50px;" %>
+        <div class="input-group-append">
+          <button class="btn btn-outline-primary" type="button" id="button_search">Искать</button>
         </div>
-        <div id="waters_list" style="margin-top: 20px">
-            <%= render "_waters_list.html", assigns %>
-        </div>
+      </div>
     </div>
-    <div class="offset-md-1 col-md-3 content-block" style="height: 100%;">
-        <div class="d-flex justify-content-between" style="margin-top: 20px;">
-            <h5><b>Фильтр</b></h5>
-            <a id="filter_refresh">
-                <span class="icon-rotate-ccw icon-refresh"></span>
-            </a>
-        </div>
-        <hr/>
-        <div class="form-group">
-            <%= label :search, :type, "Тип", style: "color: #6C758A;" %>
-            <%= select :search, :type, Faust.Reservoir.Water.types(), class: "form-control search_observer" %>
-        </div>
-         <div class="form-group">
-            <%= label :search, :color, "Цвет", style: "color: #6C758A;" %>
-            <%= select :search, :color, Faust.Reservoir.Water.colors(), class: "form-control search_observer" %>
-        </div>
-        <div class="form-group">
-          <%= label :search, :bottom_type, "Тип дна", style: "color: #6C758A;" %>
-          <%= select :search, :bottom_type, Faust.Reservoir.Water.bottom_types(), class: "form-control search_observer" %>
-        </div>
-        <div class="form-group">
-          <%= label :search, :environment, "Окружение", style: "color: #6C758A;" %>
-          <%= select :search, :environment, Faust.Reservoir.Water.environments(), class: "form-control search_observer" %>
-        </div>
-        <div class="form-group">
-            <%= label :search, :fishes_ids, "Виды рыб", style: "color: #6C758A;" %>
-            <%= multiple_select :search, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), class: "form-control search_observer" %>
-        </div>
+    <div id="waters_list" style="margin-top: 20px">
+      <%= render "_waters_list.html", assigns %>
     </div>
+    <%= if @list_waters_page.total_pages > 1 do %>
+      <div class="row" style="margin-top: 20px;">
+        <div class="offset-md-5 col-md-2">
+          <%= pagination_links @conn, @list_waters_page, [], distance: 5, previous: "<", next: ">", first: true, last: true %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="offset-md-1 col-md-3 content-block" style="height: 100%;">
+    <div class="d-flex justify-content-between" style="margin-top: 20px;">
+      <h5><b>Фильтр</b></h5>
+      <a id="filter_refresh">
+        <span class="icon-rotate-ccw icon-refresh"></span>
+      </a>
+    </div>
+    <hr/>
+    <div class="form-group">
+      <%= label :search, :type, "Тип", style: "color: #6C758A;" %>
+      <%= select :search, :type, Faust.Reservoir.Water.types(), class: "form-control", value: @params["type"] %>
+    </div>
+      <div class="form-group">
+      <%= label :search, :color, "Цвет", style: "color: #6C758A;" %>
+      <%= select :search, :color, Faust.Reservoir.Water.colors(), class: "form-control", value: @params["color"] %>
+    </div>
+    <div class="form-group">
+      <%= label :search, :bottom_type, "Тип дна", style: "color: #6C758A;" %>
+      <%= select :search, :bottom_type, Faust.Reservoir.Water.bottom_types(), class: "form-control", value: @params["bottom_type"] %>
+    </div>
+    <div class="form-group">
+      <%= label :search, :environment, "Окружение", style: "color: #6C758A;" %>
+      <%= select :search, :environment, Faust.Reservoir.Water.environments(), class: "form-control", value: @params["environment"] %>
+    </div>
+    <div class="form-group">
+      <%= label :search, :fishes_ids, "Виды рыб", style: "color: #6C758A;" %>
+      <%= multiple_select :search, :fishes_ids, FaustWeb.FishView.fishes_for_multiple_select(), class: "form-control", value: @params["fishes_ids"] %>
+    </div>
+  </div>
 </div>
 
 <script>
     $(document).ready(function(){
-			$('#search_type').selectpicker({size: 5, noneSelectedText: "не выбрано"})
+      let snoopFollowChannelName = "<%= FaustWeb.SnoopFollowChannel.topic_water() %>"
+      let snoopFollowChannel = socket.channel(snoopFollowChannelName, {})
+
+      snoopFollowChannel.join()
+        .receive("ok", resp => { console.log("Joined to " + snoopFollowChannelName, resp) })
+        .receive("error", resp => { console.log("Unable to join " + snoopFollowChannelName, resp) })
+
+      snoopFollowChannel.on("follow", payload => {
+        onClickButtonFollow(payload.follower_id)
+      })
+
+      snoopFollowChannel.on("unfollow", payload => {
+        onClickButtonUnfollow(payload.follower_id)
+      })
+
+      window.follow = function (waterId) {
+        snoopFollowChannel.push("follow", {id: waterId})
+      }
+
+      window.unfollow = function (waterId) {
+        snoopFollowChannel.push("unfollow", {id: waterId})
+      }
+
+      searchWaters = function () {
+        let query = {}
+
+        let string = $("#search_string").val()
+        if (string != "") { query.string = string }
+
+        let color = $('#search_color').val()
+        if (color != "не выбрано") { query.color = color }
+
+        let bottom_type = $('#search_bottom_type').val()
+        if (bottom_type != "не выбрано") { query.bottom_type = bottom_type }
+
+        let environment = $('#search_environment').val()
+        if (environment != "не выбрано") { query.environment = environment }
+
+        let type = $('#search_type').val()
+        if (type != "не выбрано") { query.type = type }
+
+        let fishes_ids = $("#search_fishes_ids").val()
+        if (fishes_ids.length != 0) { query.fishes_ids = fishes_ids }
+
+        if (jQuery.isEmptyObject(query)) {
+          document.location.href = "/waters"
+        } else {
+          document.location.href = "/waters?" + $.param(query)
+        }
+      }
+
+      permitSearchUsers = function () {
+        return $('#search_string').val() != "" || $('#search_type') != "не выбрано" || $('#search_color') != "не выбрано" || $('#search_bottom_type') != "не выбрано" || $('#search_environment') != "не выбрано" || $('#search_fishes_ids').val().length != 0
+      }
+
+      clearSearchWaters = function () {
+        $('#search_string').val("")
+        $('#search_type').selectpicker("val", "не выбрано")
+        $('#search_color').selectpicker("val", "не выбрано")
+        $('#search_bottom_type').selectpicker("val", "не выбрано")
+        $('#search_environment').selectpicker("val", "не выбрано")
+        $('#search_fishes_ids').selectpicker("val", "")
+      }
+
+      $("#button_search").on("click", function() { searchWaters() })
+
+      $("#filter_refresh").click(function() {
+				if (permitSearchUsers()) { clearSearchWaters(); searchWaters(); }
+      })
+
+      $('#search_type').selectpicker({size: 5, noneSelectedText: "не выбрано"})
 			$('#search_color').selectpicker({size: 5, noneSelectedText: "не выбрано"})
 			$('#search_bottom_type').selectpicker({size: 5, noneSelectedText: "не выбрано"})
 			$('#search_environment').selectpicker({size: 5, noneSelectedText: "не выбрано"})
 			$('#search_fishes_ids').selectpicker({size: 5, noneSelectedText: "не выбрано"})
-
-       $("#filter_refresh").click(function() {
-				if (
-					$('#search_string').val() != "" ||
-					$('#search_type') != "не выбрано" ||
-					$('#search_color') != "не выбрано" ||
-					$('#search_bottom_type') != "не выбрано" ||
-					$('#search_environment') != "не выбрано" ||
-					$('#search_fishes_ids').val().length != 0
-				) {
-					$('#search_string').val("")
-        	$('#search_type').selectpicker("val", "не выбрано")
-        	$('#search_color').selectpicker("val", "не выбрано")
-        	$('#search_bottom_type').selectpicker("val", "не выбрано")
-        	$('#search_environment').selectpicker("val", "не выбрано")
-        	$('#search_fishes_ids').selectpicker("val", "")
-				}
-        	
-			});
     });   
 </script>

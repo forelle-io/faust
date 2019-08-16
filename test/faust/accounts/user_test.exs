@@ -7,53 +7,18 @@ defmodule Faust.Accounts.UserTest do
   import Faust.Support.AccountFixtures, only: [user_attrs: 0, user_fixture: 0]
 
   alias Faust.Accounts
-  alias Faust.Accounts.{Credential, User}
+  alias Faust.Accounts.User
 
-  describe "list_users/0" do
-    test "когда записи users отсутствуют" do
-      assert Accounts.list_users() |> Enum.empty?()
-    end
-
-    test "когда записи users присутствуют в количестве 5" do
-      insert_list(5, :accounts_user)
-
-      assert Accounts.list_users() |> length() == 5
-    end
-  end
-
-  describe "list_users/1" do
-    test "когда записи users присутствуют в количестве 5 с пустой предзагрузкой" do
-      insert_list(5, :accounts_user)
-      assert Accounts.list_users([]) |> length() == 5
-    end
-
-    test "когда записи users присутствуют в количестве 5 с предзагрузкой credential" do
-      insert_list(5, :accounts_user)
-      list_users = Accounts.list_users([:credential])
-
-      assert length(list_users) == 5
-
-      assert Enum.all?(list_users, fn user ->
-               case user do
-                 %User{credential: %Credential{}} ->
-                   true
-
-                 _ ->
-                   false
-               end
-             end)
-    end
-  end
-
-  describe "list_users_by_filter/1" do
+  describe "list_users_by_params/1" do
     test "когда фильтрация валидна, содержит часть фамилии 'ловье' и существует запись user" do
       {:ok, user} = user_fixture() |> Accounts.update_user(%{surname: "Соловьев"})
       insert_list(5, :accounts_user)
 
-      users = Accounts.list_users_by_filter(%{"string" => "ловье"})
+      %Scrivener.Page{entries: entries} =
+        Accounts.list_users_by_params(%{"string" => "ловье"}, [])
 
-      assert length(users) == 1
-      assert user.id == List.first(users).id
+      assert length(entries) == 1
+      assert user.id == List.first(entries).id
     end
 
     test "когда фильтрация валидна, содержит часть фамилии 'ловьева' и существует запись user с женским полом" do
@@ -63,33 +28,36 @@ defmodule Faust.Accounts.UserTest do
 
       insert_list(5, :accounts_user)
 
-      users = Accounts.list_users_by_filter(%{"string" => "ловьева", "sex" => "женский"})
+      %Scrivener.Page{entries: entries} =
+        Accounts.list_users_by_params(%{"string" => "ловьева", "sex" => "женский"}, [])
 
-      assert length(users) == 1
-      assert user.id == List.first(users).id
+      assert length(entries) == 1
+      assert user.id == List.first(entries).id
     end
 
     test "когда фильтрация валидна, содержит мужской пол и существует запись user с мужским полом" do
       sex = "мужской"
       {:ok, user} = user_fixture() |> Accounts.update_user(%{sex: sex})
-      users = Accounts.list_users_by_filter(%{"sex" => sex})
+      %Scrivener.Page{entries: entries} = Accounts.list_users_by_params(%{"sex" => sex}, [])
 
-      assert length(users) == 1
-      assert user.id == List.first(users).id
+      assert length(entries) == 1
+      assert user.id == List.first(entries).id
     end
 
     test "когда фильтрация валидна, содержит мужской пол и существует запись user с женским полом" do
       {:ok, _user} = user_fixture() |> Accounts.update_user(%{sex: "женский"})
-      users = Accounts.list_users_by_filter(%{"sex" => "мужской"})
+      %Scrivener.Page{entries: entries} = Accounts.list_users_by_params(%{"sex" => "мужской"}, [])
 
-      assert Enum.empty?(users)
+      assert Enum.empty?(entries)
     end
 
     test "когда фильтрация не валидна и существует 2 записи user" do
       insert_list(2, :accounts_user)
-      users = Accounts.list_users_by_filter(%{"type" => "unknown"})
 
-      assert length(users) == 2
+      %Scrivener.Page{entries: entries} =
+        Accounts.list_users_by_params(%{"type" => "unknown"}, [])
+
+      assert length(entries) == 2
     end
   end
 

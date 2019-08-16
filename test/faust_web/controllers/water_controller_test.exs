@@ -30,7 +30,7 @@ defmodule FaustWeb.WaterControllerTest do
         |> get(Routes.water_path(conn, :index, %{"user_id" => current_user.id}))
 
       assert conn.status == code(:ok)
-      assert length(conn.assigns.waters) == 1
+      assert length(conn.assigns.list_waters_page.entries) == 1
       assert controller_module(conn) == WaterController
       assert view_module(conn) == WaterView
       assert view_template(conn) == "index.html"
@@ -59,7 +59,7 @@ defmodule FaustWeb.WaterControllerTest do
         |> get(Routes.water_path(conn, :index))
 
       assert conn.status == code(:ok)
-      assert length(conn.assigns.waters) == 1
+      assert length(conn.assigns.list_waters_page.entries) == 1
       assert controller_module(conn) == WaterController
       assert view_module(conn) == WaterView
       assert view_template(conn) == "index.html"

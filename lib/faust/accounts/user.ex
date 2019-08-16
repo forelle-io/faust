@@ -8,7 +8,7 @@ defmodule Faust.Accounts.User do
   alias __MODULE__
   alias Ecto.Changeset
   alias Faust.Accounts.Credential
-  alias Faust.Snoop.Follower
+  alias Faust.Snoop.{FollowerUser, FollowerWater}
   alias Faust.Fishing.{Fish, FishUser, Technique, TechniqueUser}
   alias Faust.Reservoir.Water
   alias FaustWeb.Accounts.UserPolicy
@@ -31,20 +31,25 @@ defmodule Faust.Accounts.User do
     has_many :waters, Water
 
     many_to_many :fishes, Fish,
-      join_through: Faust.fetch_table_name(%FishUser{}, "string"),
+      join_through: "fishing.fishes_users",
       on_replace: :delete
 
     many_to_many :techniques, Technique,
-      join_through: Faust.fetch_table_name(%TechniqueUser{}, "string"),
+      join_through: "fishing.techniques_users",
       on_replace: :delete
 
-    many_to_many :followee, User,
-      join_through: Follower,
+    many_to_many :followee_users, User,
+      join_through: FollowerUser,
       join_keys: [user_id: :id, follower_id: :id],
       on_replace: :delete
 
-    many_to_many :followers, User,
-      join_through: Follower,
+    many_to_many :follower_users, User,
+      join_through: FollowerUser,
+      join_keys: [follower_id: :id, user_id: :id],
+      on_replace: :delete
+
+    many_to_many :follower_waters, User,
+      join_through: FollowerWater,
       join_keys: [follower_id: :id, user_id: :id],
       on_replace: :delete
 
@@ -52,6 +57,7 @@ defmodule Faust.Accounts.User do
   end
 
   defdelegate authorize(action, current_user, resource), to: UserPolicy
+
   def sex, do: @sex
 
   # Changesets -----------------------------------------------------------------
@@ -106,13 +112,7 @@ defmodule Faust.Accounts.User do
 
   # SQL запрос -----------------------------------------------------------------
 
-  def list_users_query do
-    query = from(u in User)
-
-    order_by(query, [u], asc: [u.name, u.surname])
-  end
-
-  def list_users_by_filter_query(filter) do
+  def list_users_by_params_query(filter) do
     query = from(u in User)
 
     query

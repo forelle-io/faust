@@ -1,17 +1,30 @@
-<%= for water <- @waters do %>
+<%= for water <- @list_waters_page.entries do %>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
-      <div class="row" style="height: 80px; align-items: center;">              
-        <div class="col-md-6 filter-element-title">
+      <div class="row" style="height: 100%; align-items: center;">              
+        <div class="col-md-9 filter-element-title">
           <%= link water.name, to: Routes.water_path(@conn, :show, water) %>
+          <div style="margin-top: 20px;">
+            <%= water.description %>
+          </div>
           <div style="margin-top: 20px;">
             <%= raw FaustWeb.FishView.fishes_tags(@conn, water.fishes) %>
           </div>
         </div>
-        <div class="col-md-6 text-right">   
-          <div class="btn btn-outline-primary">     
-            Подписаться
-          </div>
+        <div class="col-md-3 text-right">
+          <%= if @current_user.id == water.user_id  do %>
+            <%= link "Перейти", to: Routes.water_path(FaustWeb.Endpoint, :show, water), class: "btn btn-outline-primary" %>
+          <% else %>
+            <%= if Enum.member?(@list_followee_ids, water.id) do %>
+              <div id="follow_<%= water.id %>" class="btn btn-primary" onclick="unfollow(<%= water.id %>);">
+                Отписаться
+              </div>
+            <% else %>
+              <div id="follow_<%= water.id %>" class="btn btn-outline-primary" onclick="follow(<%= water.id %>);">
+                Подписаться
+              </div>
+            <% end %>
+          <% end %>
         </div>                     
       </div>
     </li>

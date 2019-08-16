@@ -1,18 +1,18 @@
 import $ from "jquery";
 
-window.changeButtonWhenFollowerCreated = userId => {
-  $(`#follower_${userId}`)
+window.onClickButtonFollow = followerId => {
+  $(`#follow_${followerId}`)
       .removeClass("btn-outline-primary")
       .addClass("btn-primary")
-      .attr("onclick", `deleteFollower(${userId})`)
+      .attr("onclick", `unfollow(${followerId})`)
       .text("Отписаться");
 }
 
-window.changeButtonWhenFollowerDeleted = userId => {
-  $(`#follower_${userId}`)
+window.onClickButtonUnfollow = followerId => {
+  $(`#follow_${followerId}`)
       .removeClass("btn-primary")
       .addClass("btn-outline-primary")
-      .attr("onclick", `createFollower(${userId})`)
+      .attr("onclick", `follow(${followerId})`)
       .text("Подписаться");
 }
 

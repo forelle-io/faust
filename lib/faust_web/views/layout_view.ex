@@ -7,7 +7,13 @@ defmodule FaustWeb.LayoutView do
   alias Plug.Conn
 
   def active_href_navigation_class(%Conn{} = conn, current_path) do
-    if current_path == Controller.current_path(conn), do: "active-href-navigation-class", else: ""
+    with [path | _] <- conn |> Controller.current_path() |> String.split("?"),
+         true <- current_path == path do
+      "active-href-navigation-class"
+    else
+      _ ->
+        ""
+    end
   end
 
   def active_href_dropdown_class(%Conn{} = conn, current_path) do

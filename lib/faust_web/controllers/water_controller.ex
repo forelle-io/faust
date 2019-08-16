@@ -4,30 +4,55 @@ defmodule FaustWeb.WaterController do
   import FaustWeb.FishHelper, only: [fetch_fishes_params: 2]
   import FaustWeb.TechniqueHelper, only: [fetch_techniques_params: 2]
 
+  alias Faust.Accounts.User
   alias Faust.Repo
   alias Faust.Reservoir
   alias Faust.Reservoir.Water
+  alias Faust.Snoop
 
   action_fallback FaustWeb.FallbackController
 
-  def index(conn, %{"user_id" => user_id} = params) do
+  def action(conn, _) do
+    action_name = action_name(conn)
+
+    args =
+      if action_name == :index do
+        [conn, conn.params, current_user(conn)]
+      else
+        [conn, conn.params]
+      end
+
+    apply(__MODULE__, action_name, args)
+  end
+
+  def index(conn, %{"user_id" => user_id} = params, %User{} = current_user) do
     user_id = String.to_integer(user_id)
 
     with :ok <-
-           Bodyguard.permit(Water, :index, current_user(conn), %{
+           Bodyguard.permit(Water, :index, current_user, %{
              params
              | "user_id" => user_id
            }) do
-      waters = Reservoir.list_waters(user_id, [:fishes])
+      list_waters_page = Reservoir.list_waters_by_params(params, [:fishes])
 
-      render(conn, "index.html", waters: waters)
+      render(conn, "index.html",
+        current_user: current_user,
+        params: params,
+        list_waters_page: list_waters_page
+      )
     end
   end
 
-  def index(conn, _params) do
-    waters = Reservoir.list_waters([:fishes])
+  def index(conn, params, %User{} = current_user) do
+    list_followee_ids_task = Task.async(Snoop, :list_water_followee_ids, [current_user.id])
+    list_waters_page = Reservoir.list_waters_by_params(params, [:fishes])
 
-    render(conn, "index.html", waters: waters)
+    render(conn, "index.html",
+      current_user: current_user,
+      params: params,
+      list_followee_ids: Task.await(list_followee_ids_task),
+      list_waters_page: list_waters_page
+    )
   end
 
   def new(%Plug.Conn{assigns: %{changeset_water: changeset_water}} = conn, _params) do
