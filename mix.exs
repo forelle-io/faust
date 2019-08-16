@@ -4,7 +4,7 @@ defmodule Faust.MixProject do
   def project do
     [
       app: :faust,
-      version: "0.1.9",
+      version: "0.1.10",
       elixir: ">= 1.8.1",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
