@@ -13,7 +13,7 @@
             <%= link "Пользователи", to: Routes.user_path(@conn, :index), class: "nav-link #{active_href_navigation_class(@conn, Routes.user_path(@conn, :index))}"%>
           </li>
           <li class="nav-item">
-            <a link href="#" class="nav-link">Путешествие</a>
+            <a link href="#" class="nav-link">Поездки</a>
           </li>
           <li class="nav-item">
             <%= link "Водоемы", to: Routes.water_path(@conn, :index), class: "nav-link #{active_href_navigation_class(@conn, Routes.water_path(@conn, :index))}"%>
@@ -34,7 +34,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="accountDropdown">
               <%= link "Мой аккаунт", to: Routes.user_path(@conn, :show, current_user(@conn)), class: "dropdown-item #{active_href_dropdown_class(@conn, Routes.user_path(@conn, :show, current_user(@conn)))}" %>
-              <a href="#" class="dropdown-item">Мои путешествия</a>
+              <a href="#" class="dropdown-item">Мои поездки</a>
               <%= link "Мои водоемы", to: Routes.user_water_path(@conn, :index, current_user(@conn)), class: "dropdown-item #{active_href_dropdown_class(@conn, Routes.user_water_path(@conn, :index, current_user(@conn)))}" %>
               <div class="dropdown-divider"></div>
               <%= link "Редактировать", to: Routes.user_path(@conn, :edit, current_user(@conn)), class: "dropdown-item #{active_href_dropdown_class(@conn, Routes.user_path(@conn, :edit, current_user(@conn)))}" %>
