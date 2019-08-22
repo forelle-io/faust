@@ -38,22 +38,22 @@
   <div class="row">
     <div class="col-md-6 form-group">
       <%= label f, :type, "Тип водоема" %>
-      <%= select f, :type, Faust.Reservoir.Water.types(), id: "edit_water_type_id", class: "form-control" %> 
+      <%= select f, :type, Faust.Reservoir.Water.types() -- ["не выбрано"], id: "edit_water_type_id", class: "form-control" %> 
     </div>
     <div class="col-md-6 form-group">
       <%= label f, :environment, "Окружение" %>
-      <%= select f, :environment, Faust.Reservoir.Water.environments(), id: "edit_water_environment_id", class: "form-control" %> 
+      <%= select f, :environment, Faust.Reservoir.Water.environments() -- ["не выбрано"], id: "edit_water_environment_id", class: "form-control" %> 
     </div>
   </div>
   
   <div class="row">
     <div class="col-md-6 form-group">
       <%= label f, :bottom_type, "Тип дна" %>
-      <%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types(), id: "edit_water_bottom_type_id", class: "form-control" %> 
+      <%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types() -- ["не выбрано"], id: "edit_water_bottom_type_id", class: "form-control" %> 
     </div>
     <div class="col-md-6 form-group">
       <%= label f, :color, "Цвет воды" %> 
-      <%= select f, :color, Faust.Reservoir.Water.colors(), id: "edit_water_select_color_id", class: "form-control" %> 
+      <%= select f, :color, Faust.Reservoir.Water.colors() -- ["не выбрано"], id: "edit_water_select_color_id", class: "form-control" %> 
     </div>
   </div>
 
@@ -72,9 +72,9 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $('#edit_water_fishes_ids').selectpicker({size: 5,noneSelectedText: "Не выбрано",liveSearch: true, liveSearchStyle: "contains"})
-    $('#edit_water_type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"})
-    $('#edit_water_bottom_type_id').selectpicker({size: 6, noneSelectedText: "Не выбрано"})
-    $('#edit_water_environment_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
-    $('#edit_water_select_color_id').selectpicker({size: 5, noneSelectedText: "Не выбрано"})
+    $('#edit_water_type_id').selectpicker({size: 6})
+    $('#edit_water_bottom_type_id').selectpicker({size: 6})
+    $('#edit_water_environment_id').selectpicker({size: 5})
+    $('#edit_water_select_color_id').selectpicker({size: 5})
   });
 </script>

@@ -37,22 +37,22 @@
   <div class="row">
     <div class="col-md-6">
       <div><%= label f, :type, "Тип водоема", style: "color: #6C758A;" %></div>
-      <div><%= select f, :type, Faust.Reservoir.Water.types(), id: resolve_select_id(assigns[:from], "type_id"), class: "form-control" %></div>
+      <div><%= select f, :type, Faust.Reservoir.Water.types() -- ["не выбрано"], id: resolve_select_id(assigns[:from], "type_id"), class: "form-control" %></div>
     </div>
     <div class="col-md-6 form-group">
       <div><%= label f, :environment, "Окружение", style: "color: #6C758A;" %></div>
-      <div><%= select f, :environment, Faust.Reservoir.Water.environments(), id: resolve_select_id(assigns[:from], "environment_id"), class: "form-control" %></div>
+      <div><%= select f, :environment, Faust.Reservoir.Water.environments() -- ["не выбрано"], id: resolve_select_id(assigns[:from], "environment_id"), class: "form-control" %></div>
     </div>
   </div>
   
   <div class="row">
     <div class="col-md-6 form-group">
       <div><%= label f, :bottom_type, "Тип дна", style: "color: #6C758A;" %></div>
-      <div><%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types(), id: resolve_select_id(assigns[:from], "bottom_type_id"), class: "form-control" %></div>
+      <div><%= select f, :bottom_type, Faust.Reservoir.Water.bottom_types() -- ["не выбрано"], id: resolve_select_id(assigns[:from], "bottom_type_id"), class: "form-control" %></div>
     </div>
     <div class="col-md-6 form-group">
       <div><%= label f, :color, "Цвет воды", style: "color: #6C758A;" %></div>
-      <div><%= select f, :color, Faust.Reservoir.Water.colors(), id: resolve_select_id(assigns[:from], "select_color_id"), class: "form-control" %></div>
+      <div><%= select f, :color, Faust.Reservoir.Water.colors() -- ["не выбрано"], id: resolve_select_id(assigns[:from], "select_color_id"), class: "form-control" %></div>
     </div>
   </div>
 
@@ -66,10 +66,9 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $('#<%= resolve_select_id(assigns[:from], "fishes_ids") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано", liveSearch: true, liveSearchStyle: "contains"});
-    $('#<%= resolve_select_id(assigns[:from], "type_id") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
-    $('#<%= resolve_select_id(assigns[:from], "environment_id") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
-    $('#<%= resolve_select_id(assigns[:from], "bottom_type_id") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
-    $('#<%= resolve_select_id(assigns[:from], "select_color_id") %>').selectpicker({size: 5, noneSelectedText: "Не выбрано"});
+    $('#<%= resolve_select_id(assigns[:from], "type_id") %>').selectpicker({size: 5});
+    $('#<%= resolve_select_id(assigns[:from], "environment_id") %>').selectpicker({size: 5});
+    $('#<%= resolve_select_id(assigns[:from], "bottom_type_id") %>').selectpicker({size: 5});
+    $('#<%= resolve_select_id(assigns[:from], "select_color_id") %>').selectpicker({size: 5});
   });
-
 </script>
