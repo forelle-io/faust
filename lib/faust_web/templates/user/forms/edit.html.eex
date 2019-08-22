@@ -41,7 +41,7 @@
             {"Ноябрь", "11"},
             {"Декабрь", "12"},
           ]]) %>
-          <%= b.(:year, [class: "col-md-4", options: 1950..DateTime.utc_now.year]) %>
+          <%= b.(:year, [class: "col-md-4", options: offset_rank_years()]) %>
         <% end %>
       </div>
       <%= error_tag f, :birthday %>
