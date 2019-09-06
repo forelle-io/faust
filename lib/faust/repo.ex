@@ -3,5 +3,5 @@ defmodule Faust.Repo do
     otp_app: :faust,
     adapter: Ecto.Adapters.Postgres
 
-  use Scrivener, page_size: 4
+  use Scrivener, page_size: 10
 end
