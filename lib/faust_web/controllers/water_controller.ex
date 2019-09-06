@@ -2,7 +2,6 @@ defmodule FaustWeb.WaterController do
   use FaustWeb, :controller
 
   import FaustWeb.FishHelper, only: [fetch_fishes_params: 2]
-  import FaustWeb.TechniqueHelper, only: [fetch_techniques_params: 2]
 
   alias Faust.Accounts.User
   alias Faust.Repo
@@ -127,16 +126,14 @@ defmodule FaustWeb.WaterController do
 
     case action_name(conn) do
       :show ->
-        Repo.preload(water, [[user: :credential], :fishes, :techniques, :histories])
+        Repo.preload(water, [[user: :credential], :fishes])
 
       _ ->
-        Repo.preload(water, [:fishes, :techniques])
+        Repo.preload(water, [:fishes])
     end
   end
 
   defp handle_water_params(water, water_params) do
-    water_params
-    |> fetch_fishes_params(water.fishes)
-    |> fetch_techniques_params(water.techniques)
+    fetch_fishes_params(water_params, water.fishes)
   end
 end
