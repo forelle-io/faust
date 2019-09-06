@@ -36,7 +36,7 @@
     -moz-osx-font-smoothing: grayscale;
   } 
   
-.icon-arrow333:before {
+.icon-arrow:before {
   content: "\e948";
   color: #6c758a;
 }
@@ -51,9 +51,6 @@
 .icon-water:before {
   content: "\e94b";
   color: #6c758a;
-}
-.icon-arrow-up-circle:before {
-  content: "\e941";
 }
 .icon-code:before {
   content: "\e942";
@@ -84,12 +81,6 @@
 }
 .icon-alert-circle:before {
   content: "\e901";
-}
-.icon-arrow-left:before {
-  content: "\e902";
-}
-.icon-arrow-right:before {
-  content: "\e903";
 }
 .icon-att:before {
   content: "\e904";
@@ -415,10 +406,4 @@ header nav a {
     color: #0077FF;
     cursor: pointer;
   }
-}
-
-.water-icon {
-  font-size: 15px;
-  line-height: 16px;
-  padding: 10px 60px;
 }

@@ -22,16 +22,16 @@
     <div class="row">
       <div id="mapid" style="width: 100%; height: 256px;"></div>
     </div>
-     <div class="row">
-      <span class="water-icon">
-        <span class="icon-compass"></span> <b>Окружение</b> - <%= @water.environment %> 
-      </span>
-      <span class="water-icon">
-        <span class="icon-arrow333"></span><b> Тип дна - </b> <%= @water.bottom_type %> 
-      </span> 
-      <span class="water-icon">
-        <span class="icon-water"></span><b> Цвет воды - </b> <%= @water.color%>
-      </span>
+     <div class="row text-center" style="margin-top: 20px;">
+        <div class="col-md-4">
+          <span class="icon-compass" style="padding-right: 5px;"></span><b>Окружение - </b><%= @water.environment %> 
+        </div>
+        <div class="col-md-4">
+          <span class="icon-arrow" style="padding-right: 5px;"></span><b>Тип дна - </b><%= @water.bottom_type %> 
+        </div>
+        <div class="col-md-4">
+          <span class="icon-water" style="padding-right: 5px;"></span><b>Цвет воды - </b><%= @water.color %>
+        </div>
     </div>
     <div class="row" style="margin-top: 20px; margin-left: 20px;">
       <div class="col-md-10">
