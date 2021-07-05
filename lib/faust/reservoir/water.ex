@@ -11,10 +11,11 @@ defmodule Faust.Reservoir.Water do
   alias Faust.Reservoir.History
   alias FaustWeb.Reservoir.WaterPolicy
 
-  @colors ["не выбрано", "коричневый", "зеленый", "синий", "прозрачный"]
-  @types ["не выбрано", "море", "озеро", "пруд", "река", "водохранилище", "карьер"]
+  @colors ["не выбрано", "не указано", "коричневый", "зеленый", "синий", "прозрачный"]
+  @types ["не выбрано", "не указано", "водохранилище", "озеро", "пруд", "река", "карьер"]
   @bottom_types [
     "не выбрано",
+    "не указано",
     "илистое",
     "песчаное",
     "каменистое",
@@ -22,7 +23,7 @@ defmodule Faust.Reservoir.Water do
     "скалистое",
     "подводные леса"
   ]
-  @environments ["не выбрано", "лес", "степь", "луг", "поле", "сад"]
+  @environments ["не выбрано", "не указано", "лес", "степь", "луг", "поле", "сад"]
 
   @regex_name ~r/\A[a-zA-Zа-яА-Я ]+\z/u
 
@@ -160,6 +161,9 @@ defmodule Faust.Reservoir.Water do
       "не выбрано" ->
         query
 
+      "не указано" ->
+        where(query, [w], is_nil(w.type))
+
       _ ->
         where(query, [w], w.type == ^type)
     end
@@ -171,6 +175,9 @@ defmodule Faust.Reservoir.Water do
     case bottom_type do
       "не выбрано" ->
         query
+
+      "не указано" ->
+        where(query, [w], is_nil(w.bottom_type))
 
       _ ->
         where(query, [w], w.bottom_type == ^bottom_type)
@@ -184,6 +191,9 @@ defmodule Faust.Reservoir.Water do
       "не выбрано" ->
         query
 
+      "не указано" ->
+        where(query, [w], is_nil(w.color))
+
       _ ->
         where(query, [w], w.color == ^color)
     end
@@ -195,6 +205,9 @@ defmodule Faust.Reservoir.Water do
     case environment do
       "не выбрано" ->
         query
+
+      "не указано" ->
+        where(query, [w], is_nil(w.environment))
 
       _ ->
         where(query, [w], w.environment == ^environment)
